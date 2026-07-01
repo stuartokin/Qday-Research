@@ -1,11 +1,20 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" data-theme="dark">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>Q-Day Observatory</title>
-<meta name="description" content="A planning app tracking the estimated arrival of a cryptographically relevant quantum computer against the NCSC 2035 post-quantum migration deadline. Built from verified public sources."/>
+<meta name="description" content="A planning app tracking the estimated arrival of a cryptographically relevant quantum computer against global post-quantum migration deadlines. Built from verified public sources."/>
 <meta name="theme-color" content="#080c0e"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Q-Day Observatory"/>
+<meta property="og:description" content="When could a quantum computer break RSA/ECC — and can you migrate in time? A planning dashboard from verified public sources."/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Q-Day Observatory"/>
+<meta name="twitter:description" content="When could a quantum computer break RSA/ECC — and can you migrate in time?"/>
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Q-Day%20Observatory%22%2C%22short_name%22%3A%22Q-Day%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23080c0e%22%2C%22theme_color%22%3A%22%23080c0e%22%2C%22start_url%22%3A%22.%22%7D"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,47 +26,57 @@
   --threat:#ff9e3d; --threat-2:#ffd08a;
   --defence:#46d4c4; --defence-2:#a6efe6;
   --alert:#ff5a5f;
+  --card:rgba(255,255,255,.025); --field:rgba(0,0,0,.22);
   --r:18px; --appw:900px; --bar-h:56px;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --disp:"Space Grotesk",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
+:root[data-theme=light]{
+  --bg:#eef2f1; --panel:rgba(255,255,255,.86); --panel2:rgba(246,249,248,.92);
+  --ink:#0f1a1c; --muted:#4a5b5d; --faint:#7c8d8f;
+  --line:rgba(20,50,48,.14); --line2:rgba(20,50,48,.22);
+  --threat:#c96a12; --threat-2:#a2540a;
+  --defence:#0e8f83; --defence-2:#0a6f66;
+  --alert:#c62b30;
+  --card:rgba(20,50,48,.03); --field:rgba(20,50,48,.05);
+}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;min-height:100dvh;background:var(--bg);color:var(--ink);font-family:var(--disp);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-overflow-scrolling:touch}
-body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(60% 50% at 12% 0%,rgba(255,158,61,.10),transparent 60%),radial-gradient(55% 45% at 92% 4%,rgba(70,212,196,.10),transparent 60%),linear-gradient(180deg,#0a1013,#070b0d 60%,#080c0e)}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(60% 50% at 12% 0%,rgba(255,158,61,.10),transparent 60%),radial-gradient(55% 45% at 92% 4%,rgba(70,212,196,.10),transparent 60%),linear-gradient(180deg,var(--bg),var(--bg))}
+:root[data-theme=dark] body::before{background:radial-gradient(60% 50% at 12% 0%,rgba(255,158,61,.10),transparent 60%),radial-gradient(55% 45% at 92% 4%,rgba(70,212,196,.10),transparent 60%),linear-gradient(180deg,#0a1013,#070b0d 60%,#080c0e)}
 body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(160,200,195,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(160,200,195,.05) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 90% 75% at 50% 30%,#000,transparent 92%)}
 a{color:var(--defence-2);text-underline-offset:3px}
-a:hover{color:#fff}
-
-/* icons, disclosure & links */
+a:hover{color:var(--ink)}
+:focus-visible{outline:2px solid var(--defence);outline-offset:2px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .ic{width:1em;height:1em;flex:none;stroke:currentColor;fill:none;stroke-width:2;vertical-align:-.12em}
-.ibtn{display:inline-grid;place-items:center;width:34px;height:34px;flex:none;border-radius:10px;border:1px solid var(--line2);background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer;font-size:15px;transition:.16s}
-.ibtn:hover,.ibtn[aria-expanded=true]{color:#fff;border-color:var(--defence)}
-.disc{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line2);background:rgba(255,255,255,.03);border-radius:999px;padding:7px 13px;cursor:pointer;transition:.16s}
+.ibtn{display:inline-grid;place-items:center;width:34px;height:34px;flex:none;border-radius:10px;border:1px solid var(--line2);background:var(--card);color:var(--muted);cursor:pointer;font-size:15px;transition:.16s}
+.ibtn:hover,.ibtn[aria-expanded=true]{color:var(--ink);border-color:var(--defence)}
+.disc{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line2);background:var(--card);border-radius:999px;padding:7px 13px;cursor:pointer;transition:.16s}
 .disc:hover{color:var(--ink)}
 .disc .ic{width:13px;height:13px}
 .disc .chev{width:12px;height:12px;transition:transform .22s ease}
 .disc[aria-expanded=true]{color:var(--ink);border-color:var(--defence)}
 .disc[aria-expanded=true] .chev{transform:rotate(180deg)}
 .disc.tk{color:var(--threat-2);border-color:rgba(255,158,61,.35);background:rgba(255,158,61,.06)}
-.disc.tk:hover{color:#fff}
-.disc-body[hidden],.takeaway[hidden],.hndl[hidden],.srcgrid[hidden]{display:none}
+.disc-body[hidden],.takeaway[hidden],.hndl[hidden]{display:none}
 .disc-body{animation:fade .22s ease}
 @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .srclink{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--defence-2);text-decoration:none}
-.srclink:hover{color:#fff;text-decoration:underline}
+.srclink:hover{color:var(--ink);text-decoration:underline}
 .srclink .ic{width:12px;height:12px;stroke-width:1.7}
-
-/* app bar */
-.appbar{position:sticky;top:0;z-index:40;height:var(--bar-h);display:flex;align-items:center;gap:11px;padding:0 clamp(12px,3vw,22px);background:rgba(8,12,14,.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.badge{display:inline-block;font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:5px;border:1px solid var(--line2);color:var(--muted)}
+.badge.reported{color:var(--defence-2);border-color:rgba(70,212,196,.4)}
+.badge.roadmap{color:var(--threat-2);border-color:rgba(255,158,61,.4)}
+.badge.projected{color:var(--muted);border-style:dashed}
+.appbar{position:sticky;top:0;z-index:40;height:var(--bar-h);display:flex;align-items:center;gap:10px;padding:0 clamp(12px,3vw,22px);background:var(--panel);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
 .mark{width:30px;height:30px;border-radius:9px;flex:none;position:relative;background:radial-gradient(circle at 30% 30%,#0e1518,#070b0d);border:1px solid var(--line2);box-shadow:inset 0 0 18px rgba(70,212,196,.2)}
 .mark::before{content:"";position:absolute;inset:7px;border-radius:50%;border:1.5px solid var(--threat);box-shadow:0 0 10px rgba(255,158,61,.5)}
 .mark::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;border-radius:50%;transform:translate(-50%,-50%);background:var(--defence);box-shadow:0 0 10px var(--defence)}
 .wordmark{font-weight:700;letter-spacing:-.02em;font-size:16px;display:flex;align-items:baseline;gap:7px}
 .wordmark span{font-family:var(--mono);font-weight:500;font-size:11px;color:var(--muted);letter-spacing:0}
-.appbar .ibtn{margin-left:auto}
-
-/* main / views */
+.appbar .sp{margin-left:auto}
 .appmain{max-width:var(--appw);margin:0 auto;padding:clamp(14px,3vw,26px) clamp(12px,3vw,24px) calc(var(--bar-h) + 52px)}
 .view{display:none;animation:viewin .26s ease}
 .view.active{display:block}
@@ -65,10 +84,7 @@ a:hover{color:#fff}
 .vhead{display:flex;align-items:center;gap:9px;margin:2px 0 14px}
 .vhead .lab{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--threat-2);font-weight:600}
 .vhead .ibtn{width:28px;height:28px;font-size:13px;margin-left:auto}
-.vhead .disc{margin-left:auto}
-.vdesc{font-family:var(--mono);font-size:12px;color:var(--muted);margin:-6px 0 16px;line-height:1.55;padding:10px 12px;border-left:2px solid var(--line2);background:rgba(255,255,255,.02);border-radius:0 8px 8px 0}
-
-/* clocks (home) */
+.vdesc{font-family:var(--mono);font-size:12px;color:var(--muted);margin:-6px 0 16px;line-height:1.55;padding:10px 12px;border-left:2px solid var(--line2);background:var(--card);border-radius:0 8px 8px 0}
 .hero-head{text-align:center;margin:6px 0 20px}
 h1{font-size:clamp(22px,4.4vw,34px);line-height:1.12;letter-spacing:-.025em;margin:0 auto 12px;font-weight:700;text-wrap:balance}
 h1 em{font-style:normal;color:var(--threat)}
@@ -77,7 +93,6 @@ h1 em{font-style:normal;color:var(--threat)}
 .lede-short b{color:var(--ink);font-weight:600}
 .lede{color:var(--muted);max-width:74ch;font-size:13px;margin:14px auto 0;font-family:var(--mono);line-height:1.65;text-align:left}
 .lede b{color:var(--ink);font-weight:600}
-
 .clocks{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(9px,1.6vw,18px);align-items:stretch}
 .cl{border:1px solid var(--line2);border-radius:var(--r);padding:clamp(13px,2vw,22px);background:linear-gradient(180deg,var(--panel),var(--panel2));backdrop-filter:blur(14px);position:relative;overflow:hidden;min-width:0}
 .cl.threat{box-shadow:inset 0 0 60px rgba(255,158,61,.06)}
@@ -89,42 +104,67 @@ h1 em{font-style:normal;color:var(--threat)}
 .cl .date{font-family:var(--mono);font-weight:600;font-size:clamp(14px,2vw,18px);margin-bottom:11px}
 .cl.threat .date{color:var(--threat)} .cl.defence .date{color:var(--defence)}
 .counter{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.unit{text-align:center;border:1px solid var(--line);border-radius:11px;padding:8px 3px;background:rgba(0,0,0,.22);min-width:0;overflow:hidden}
+.unit{text-align:center;border:1px solid var(--line);border-radius:11px;padding:8px 3px;background:var(--field);min-width:0;overflow:hidden}
 .unit b{display:block;font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;font-size:clamp(15px,5vw,28px);line-height:1;white-space:nowrap}
 .unit span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:5px}
-
-.buffer{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px dashed var(--line2);border-radius:var(--r);padding:12px;min-width:120px;background:rgba(0,0,0,.18)}
+.buffer{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px dashed var(--line2);border-radius:var(--r);padding:12px;min-width:120px;background:var(--field)}
 .buffer .lab{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .buffer .big{font-family:var(--mono);font-weight:700;font-size:clamp(20px,3.2vw,30px);line-height:1.05;margin:6px 0 2px;font-variant-numeric:tabular-nums}
 .buffer .note{font-family:var(--mono);font-size:10px;color:var(--faint);line-height:1.35}
 .buffer.pos .big{color:var(--defence)} .buffer.neg .big{color:var(--alert)}
 .arrowrow{color:var(--faint);font-size:15px;margin-bottom:6px}
-
 .controls{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:16px}
 .scenario{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.sbtn{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line2);background:rgba(255,255,255,.03);border-radius:999px;padding:8px 13px;cursor:pointer;transition:.16s}
+.sbtn{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line2);background:var(--card);border-radius:999px;padding:8px 13px;cursor:pointer;transition:.16s}
 .sbtn:hover{color:var(--ink)}
 .sbtn.on{color:#0a0e10;background:var(--threat);border-color:var(--threat);box-shadow:0 0 18px rgba(255,158,61,.3)}
 .scentext{font-family:var(--mono);font-size:12.5px;color:var(--muted);max-width:80ch;margin:12px auto 0;line-height:1.6;text-align:center}
 .scen-src{display:flex;gap:16px;flex-wrap:wrap;margin-top:11px;justify-content:center}
+.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .minifoot{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:22px;line-height:1.6;text-align:center}
-
-/* grids & cards */
+.mosca{border:1px solid var(--line2);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--panel2));padding:clamp(15px,2.4vw,24px);margin-top:20px}
+.mosca h3{margin:0 0 3px;font-size:16px}
+.mosca .msub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:0 0 16px;line-height:1.55}
+.mosca .msub b{color:var(--threat-2)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.mfield label{display:block;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:6px}
+.mfield label b{color:var(--ink)}
+.mrow{display:flex;align-items:center;gap:10px}
+.mrow input[type=range]{flex:1;accent-color:var(--threat);min-width:0}
+.mrow output{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--threat-2);min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
+.mfield select{width:100%;font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--field);border:1px solid var(--line2);border-radius:9px;padding:9px 10px}
+.mresult{margin-top:16px;border-radius:12px;padding:14px 15px;border:1px solid var(--line2);font-family:var(--mono)}
+.mresult.exposed{border-color:rgba(255,90,95,.5);background:rgba(255,90,95,.07)}
+.mresult.ok{border-color:rgba(70,212,196,.5);background:rgba(70,212,196,.07)}
+.mresult .verdict{font-size:15px;font-weight:700;margin-bottom:5px}
+.mresult.exposed .verdict{color:var(--alert)} .mresult.ok .verdict{color:var(--defence)}
+.mresult .detail{font-size:11.5px;color:var(--muted);line-height:1.55}
+.mbar{height:10px;border-radius:999px;background:var(--field);overflow:hidden;margin:12px 0 6px;display:flex}
+.mbar i{height:100%}
+.mbar .x{background:linear-gradient(90deg,var(--threat),var(--threat-2))}
+.mbar .y{background:linear-gradient(90deg,#c98a3a,#8a6020)}
+.mscale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
 .grid-auto{display:grid;gap:clamp(11px,1.7vw,18px)}
 .charts{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
-.chart{border:1px solid var(--line2);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--panel2));backdrop-filter:blur(12px);padding:clamp(14px,2vw,22px);min-width:0}
+.chart{border:1px solid var(--line2);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--panel2));backdrop-filter:blur(12px);padding:clamp(14px,2vw,22px);min-width:0;position:relative}
 .chart h3{margin:0 0 3px;font-size:15px;font-weight:600}
-.chart .csub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:0 0 13px}
+.chart .csub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:0 0 12px}
 .chart svg{display:block;width:100%;height:auto;overflow:visible}
-.legend{display:flex;gap:13px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:11px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:999px;overflow:hidden;margin:0 0 12px}
+.seg button{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--muted);background:transparent;border:0;padding:6px 12px;cursor:pointer}
+.seg button.on{background:var(--threat);color:#0a0e10}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:11px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .swatch{width:13px;height:3px;border-radius:2px;display:inline-block}
 .swatch.band{height:11px;width:11px;border-radius:3px;background:rgba(255,158,61,.18);border:1px solid rgba(255,158,61,.4)}
+.swatch.range{height:11px;width:11px;border-radius:3px;background:rgba(70,212,196,.15);border:1px dashed rgba(70,212,196,.5)}
 .takeaway{font-family:var(--mono);font-size:12px;color:var(--ink);margin-top:11px;padding:11px 13px;border-left:2px solid var(--threat);background:rgba(255,158,61,.06);border-radius:0 8px 8px 0;line-height:1.55}
-
+.tip{position:absolute;pointer-events:none;z-index:5;background:var(--panel2);border:1px solid var(--line2);border-radius:9px;padding:8px 10px;font-family:var(--mono);font-size:10.5px;color:var(--ink);max-width:210px;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .12s;backdrop-filter:blur(8px)}
+.tip.show{opacity:1}
+.tip b{color:var(--defence-2)}
 .scorebar{display:flex;align-items:center;gap:clamp(14px,2.4vw,26px);flex-wrap:wrap;border:1px solid var(--line2);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--panel2));padding:clamp(14px,2vw,22px);margin-bottom:16px}
-.ring{--p:0;width:112px;height:112px;flex:none;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--threat) calc(var(--p)*1%),rgba(255,255,255,.06) 0)}
-.ring::before{content:"";position:absolute;inset:10px;border-radius:50%;background:#0b1114;border:1px solid var(--line)}
+.ring{--p:0;width:112px;height:112px;flex:none;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--threat) calc(var(--p)*1%),var(--field) 0)}
+.ring::before{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
 .ring b{position:relative;font-family:var(--mono);font-weight:700;font-size:27px}
 .ring small{position:relative;display:block;text-align:center;font-family:var(--mono);font-size:8.5px;color:var(--faint);letter-spacing:.1em;margin-top:2px}
 .scorebar .txt{flex:1 1 260px;min-width:0}
@@ -134,13 +174,13 @@ h1 em{font-style:normal;color:var(--threat)}
 .scorebar #scoreCalc{margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--faint);line-height:1.55;border-top:1px solid var(--line);padding-top:10px}
 .scorebar #scoreCalc b{color:var(--defence-2);font-weight:600}
 .stack{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-.comp{border:1px solid var(--line2);border-radius:14px;background:rgba(255,255,255,.025);padding:14px;cursor:pointer;transition:.16s;min-width:0}
+.comp{border:1px solid var(--line2);border-radius:14px;background:var(--card);padding:14px;cursor:pointer;transition:.16s;min-width:0}
 .comp:hover{border-color:var(--threat);box-shadow:0 12px 30px rgba(0,0,0,.35)}
 .comp .ctop{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:7px}
 .comp .ctop b{font-size:13px;font-weight:600}
 .comp .pct{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--threat)}
 .comp .met{font-family:var(--mono);font-size:10.5px;color:var(--defence-2);line-height:1.4;margin-bottom:9px}
-.comp .track{height:6px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}
+.comp .track{height:6px;border-radius:999px;background:var(--field);overflow:hidden}
 .comp .track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--threat),var(--threat-2))}
 .comp .more-btn{display:flex;align-items:center;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:10px;letter-spacing:.03em}
 .comp .more-btn .chev{width:12px;height:12px;flex:none;transition:transform .22s ease}
@@ -153,11 +193,10 @@ h1 em{font-style:normal;color:var(--threat)}
 .comp-more .novice{font-family:var(--mono);font-size:10.5px;color:var(--defence-2);line-height:1.5;margin:0}
 .comp-more .detail{font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.55;margin:0}
 .comp-more .srclink{margin-top:11px}
-
 .tl{border:1px solid var(--line2);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--panel2));padding:clamp(14px,2.2vw,24px)}
 .track-line{height:3px;background:linear-gradient(90deg,var(--defence),rgba(70,212,196,.2));border-radius:2px;margin:4px 6px 0}
 .nodes{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:13px}
-.node{border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025);padding:14px;min-width:0}
+.node{border:1px solid var(--line);border-radius:13px;background:var(--card);padding:14px;min-width:0}
 .node .yr{font-family:var(--mono);font-weight:700;font-size:19px;color:var(--defence)}
 .node .ttl{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--threat-2);letter-spacing:.06em;text-transform:uppercase;margin:1px 0 0}
 .node .days{font-family:var(--mono);font-size:11.5px;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;margin:6px 0 0}
@@ -165,8 +204,7 @@ h1 em{font-style:normal;color:var(--threat)}
 .node .novice{font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.5;margin:9px 0 0}
 .node .srclink{margin-top:10px}
 .hndl{font-family:var(--mono);font-size:12px;color:var(--threat-2);margin-top:14px;padding:11px 13px;border-left:2px solid var(--threat);background:rgba(255,158,61,.06);border-radius:0 8px 8px 0;line-height:1.55}
-
-.std{border:1px solid var(--line2);border-radius:14px;background:rgba(255,255,255,.025);padding:15px;margin-top:14px}
+.std{border:1px solid var(--line2);border-radius:14px;background:var(--card);padding:15px;margin-top:14px}
 .std h4{margin:0 0 3px;font-size:13.5px;font-weight:600}
 .std .ssub{font-family:var(--mono);font-size:11px;color:var(--muted);margin:0 0 8px}
 .std .row{display:flex;gap:10px;align-items:baseline;font-family:var(--mono);font-size:11.5px;padding:8px 0;border-top:1px solid var(--line);line-height:1.45}
@@ -174,26 +212,29 @@ h1 em{font-style:normal;color:var(--threat)}
 .std .row span{color:var(--ink)}
 .std .note{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin:9px 0 11px;line-height:1.5}
 .std .links{display:flex;gap:16px;flex-wrap:wrap}
-
-.srcgrid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-.src-a{display:block;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.025);text-decoration:none;transition:.16s;min-width:0}
-.src-a:hover{border-color:var(--defence);background:rgba(70,212,196,.05)}
-.src-a b{display:block;color:var(--ink);font-size:12.5px;font-weight:600;margin-bottom:3px}
-.src-a span{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
-
-/* bottom tab bar */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center;padding:9px 12px calc(9px + env(safe-area-inset-bottom));pointer-events:none}
-.tabbar .inner{pointer-events:auto;display:flex;gap:3px;background:rgba(11,17,20,.9);backdrop-filter:blur(18px);border:1px solid var(--line2);border-radius:18px;padding:6px;box-shadow:0 14px 44px rgba(0,0,0,.55)}
-.tab{display:grid;justify-items:center;gap:3px;min-width:64px;padding:7px 11px;border-radius:13px;background:transparent;border:0;color:var(--muted);font-family:var(--mono);font-size:10px;font-weight:600;cursor:pointer;transition:.16s}
-.tab .ic{width:19px;height:19px;stroke-width:1.9}
+.reg{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:4px}
+.regcard{border:1px solid var(--line2);border-radius:14px;background:var(--card);padding:14px;min-width:0}
+.regcard .rtop{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.regcard .flag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;color:#0a0e10;background:var(--defence);border-radius:6px;padding:2px 7px}
+.regcard .rbody{font-size:12.5px;font-weight:600}
+.regcard .milestone{display:flex;gap:10px;font-family:var(--mono);font-size:11px;padding:5px 0;border-top:1px solid var(--line);line-height:1.4}
+.regcard .milestone b{color:var(--threat-2);flex:none;min-width:40px}
+.regcard .srclink{margin-top:9px}
+.regcard .rsrc{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:9px}
+.log{grid-template-columns:1fr;gap:0;margin-top:4px}
+.logitem{display:flex;gap:12px;font-family:var(--mono);font-size:11.5px;padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}
+.logitem time{color:var(--defence-2);font-weight:600;flex:none;min-width:74px}
+.logitem span{color:var(--muted)}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center;padding:9px 10px calc(9px + env(safe-area-inset-bottom));pointer-events:none}
+.tabbar .inner{pointer-events:auto;display:flex;gap:2px;background:var(--panel2);backdrop-filter:blur(18px);border:1px solid var(--line2);border-radius:18px;padding:6px;box-shadow:0 14px 44px rgba(0,0,0,.55)}
+.tab{display:grid;justify-items:center;gap:3px;min-width:58px;padding:7px 9px;border-radius:13px;background:transparent;border:0;color:var(--muted);font-family:var(--mono);font-size:10px;font-weight:600;cursor:pointer;transition:.16s}
+.tab .ic{width:18px;height:18px;stroke-width:1.9}
 .tab:hover{color:var(--ink)}
 .tab.on{color:var(--defence);background:rgba(70,212,196,.12)}
-
-/* drawer */
 .drawer{position:fixed;inset:0;z-index:70;display:none}
 .drawer.open{display:block}
 .shade{position:absolute;inset:0;background:rgba(4,7,8,.66);backdrop-filter:blur(6px)}
-.sheet{position:absolute;right:0;top:0;bottom:0;width:min(560px,100%);overflow:auto;background:linear-gradient(180deg,#0d1417,#080c0e);border-left:1px solid var(--line2);padding:clamp(20px,3vw,30px);box-shadow:-30px 0 80px rgba(0,0,0,.6);transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.7,.2,1)}
+.sheet{position:absolute;right:0;top:0;bottom:0;width:min(580px,100%);overflow:auto;background:linear-gradient(180deg,var(--panel2),var(--bg));border-left:1px solid var(--line2);padding:clamp(20px,3vw,30px);box-shadow:-30px 0 80px rgba(0,0,0,.6);transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.7,.2,1)}
 .drawer.open .sheet{transform:none}
 .sheet h2{margin:0 44px 6px 0;font-size:20px;letter-spacing:-.02em}
 .sheet h3{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--threat-2);margin:20px 0 8px}
@@ -204,29 +245,25 @@ h1 em{font-style:normal;color:var(--threat)}
 .sheet .warn{border-left:2px solid var(--threat);background:rgba(255,158,61,.06);padding:11px 13px;border-radius:0 8px 8px 0;color:var(--threat-2)}
 .sheet .menu a{display:block;border:1px solid var(--line2);border-radius:11px;padding:13px 15px;margin:9px 0;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:13px;font-weight:600;transition:.16s}
 .sheet .menu a:hover{border-color:var(--defence);background:rgba(70,212,196,.05)}
-.xbtn{position:absolute;right:16px;top:16px;font-family:var(--mono);font-size:12px;color:var(--ink);border:1px solid var(--line2);background:rgba(255,255,255,.04);border-radius:9px;padding:7px 11px;cursor:pointer}
-.xbtn:hover{border-color:var(--alert);color:#fff}
+.xbtn{position:absolute;right:16px;top:16px;font-family:var(--mono);font-size:12px;color:var(--ink);border:1px solid var(--line2);background:var(--card);border-radius:9px;padding:7px 11px;cursor:pointer}
+.xbtn:hover{border-color:var(--alert)}
 .sheet a{display:inline}.sheet .menu a{display:block}
-
-/* form factors */
-@media(max-width:660px){
-  .clocks{grid-template-columns:1fr}
-  .buffer{order:3;flex-direction:row;justify-content:center;gap:13px;min-width:0}
-  .buffer .big{margin:0}
-  .arrowrow{transform:rotate(90deg)}
-}
-@media(max-width:380px){
-  .counter{gap:4px}.unit{padding:7px 2px}
-  .wordmark span{display:none}
-  .tab{min-width:54px;padding:7px 7px}
-  .std .row b{min-width:100%}
-}
-@media(max-height:540px) and (orientation:landscape){ h1{font-size:clamp(18px,3.4vw,26px)} }
-/* use the room on larger screens */
-@media(min-width:1080px){ :root{--appw:1040px} }
-@media(min-width:1440px){ :root{--appw:1200px} }
-@media(min-width:1720px){ :root{--appw:1320px} }
-@media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{animation:none!important;transition:none!important} }
+.welcome{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px}
+.welcome.open{display:flex}
+.welcome .card{position:relative;max-width:440px;width:100%;background:linear-gradient(180deg,var(--panel2),var(--bg));border:1px solid var(--line2);border-radius:20px;padding:26px 24px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.welcome h2{margin:0 0 6px;font-size:20px}
+.welcome p{font-family:var(--mono);font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 10px}
+.welcome ul{margin:8px 0 16px;padding-left:18px}
+.welcome li{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.7}
+.welcome .go{font-family:var(--mono);font-size:13px;font-weight:700;color:#0a0e10;background:var(--defence);border:0;border-radius:11px;padding:11px 18px;cursor:pointer}
+@media(max-width:660px){.clocks{grid-template-columns:1fr}.buffer{order:3;flex-direction:row;justify-content:center;gap:13px;min-width:0}.buffer .big{margin:0}.arrowrow{transform:rotate(90deg)}}
+@media(max-width:380px){.counter{gap:4px}.unit{padding:7px 2px}.wordmark span{display:none}.tab{min-width:50px;padding:7px 6px}.tab .lbl2{display:none}.std .row b{min-width:100%}}
+@media(max-height:540px) and (orientation:landscape){h1{font-size:clamp(18px,3.4vw,26px)}}
+@media(min-width:1080px){:root{--appw:1040px}}
+@media(min-width:1440px){:root{--appw:1200px}}
+@media(min-width:1720px){:root{--appw:1320px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+@media print{.appbar,.tabbar,.drawer,.welcome,.actions,.seg,.disc,.tip{display:none!important}.view{display:block!important;page-break-inside:avoid;margin-bottom:20px}body{background:#fff;color:#000}body::before,body::after{display:none}.appmain{max-width:none;padding:0}}
 </style>
 </head>
 <body>
@@ -234,12 +271,13 @@ h1 em{font-style:normal;color:var(--threat)}
 <header class="appbar">
   <div class="mark" aria-hidden="true"></div>
   <div class="wordmark">Q-Day<span>Observatory</span></div>
-  <button class="ibtn" onclick="open_('menu')" aria-label="Reference and sources"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
+  <span class="sp"></span>
+  <button class="ibtn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle light or dark theme" title="Theme"></button>
+  <button class="ibtn" onclick="open_('menu')" aria-label="Reference and sources" title="Reference &amp; sources"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
 </header>
 
 <main class="appmain">
 
-  <!-- CLOCKS -->
   <section class="view active" id="view-clocks">
     <div class="hero-head">
       <h1>Defences ready <em>before</em> Quantum breaks crypto</h1>
@@ -248,7 +286,7 @@ h1 em{font-style:normal;color:var(--threat)}
         <button class="disc" aria-expanded="false" data-target="ledeMore" onclick="toggle(this)">How it works<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
       </div>
       <div class="disc-body" id="ledeMore" hidden>
-        <p class="lede">The left clock counts toward an estimated <b>cryptographically relevant quantum computer (CRQC)</b> — when RSA and ECC could be broken at scale. The right counts toward the <b>NCSC's 2035 deadline</b> to finish migrating to post-quantum cryptography. The gap is your <b>headroom</b>; change the scenario to move it.</p>
+        <p class="lede">The left clock counts toward an estimated <b>cryptographically relevant quantum computer (CRQC)</b> — when RSA and ECC could be broken at scale. The right counts toward the <b>NCSC's 2035 deadline</b> to finish migrating to post-quantum cryptography. The gap is your <b>headroom</b>; change the scenario to move it. Then use the calculator below to test your own exposure.</p>
       </div>
     </div>
 
@@ -257,7 +295,7 @@ h1 em{font-style:normal;color:var(--threat)}
         <div class="tag"><svg class="ic" viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 7-8"/><path d="M21 7v5h-5"/></svg> Capability · est. Q-Day</div>
         <div class="sub" id="qScenarioLabel">Source-weighted</div>
         <div class="date" id="qDate">—</div>
-        <div class="counter">
+        <div class="counter" aria-hidden="true">
           <div class="unit"><b id="q_d">—</b><span>days</span></div>
           <div class="unit"><b id="q_h">—</b><span>hrs</span></div>
           <div class="unit"><b id="q_m">—</b><span>min</span></div>
@@ -272,7 +310,7 @@ h1 em{font-style:normal;color:var(--threat)}
         <div class="tag"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg> Defence · NCSC 2035</div>
         <div class="sub">Complete migration to PQC</div>
         <div class="date" id="ncscDate">31 Dec 2035</div>
-        <div class="counter">
+        <div class="counter" aria-hidden="true">
           <div class="unit"><b id="n_d">—</b><span>days</span></div>
           <div class="unit"><b id="n_h">—</b><span>hrs</span></div>
           <div class="unit"><b id="n_m">—</b><span>min</span></div>
@@ -280,6 +318,7 @@ h1 em{font-style:normal;color:var(--threat)}
         </div>
       </div>
     </div>
+    <div class="sr-only" id="srCountdown" aria-live="polite"></div>
 
     <div class="controls">
       <div class="scenario" id="scenario"></div>
@@ -292,46 +331,84 @@ h1 em{font-style:normal;color:var(--threat)}
         <a class="srclink" href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NCSC 2035 deadline ↗</a>
       </div>
     </div>
-    <p class="minifoot">AI built from public primary sources · last checked 30 Jun 2026</p>
+
+    <div class="actions">
+      <button class="disc" onclick="shareCard()"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7"/><path d="M12 3v13M8 7l4-4 4 4"/></svg>Share snapshot</button>
+      <button class="disc" onclick="copyLink()"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg><span id="copyLbl">Copy link</span></button>
+    </div>
+
+    <div class="mosca">
+      <h3>Your exposure — the Mosca test</h3>
+      <p class="msub">If your data's shelf-life (X) plus your migration time (Y) is greater than the time until a quantum threat (Z), you're already exposed: <b>X + Y &gt; Z → act now</b>.</p>
+      <div class="mgrid">
+        <div class="mfield">
+          <label><b>X</b> · data shelf-life</label>
+          <div class="mrow"><input id="mX" type="range" min="1" max="50" value="10" oninput="mosca()" aria-label="Data shelf-life in years"><output id="xOut">10y</output></div>
+        </div>
+        <div class="mfield">
+          <label><b>Y</b> · migration time</label>
+          <div class="mrow"><input id="mY" type="range" min="1" max="15" value="5" oninput="mosca()" aria-label="Migration time in years"><output id="yOut">5y</output></div>
+        </div>
+        <div class="mfield">
+          <label><b>Z</b> · time to quantum threat</label>
+          <select id="mZ" onchange="moscaZ()" aria-label="Threat scenario">
+            <option value="fast">Aggressive — 2036</option>
+            <option value="weighted" selected>Source-weighted — 2038</option>
+            <option value="cautious">Cautious — 2041</option>
+          </select>
+        </div>
+      </div>
+      <div class="mbar" aria-hidden="true"><i class="x" id="barX"></i><i class="y" id="barY"></i></div>
+      <div class="mscale" aria-hidden="true"><span>now</span><span id="zScale"></span></div>
+      <div class="mresult ok" id="mResult"><div class="verdict" id="mVerdict"></div><div class="detail" id="mDetail"></div></div>
+      <p class="minifoot" style="margin-top:12px;text-align:left">Mosca inequality (M. Mosca / GRI). Illustrative — Z uses the selected scenario, not a forecast.</p>
+    </div>
+
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
   </section>
 
-  <!-- TRENDS -->
   <section class="view" id="view-trends">
     <div class="vhead"><span class="lab">Trends</span>
       <button class="ibtn" aria-expanded="false" data-target="dTrends" onclick="toggle(this)" aria-label="About"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
     </div>
-    <p class="vdesc" id="dTrends" hidden>The qubits needed to break RSA-2048 are near their floor while machines scale up the published roadmaps — where the two meet is an illustrative Q-Day, shown against the expert scenario window. The second chart shows how expert opinion has shifted.</p>
+    <p class="vdesc" id="dTrends" hidden>Where the qubits needed to break RSA/ECC (falling to a floor) meet the machines being built (rising along vendor roadmaps) is an illustrative Q-Day, shown with a vendor projection range and the expert scenario window. Switch target to see ECC-256 fall earlier. Tap points for detail.</p>
     <div class="grid-auto charts">
       <div class="chart">
-        <h3>Qubits to break RSA-2048: required vs built</h3>
-        <p class="csub">Log scale · solid = reported · dashed = roadmap / floor</p>
-        <svg id="chartCollapse" viewBox="0 0 540 320" role="img" aria-label="Log-scale chart: physical qubits required to factor RSA-2048 falling to a roughly one-million floor, against the largest machines built rising along IBM's roadmap. The projected lines cross around 2037, inside the 2036 to 2041 expert scenario window."></svg>
-        <div class="legend"><span><i class="swatch" style="background:var(--threat)"></i> Required (Gidney floor)</span><span><i class="swatch" style="background:var(--defence)"></i> Built — IBM roadmap</span><span><i class="swatch band"></i> Scenario window</span></div>
+        <h3>Qubits to break <span id="tgtName">RSA-2048</span>: required vs built</h3>
+        <p class="csub">Log scale · reported → roadmap → projected crossover</p>
+        <div class="seg" role="group" aria-label="Target">
+          <button id="segRsa" class="on" onclick="setTarget('rsa')">RSA-2048</button>
+          <button id="segEcc" onclick="setTarget('ecc')">ECC-256</button>
+        </div>
+        <svg id="chartCollapse" viewBox="0 0 540 330" role="img" aria-label="Log-scale chart of physical qubits required to break the selected algorithm against the largest machines built along vendor roadmaps, crossing in the mid-2030s within the expert scenario window."></svg>
+        <div class="legend"><span><i class="swatch" style="background:var(--threat)"></i> Required floor</span><span><i class="swatch" style="background:var(--defence)"></i> Built (roadmap)</span><span><i class="swatch range"></i> Vendor range</span><span><i class="swatch band"></i> Scenario window</span></div>
         <button class="disc tk" aria-expanded="false" data-target="t1" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
-        <div class="takeaway" id="t1" hidden>Holding the requirement at Gidney's ~1M-qubit floor and scaling IBM's published roadmap (Starling ~10k physical qubits in 2029, Blue Jay ~100k in 2033), the two lines cross around <b><span id="xoverYear">~2037</span></b> — inside the 2036–2041 expert window the scenarios use. The crossover marks when enough qubits could exist; running the full attack at depth pushes the real date toward the later end.
+        <div class="takeaway" id="t1" hidden><span id="tkText"></span>
           <div style="margin-top:9px;display:flex;gap:14px;flex-wrap:wrap">
             <a class="srclink" href="https://www.ibm.com/quantum/blog/large-scale-ftqc" target="_blank" rel="noopener">IBM roadmap ↗</a>
-            <a class="srclink" href="https://arxiv.org/abs/2505.15917" target="_blank" rel="noopener">Gidney 2025 ↗</a>
+            <a class="srclink" href="https://arxiv.org/abs/2505.15917" target="_blank" rel="noopener">Gidney 2025 (RSA) ↗</a>
+            <a class="srclink" href="https://physicsworld.com/a/new-findings-shorten-the-road-to-cryptographically-relevant-quantum-computers/" target="_blank" rel="noopener">Google 2026 (ECC) ↗</a>
           </div>
         </div>
       </div>
       <div class="chart">
-        <h3>Expert outlook is hardening</h3>
-        <p class="csub">GRI / evolutionQ · P(break RSA-2048 in 24h)</p>
-        <svg id="chartOutlook" viewBox="0 0 520 320" role="img" aria-label="Bar chart showing the expert-estimated probability of a CRQC within 10 years rising from 17 to 31 percent in 2023 to 28 to 49 percent in 2025, with the 15-year estimate at 51 to 70 percent."></svg>
-        <div class="legend"><span><i class="swatch" style="background:var(--threat)"></i> 10-year</span><span><i class="swatch" style="background:var(--threat-2)"></i> 15-year (2025)</span></div>
+        <h3>Expert outlook &amp; probability by year</h3>
+        <p class="csub">GRI / evolutionQ · 10-yr range (bars) + cumulative P (line)</p>
+        <svg id="chartOutlook" viewBox="0 0 540 330" role="img" aria-label="Bars showing the 10-year expert probability rising 2023 to 2025, with a line showing cumulative probability of a CRQC reaching 14 percent by 2029, 34 by 2034, 55 by 2039 and 79 by 2044."></svg>
+        <div class="legend"><span><i class="swatch" style="background:var(--threat)"></i> 10-yr range</span><span><i class="swatch" style="background:var(--defence)"></i> Cumulative P (2024 survey)</span></div>
         <button class="disc tk" aria-expanded="false" data-target="t2" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
-        <div class="takeaway" id="t2" hidden>The 2025 survey is the most pessimistic in the series' history — a CRQC is now rated "quite possible" within 10 years and "likely" within 15.<div style="margin-top:9px"><a class="srclink" href="https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/" target="_blank" rel="noopener">Source: GRI Quantum Threat Timeline 2025 ↗</a></div></div>
+        <div class="takeaway" id="t2" hidden>The 2025 survey is the most pessimistic in the report's seven-year history — a CRQC is now "quite possible" within 10 years and "likely" within 15. The cumulative curve passes even odds around 2039.<div style="margin-top:9px"><a class="srclink" href="https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/" target="_blank" rel="noopener">GRI 2025 ↗</a></div></div>
       </div>
     </div>
+    <div class="vhead" style="margin-top:22px"><span class="lab">What's changed</span></div>
+    <div class="grid-auto log" id="changelog"></div>
   </section>
 
-  <!-- STACK -->
   <section class="view" id="view-stack">
     <div class="vhead"><span class="lab">Capability stack</span>
       <button class="ibtn" aria-expanded="false" data-target="dStack" onclick="toggle(this)" aria-label="About"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
     </div>
-    <p class="vdesc" id="dStack" hidden>Breaking RSA/ECC needs a whole stack, not a headline qubit count. Tap any card to reveal how it works, a plain-terms explanation, and its verified source.</p>
+    <p class="vdesc" id="dStack" hidden>Breaking RSA/ECC needs a whole stack, not a headline qubit count. Tap any card to reveal how it works, a plain-terms explanation, and its verified source (expands the whole row).</p>
     <div class="scorebar">
       <div class="ring" id="ring"><div><b id="score">—%</b><small>STACK READINESS</small></div></div>
       <div class="txt"><h3>Indicative readiness</h3><p>Hardware quality is advancing fast; raw scale and sustained fault-tolerant execution remain the long poles. ECC-256 is the nearer target — fewer resources than RSA-2048.</p><button class="disc calc-btn" aria-expanded="false" data-target="scoreCalc" onclick="toggle(this)"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg>How it's calculated<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="disc-body" id="scoreCalc" hidden></div></div>
@@ -339,159 +416,168 @@ h1 em{font-style:normal;color:var(--threat)}
     <div class="grid-auto stack" id="stack"></div>
   </section>
 
-  <!-- PLAN -->
   <section class="view" id="view-plan">
     <div class="vhead"><span class="lab">Migration plan</span>
       <button class="ibtn" aria-expanded="false" data-target="dPlan" onclick="toggle(this)" aria-label="About"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
     </div>
-    <p class="vdesc" id="dPlan" hidden>The three NCSC PQC milestones every UK organisation is asked to work toward, what each involves, and what you migrate to. Counters are live.</p>
+    <p class="vdesc" id="dPlan" hidden>The UK NCSC milestones, what you migrate to, and how global regulators' deadlines compare. Counters are live.</p>
     <div class="tl">
       <div class="track-line"></div>
       <div class="grid-auto nodes" id="nodes"></div>
       <button class="disc" aria-expanded="false" data-target="hndlBox" onclick="toggle(this)" style="margin-top:14px"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Harvest now, decrypt later<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
       <div class="hndl" id="hndlBox" hidden><b>HNDL:</b> data captured today can be stored and decrypted once a CRQC exists. For anything that must stay secret beyond Q-Day, the effective deadline is already here — not 2035.</div>
-
       <div class="std">
         <h4>What you migrate to</h4>
         <p class="ssub">NIST's finalised post-quantum standards · published 13 Aug 2024</p>
         <div class="row"><b>FIPS 203 · ML-KEM</b><span>General encryption and key exchange — the replacement for RSA and ECDH.</span></div>
         <div class="row"><b>FIPS 204 · ML-DSA</b><span>Primary digital signatures — the replacement for RSA and ECDSA.</span></div>
         <div class="row"><b>FIPS 205 · SLH-DSA</b><span>Hash-based backup signatures, using different maths for resilience.</span></div>
-        <p class="note">A backup key-exchange scheme, HQC, was selected in March 2025 (final standard expected ~2027); a further signature standard, FIPS 206 (FN-DSA, from Falcon), is in draft. In plain terms: ML-KEM and ML-DSA are the defaults to adopt; the others exist so there is a fallback if one maths family is ever broken.</p>
+        <p class="note">A backup KEM, HQC, was selected in March 2025 (final ~2027); FIPS 206 (FN-DSA / Falcon) is in draft. In plain terms: ML-KEM and ML-DSA are the defaults; the others are fallbacks if one maths family is ever broken.</p>
         <div class="links">
           <a class="srclink" href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NIST PQC project ↗</a>
           <a class="srclink" href="https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>HQC selection ↗</a>
         </div>
       </div>
     </div>
-
+    <div class="vhead" style="margin-top:22px"><span class="lab">Global deadlines</span></div>
+    <div class="grid-auto reg" id="regs"></div>
+    <p class="minifoot" style="text-align:left">Dates compiled from public government publications (2025–26). EU / Australia rows link out via Methodology &amp; sources.</p>
   </section>
 
 </main>
 
-<!-- BOTTOM TAB BAR -->
 <nav class="tabbar"><div class="inner">
-  <button class="tab on" data-v="clocks" onclick="showView('clocks')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Clocks</button>
-  <button class="tab" data-v="trends" onclick="showView('trends')"><svg class="ic" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M19 8l-5 6-3-2-4 5"/></svg>Trends</button>
-  <button class="tab" data-v="stack" onclick="showView('stack')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>Stack</button>
-  <button class="tab" data-v="plan" onclick="showView('plan')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg>Plan</button>
+  <button class="tab on" data-v="clocks" onclick="showView('clocks')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lbl2">Clocks</span></button>
+  <button class="tab" data-v="trends" onclick="showView('trends')"><svg class="ic" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M19 8l-5 6-3-2-4 5"/></svg><span class="lbl2">Trends</span></button>
+  <button class="tab" data-v="stack" onclick="showView('stack')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><span class="lbl2">Stack</span></button>
+  <button class="tab" data-v="plan" onclick="showView('plan')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg><span class="lbl2">Plan</span></button>
 </div></nav>
 
-<!-- DRAWER -->
 <div class="drawer" id="drawer"><div class="shade" onclick="close_()"></div>
   <aside class="sheet"><button class="xbtn" onclick="close_()">Close ✕</button><div id="paneBody"></div></aside>
 </div>
+
+<div class="welcome" id="welcome"><div class="card">
+  <h2>Welcome to the Q-Day Observatory</h2>
+  <p>A planning aid for the race between quantum capability and post-quantum migration. Everything here is drawn from verified public sources.</p>
+  <ul>
+    <li><b>Clocks</b> — capability vs the 2035 deadline, plus a Mosca exposure test.</li>
+    <li><b>Trends</b> — when required and built qubit curves cross (RSA or ECC).</li>
+    <li><b>Stack</b> — what still has to be engineered.</li>
+    <li><b>Plan</b> — NCSC milestones, standards and global deadlines.</li>
+  </ul>
+  <p style="color:var(--faint)">Planning anchors, not forecasts. No trackers. Views are the author's own.</p>
+  <button class="go" onclick="closeWelcome()">Explore →</button>
+</div></div>
+
+<div class="tip" id="tip"></div>
 
 <script>
 /* ============================ DATA MODEL ============================ */
 const NCSC_DEADLINE='2035-12-31T23:59:59Z';
 const model={
   scenarios:{
-    fast:{label:'Aggressive',date:'2036-01-01T00:00:00Z',text:'Aggressive sits at the front edge of the Global Risk Institute 2025 expert window — a CRQC assessed as "quite possible" (28–49%) within roughly ten years. A risk-management lower bound, not a claim that RSA/ECC fails in 2036.'},
-    weighted:{label:'Source-weighted',date:'2038-01-01T00:00:00Z',text:'Source-weighted takes the middle of the 10–15 year GRI window and cross-checks against the NCSC 2035 deadline. It deliberately lands just after the deadline so the headroom stays visibly thin — and it matches the roadmap-vs-requirement crossover on the Trends chart.'},
-    cautious:{label:'Cautious',date:'2041-01-01T00:00:00Z',text:'Cautious uses the far edge of the GRI window — a CRQC assessed as "likely" (51–70%) within about fifteen years. It assumes scaling, error correction and long-depth reliable execution stay genuinely hard.'}
+    fast:{label:'Aggressive',year:2036,date:'2036-01-01T00:00:00Z',text:'Aggressive sits at the front edge of the GRI 2025 expert window — a CRQC "quite possible" (28–49%) within ~10 years. A risk-management lower bound, not a claim that RSA/ECC fails in 2036.'},
+    weighted:{label:'Source-weighted',year:2038,date:'2038-01-01T00:00:00Z',text:'Source-weighted takes the middle of the 10–15 year GRI window and cross-checks the NCSC 2035 deadline. It matches the roadmap-vs-requirement crossover on the Trends chart.'},
+    cautious:{label:'Cautious',year:2041,date:'2041-01-01T00:00:00Z',text:'Cautious uses the far edge of the GRI window — a CRQC "likely" (51–70%) within ~15 years. It assumes scaling, error correction and long-depth reliable execution stay genuinely hard.'}
+  },
+  targets:{
+    rsa:{label:'RSA-2048',floor:1e6,src:'Gidney 2025: RSA-2048 with <1M noisy qubits (~1,000 logical).'},
+    ecc:{label:'ECC-256',floor:5e5,src:'Google 2026: ECC-256 with ~500k physical (~1,200 logical) — about half of RSA-2048.'}
   },
   ncsc:[
-    {year:'2028',title:'Discover & plan',date:'2028-12-31T23:59:59Z',
-     info:'NCSC\u2019s first checkpoint: define your migration goals, complete a full discovery of where and how cryptography is used across systems, services and data, and build a prioritised migration plan \u2014 engaging suppliers on the PQC support you will need.',
-     novice:'Plain terms: find every place you rely on vulnerable encryption, and write the plan to replace it.',
-     href:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',srcLabel:'NCSC guidance'},
-    {year:'2031',title:'Migrate priorities',date:'2031-12-31T23:59:59Z',
-     info:'By the midpoint, the highest-priority migrations should be complete \u2014 the most critical systems and the longest-lived secrets \u2014 with infrastructure and processes in place and the plan refined so full migration can finish on schedule.',
-     novice:'Plain terms: upgrade your most important and most sensitive systems first, and get set up to finish the rest.',
-     href:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',srcLabel:'NCSC guidance'},
-    {year:'2035',title:'Complete',date:'2035-12-31T23:59:59Z',
-     info:'The end state: migration to post-quantum cryptography complete across all systems, services and products, with PQC the new default and broader cyber resilience improved along the way.',
-     novice:'Plain terms: everything is quantum-safe.',
-     href:'https://www.ncsc.gov.uk/news/pqc-migration-roadmap-unveiled',srcLabel:'NCSC roadmap'}
+    {year:'2028',title:'Discover & plan',date:'2028-12-31T23:59:59Z',info:'NCSC\u2019s first checkpoint: define migration goals, complete a full discovery of where cryptography is used, and build a prioritised plan \u2014 engaging suppliers on the PQC support you will need.',novice:'Plain terms: find every place you rely on vulnerable encryption, and write the plan to replace it.',href:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',srcLabel:'NCSC guidance'},
+    {year:'2031',title:'Migrate priorities',date:'2031-12-31T23:59:59Z',info:'By the midpoint, the highest-priority migrations should be complete \u2014 the most critical systems and the longest-lived secrets \u2014 with infrastructure in place and the plan refined to finish on schedule.',novice:'Plain terms: upgrade your most important and most sensitive systems first, and get set up to finish the rest.',href:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',srcLabel:'NCSC guidance'},
+    {year:'2035',title:'Complete',date:'2035-12-31T23:59:59Z',info:'The end state: migration to PQC complete across all systems, services and products, with PQC the new default and broader cyber resilience improved along the way.',novice:'Plain terms: everything is quantum-safe.',href:'https://www.ncsc.gov.uk/news/pqc-migration-roadmap-unveiled',srcLabel:'NCSC roadmap'}
   ],
   components:[
-    {name:'Logical qubits',pct:8,metric:'Best public: 94 logical (Quantinuum, Mar 2026)',
-     novice:'In plain terms: \u201creliable\u201d qubits assembled from many error-prone ones. A real attack needs thousands; the best public result so far is 94.',
-     why:"Shor's algorithm needs stable, error-corrected logical qubits — not raw noisy physical ones.",
-     detail:"Quantinuum reported 48 logical qubits via 'Skinny Logic' codes on the 98-physical Helios in Nov 2025, and 94 logical in Mar 2026. Real progress — but cryptanalysis of RSA-2048 is generally framed in the thousands of logical qubits, so this remains far below scale.",
-     href:'https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world',srcLabel:'Quantinuum'},
-    {name:'Physical scale',pct:5,metric:'Largest today \u2248 1,100\u20131,200 physical qubits',
-     novice:'In plain terms: the raw qubit count. Today\u2019s biggest machines hold ~1,200; estimates say RSA-2048 needs under a million \u2014 about a thousandfold more.',
-     why:'Error correction spends many physical qubits per logical qubit, plus routing, measurement and spares.',
-     detail:'The biggest published processors sit near 1,100–1,200 physical qubits. Gidney (2025) estimates under a million noisy qubits are needed to factor RSA-2048 — roughly three orders of magnitude away. IBM\u2019s roadmap targets ~10,000 (Starling, 2029) and ~100,000 (Blue Jay, 2033).',
-     href:'https://www.ibm.com/quantum/blog/large-scale-ftqc',srcLabel:'IBM roadmap'},
-    {name:'Error correction',pct:22,metric:'Verified: Willow d=7, 0.143%/cycle, \u039b=2.14',
-     novice:'In plain terms: the trick that stops errors snowballing as a calculation runs longer. Google showed errors shrinking as the code grew \u2014 a landmark.',
-     why:'A cryptanalytic run is an enormously long circuit; error must fall as the code grows.',
-     detail:"Google's Willow showed below-threshold surface-code memory: a 101-qubit distance-7 code at 0.143% ± 0.003% logical error per cycle, suppressed by Λ = 2.14 per two steps of distance, and 2.4× beyond break-even (Nature, 2024).",
-     href:'https://www.nature.com/articles/s41586-024-08449-y',srcLabel:'Nature 2024'},
-    {name:'Gate fidelity',pct:34,metric:'Verified: 99.921% two-qubit \u00b7 99.9975% single',
-     novice:'In plain terms: how cleanly each step runs. The best machines now slip only about 8 times in 100,000 two-qubit operations.',
-     why:'RSA/ECC attacks involve vast numbers of operations; small two-qubit errors compound quickly.',
-     detail:'Quantinuum Helios reports single-qubit fidelity 99.9975% and two-qubit 99.921% across all pairs, peer-reviewed in Nature (Jun 2026) and validated by Sandia. Excellent — but only one layer of the stack.',
-     href:'https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html',srcLabel:'Nature / Sandia 2026'},
-    {name:'Depth & speed',pct:6,metric:'Target: sustained fault-tolerant runs',
-     novice:'In plain terms: can a machine run a giant calculation, error-corrected, long enough to finish? Today\u2019s runs still trip over rare errors.',
-     why:'Breaking RSA/ECC is not a one-shot benchmark; it needs long, reliable computation.',
-     detail:'Willow held below-threshold performance over a million cycles at d=5, but logical runs were ultimately limited by rare correlated errors (~once an hour). Cryptanalysis needs many logical qubits running deep circuits, corrected, for long enough to finish.',
-     href:'https://www.nature.com/articles/s41586-024-08449-y',srcLabel:'Nature 2024'},
-    {name:'Algorithm & stack',pct:15,metric:'Gidney 2025: 20\u00d7 fewer qubits than 2019',
-     novice:'In plain terms: the clever software and methods to actually run the attack. These are improving fast \u2014 the qubit bill fell ~20\u00d7 since 2019.',
-     why:'The machine must compile, schedule, correct and complete the algorithm in a useful time.',
-     detail:'Resource estimates are improving fast: Gidney (2025) cut the qubit requirement ~20× versus 2019 and the Toffoli count >100× versus Chevignard 2024. Full-stack, end-to-end cryptanalytic demonstrations remain far off.',
-     href:'https://arxiv.org/abs/2505.15917',srcLabel:'Gidney 2025'}
+    {name:'Logical qubits',pct:8,conf:'reported',metric:'Best public: 94 logical (Quantinuum, Mar 2026)',novice:'In plain terms: \u201creliable\u201d qubits assembled from many error-prone ones. A real attack needs thousands; the best public result so far is 94.',detail:"Quantinuum reported 48 logical qubits via 'Skinny Logic' codes on the 98-physical Helios in Nov 2025, and 94 logical in Mar 2026 \u2014 still far below the ~1,000 logical framed for RSA-2048.",href:'https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world',srcLabel:'Quantinuum'},
+    {name:'Physical scale',pct:5,conf:'roadmap',metric:'Largest today \u2248 1,100\u20131,200 physical qubits',novice:'In plain terms: the raw qubit count. Today\u2019s biggest machines hold ~1,200; RSA-2048 needs under a million \u2014 about a thousandfold more.',detail:'The biggest published processors sit near 1,100\u20131,200. IBM\u2019s roadmap targets ~10,000 (Starling, 2029) and ~100,000 (Blue Jay, 2033); Gidney (2025) puts the RSA-2048 requirement under a million.',href:'https://www.ibm.com/quantum/blog/large-scale-ftqc',srcLabel:'IBM roadmap'},
+    {name:'Error correction',pct:22,conf:'reported',metric:'Verified: Willow d=7, 0.143%/cycle, \u039b=2.14',novice:'In plain terms: the trick that stops errors snowballing as a calculation runs longer. Google showed errors shrinking as the code grew \u2014 a landmark.',detail:"Google's Willow: below-threshold surface-code memory, 101-qubit distance-7 code at 0.143% \u00b1 0.003% logical error per cycle, \u039b = 2.14, 2.4\u00d7 beyond break-even (Nature, 2024).",href:'https://www.nature.com/articles/s41586-024-08449-y',srcLabel:'Nature 2024'},
+    {name:'Gate fidelity',pct:34,conf:'reported',metric:'Verified: 99.921% two-qubit \u00b7 99.9975% single',novice:'In plain terms: how cleanly each step runs. The best machines now slip only about 8 times in 100,000 two-qubit operations.',detail:'Quantinuum Helios: single-qubit 99.9975%, two-qubit 99.921% across all pairs, peer-reviewed in Nature (Jun 2026) and validated by Sandia.',href:'https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html',srcLabel:'Nature / Sandia 2026'},
+    {name:'Depth & speed',pct:6,conf:'roadmap',metric:'Target: sustained fault-tolerant runs',novice:'In plain terms: can a machine run a giant calculation, error-corrected, long enough to finish? Today\u2019s runs still trip over rare errors.',detail:'Willow held below-threshold over a million cycles at d=5, but was limited by rare correlated errors (~once/hour). Cryptanalysis needs many logical qubits running deep circuits, corrected, long enough to finish.',href:'https://www.nature.com/articles/s41586-024-08449-y',srcLabel:'Nature 2024'},
+    {name:'Algorithm & stack',pct:15,conf:'reported',metric:'Gidney 2025: 20\u00d7 fewer qubits than 2019',novice:'In plain terms: the software and methods to actually run the attack. These are improving fast \u2014 the qubit bill fell ~20\u00d7 since 2019.',detail:'Gidney (2025) cut the qubit requirement ~20\u00d7 vs 2019 and the Toffoli count >100\u00d7 vs Chevignard 2024. Full-stack cryptanalytic demonstrations remain far off.',href:'https://arxiv.org/abs/2505.15917',srcLabel:'Gidney 2025'}
+  ],
+  regulations:[
+    {region:'UK',body:'NCSC PQC migration',milestones:[['2028','Discover & plan'],['2031','Priority migration'],['2035','Complete']],href:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',srcLabel:'NCSC'},
+    {region:'US',body:'NSA CNSA 2.0 / NSM-10',milestones:[['2027','New acquisitions support PQC'],['2030','Firmware & networking exclusive'],['2033','OS, apps & cloud exclusive'],['2035','All NSS quantum-resistant']],href:'https://csrc.nist.gov/projects/post-quantum-cryptography',srcLabel:'NIST / NSA'},
+    {region:'EU',body:'Coordinated PQC roadmap (Jun 2025)',milestones:[['2026','National transition roadmaps'],['2030','High-risk use cases migrated'],['2035','Full transition']],href:'',srcLabel:'EU NIS Cooperation Group'},
+    {region:'AU',body:'ASD Information Security Manual',milestones:[['2026','Refined transition plan'],['2030','Cease traditional asymmetric']],href:'',srcLabel:'Australian Signals Directorate'}
+  ],
+  changelog:[
+    {d:'Jun 2026',t:'Helios two-qubit fidelity (99.921%) peer-reviewed in Nature, validated by Sandia.'},
+    {d:'Mar 2026',t:'GRI 2025: 10-year CRQC likelihood jumps to 28\u201349% \u2014 highest in the report\u2019s seven-year history.'},
+    {d:'2026',t:'Google whitepaper: ECC-256 breakable with ~500k physical qubits \u2014 about half of RSA-2048.'},
+    {d:'Jun 2025',t:'IBM roadmap: Starling (2029, 200 logical / ~10k physical) and Blue Jay (2033, 2,000 logical / ~100k).'},
+    {d:'May 2025',t:'Gidney (Google): RSA-2048 factorable with <1M noisy qubits \u2014 down ~20\u00d7 from 20M (2019).'},
+    {d:'Mar 2025',t:'NIST selects HQC as a backup KEM (final standard expected ~2027).'}
   ],
   sources:[
-    {t:'NCSC — Timelines for migration to post-quantum cryptography',u:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',d:'ncsc.gov.uk · guidance'},
+    {t:'NCSC — Timelines for migration to post-quantum cryptography',u:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',d:'ncsc.gov.uk · guidance · checked Jun 2026'},
     {t:'NCSC — PQC migration roadmap announcement',u:'https://www.ncsc.gov.uk/news/pqc-migration-roadmap-unveiled',d:'ncsc.gov.uk · news'},
-    {t:'Global Risk Institute — Quantum Threat Timeline Report 2025',u:'https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/',d:'globalriskinstitute.org'},
-    {t:'Nature — QEC below the surface-code threshold (Willow)',u:'https://www.nature.com/articles/s41586-024-08449-y',d:'nature.com · peer-reviewed'},
-    {t:'arXiv — Willow QEC below threshold (preprint)',u:'https://arxiv.org/abs/2408.13687',d:'arxiv.org · 2408.13687'},
-    {t:'Gidney — Factoring RSA-2048 with < 1M noisy qubits',u:'https://arxiv.org/abs/2505.15917',d:'arxiv.org · 2505.15917'},
-    {t:'Google Research — same paper (landing page)',u:'https://research.google/pubs/how-to-factor-2048-bit-rsa-integers-with-less-than-a-million-noisy-qubits/',d:'research.google'},
-    {t:'IBM — Path to large-scale, fault-tolerant quantum (roadmap)',u:'https://www.ibm.com/quantum/blog/large-scale-ftqc',d:'ibm.com · roadmap'},
-    {t:'Quantinuum — Helios announcement',u:'https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world',d:'quantinuum.com'},
-    {t:'phys.org — Helios fidelity verified in Nature (Sandia)',u:'https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html',d:'phys.org · 2026'},
+    {t:'Global Risk Institute — Quantum Threat Timeline Report 2025',u:'https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/',d:'globalriskinstitute.org · Mar 2026'},
+    {t:'Nature — QEC below the surface-code threshold (Willow)',u:'https://www.nature.com/articles/s41586-024-08449-y',d:'nature.com · peer-reviewed 2024'},
+    {t:'Gidney — Factoring RSA-2048 with < 1M noisy qubits',u:'https://arxiv.org/abs/2505.15917',d:'arxiv.org · 2505.15917 · 2025'},
+    {t:'IBM — Path to large-scale, fault-tolerant quantum (roadmap)',u:'https://www.ibm.com/quantum/blog/large-scale-ftqc',d:'ibm.com · Jun 2025'},
+    {t:'IonQ — Accelerated roadmap (2M physical by 2030)',u:'https://www.ionq.com/roadmap',d:'ionq.com · 2025'},
+    {t:'Quantinuum — Helios announcement',u:'https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world',d:'quantinuum.com · 2026'},
+    {t:'phys.org — Helios fidelity verified in Nature (Sandia)',u:'https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html',d:'phys.org · Jun 2026'},
+    {t:'Physics World — ECC-256 with ~500k physical qubits (Google 2026)',u:'https://physicsworld.com/a/new-findings-shorten-the-road-to-cryptographically-relevant-quantum-computers/',d:'physicsworld.com · 2026'},
     {t:'NIST — Post-Quantum Cryptography project',u:'https://csrc.nist.gov/projects/post-quantum-cryptography',d:'nist.gov'},
-    {t:'NIST — Selects HQC as fifth (backup) PQC algorithm',u:'https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption',d:'nist.gov · 2025'}
+    {t:'NIST — Selects HQC as fifth (backup) PQC algorithm',u:'https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption',d:'nist.gov · Mar 2025'}
   ]
 };
-/* required = physical qubits to break RSA-2048; floor held at Gidney 1e6 (no source projects lower).
-   builtReported = largest reported processor; builtRoadmap = IBM published milestones (Starling/Blue Jay). */
 const collapse={
-  required:[{x:2012,y:1e9},{x:2019,y:2e7},{x:2025,y:1e6}],
-  reqFloor:1e6,
-  builtReported:[{x:2016,y:5},{x:2019,y:53},{x:2021,y:127},{x:2022,y:433},{x:2023,y:1121},{x:2025,y:1200}],
-  builtRoadmap:[{x:2025,y:1200},{x:2029,y:1e4},{x:2033,y:1e5}],
-  scenarioBand:[2036,2041]
+  required:[{x:2012,y:1e9,ev:'Early surface-code estimates ~1 billion'},{x:2019,y:2e7,ev:'Gidney+Eker\u00e5: 20 million'},{x:2025,y:1e6,ev:'Gidney 2025: <1 million (RSA-2048)'}],
+  builtReported:[{x:2016,y:5,ev:'IBM 5-qubit cloud'},{x:2019,y:53,ev:'Google Sycamore, 53'},{x:2021,y:127,ev:'IBM Eagle, 127'},{x:2022,y:433,ev:'IBM Osprey, 433'},{x:2023,y:1121,ev:'IBM Condor, 1,121'},{x:2026,y:1200,ev:'Largest today, ~1,200'}],
+  builtRoadmap:[{x:2026,y:1200,ev:'Today'},{x:2029,y:1e4,ev:'IBM Starling: ~10k physical / 200 logical'},{x:2033,y:1e5,ev:'IBM Blue Jay: ~100k physical / 2,000 logical'}],
+  vendors:[{name:'PsiQuantum',y:2028,ev:'PsiQuantum: 1M+ photonic qubits (aspirational)'},{name:'Google',y:2030,ev:'Google: ~1M physical, ~end of decade'},{name:'IonQ',y:2030,ev:'IonQ: 2M physical / 40\u201380k logical by 2030'},{name:'IBM',y:2037,ev:'IBM: ~1M extrapolated from Blue Jay trajectory'}]
 };
-const outlook=[{yr:'2023',lo:17,hi:31,kind:'10y'},{yr:'2024',lo:19,hi:34,kind:'10y'},{yr:'2025',lo:28,hi:49,kind:'10y'},{yr:'2025',lo:51,hi:70,kind:'15y'}];
+const outlook=[{yr:'2023',lo:17,hi:31},{yr:'2024',lo:19,hi:34},{yr:'2025',lo:28,hi:49}];
+const griCurve=[{y:2029,p:14},{y:2034,p:34},{y:2039,p:55},{y:2044,p:79}];
 
 /* ============================ HELPERS ============================ */
 const $=id=>document.getElementById(id);
 const fmt=d=>new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
 const daysTo=d=>Math.max(0,Math.ceil((new Date(d)-new Date())/864e5));
-let active='weighted',qTarget=new Date(model.scenarios.weighted.date);
+const cssvar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const nowYear=()=>new Date().getFullYear();
+let scen='weighted',tgt='rsa',qTarget=new Date(model.scenarios.weighted.date);
 const nTarget=new Date(NCSC_DEADLINE);
 function toggle(btn){const open=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!open));const t=$(btn.dataset.target);if(t)t.hidden=open;}
 function toggleCard(c){const next=c.getAttribute('aria-expanded')==='true'?'false':'true';const top=c.offsetTop;[...document.querySelectorAll('#view-stack .comp')].filter(k=>Math.abs(k.offsetTop-top)<2).forEach(k=>k.setAttribute('aria-expanded',next));}
 function fitDigits(){document.querySelectorAll('.counter .unit b').forEach(b=>{b.style.fontSize='';let fs=parseFloat(getComputedStyle(b).fontSize),g=0;while(b.scrollWidth>b.clientWidth+0.5&&fs>9&&g<40){fs-=1;b.style.fontSize=fs+'px';g++;}});}
+function crossover(floor){const road=collapse.builtRoadmap,log=Math.log10;const a=road[road.length-2],b=road[road.length-1];const m=(log(b.y)-log(a.y))/(b.x-a.x);return b.x+(log(floor)-log(b.y))/m;}
+const linkIcon='<svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>';
 
-/* ============================ APP NAV ============================ */
+/* ============================ NAV + URL STATE ============================ */
 let charted=false;
 function showView(v){
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.id==='view-'+v));
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
   if(v==='trends'&&!charted){drawCollapse();drawOutlook();charted=true;}
-  if(v==='clocks'){requestAnimationFrame(fitDigits);}
-  window.scrollTo({top:0,behavior:'auto'});
+  if(v==='clocks')requestAnimationFrame(fitDigits);
+  syncURL(v);window.scrollTo({top:0,behavior:'auto'});
 }
+function curView(){const a=document.querySelector('.view.active');return a?a.id.replace('view-',''):'clocks';}
+function syncURL(v){try{const p=new URLSearchParams();p.set('tab',v||curView());p.set('scenario',scen);p.set('target',tgt);if(document.documentElement.dataset.theme==='light')p.set('theme','light');history.replaceState(null,'','?'+p.toString());}catch(e){}}
+function readURL(){try{const p=new URLSearchParams(location.search);if(p.get('theme')==='light')document.documentElement.dataset.theme='light';const s=p.get('scenario');if(s&&model.scenarios[s])scen=s;const t=p.get('target');if(t==='ecc'||t==='rsa')tgt=t;return p.get('tab');}catch(e){return null;}}
+
+/* ============================ THEME ============================ */
+const sunI='<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const moonI='<svg class="ic" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>';
+function paintTheme(){const light=document.documentElement.dataset.theme==='light';$('themeBtn').innerHTML=light?sunI:moonI;$('themeBtn').title=light?'Switch to dark':'Switch to light';}
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==='light'?'dark':'light';paintTheme();if(charted){drawCollapse();drawOutlook();}syncURL();}
 
 /* ============================ COUNTDOWN ============================ */
 function parts(ms){ms=Math.max(0,ms);return{d:Math.floor(ms/864e5),h:Math.floor(ms%864e5/36e5),m:Math.floor(ms%36e5/6e4),s:Math.floor(ms%6e4/1e3)};}
-let lastLen=0;
+let lastLen=0,lastDay=-1;
 function tick(){
   const q=parts(qTarget-new Date()),n=parts(nTarget-new Date());
   $('q_d').textContent=q.d;$('q_h').textContent=String(q.h).padStart(2,'0');$('q_m').textContent=String(q.m).padStart(2,'0');$('q_s').textContent=String(q.s).padStart(2,'0');
   $('n_d').textContent=n.d;$('n_h').textContent=String(n.h).padStart(2,'0');$('n_m').textContent=String(n.m).padStart(2,'0');$('n_s').textContent=String(n.s).padStart(2,'0');
-  const len=Math.max(String(q.d).length,String(n.d).length);
-  if(len!==lastLen){lastLen=len;fitDigits();}
+  const len=Math.max(String(q.d).length,String(n.d).length);if(len!==lastLen){lastLen=len;fitDigits();}
+  if(q.d!==lastDay){lastDay=q.d;$('srCountdown').textContent='Estimated Q-Day '+fmt(qTarget)+', about '+q.d.toLocaleString('en-GB')+' days away. NCSC deadline '+n.d.toLocaleString('en-GB')+' days away.';}
 }
 function setBuffer(){
   const gap=Math.round((qTarget-nTarget)/864e5),b=$('buffer');
@@ -499,97 +585,162 @@ function setBuffer(){
   else{b.className='buffer neg';$('bufVal').textContent=(gap/365).toFixed(1)+' yr';$('bufNote').textContent='Q-Day BEFORE migration completes.';}
 }
 
-/* ============================ RENDER ============================ */
+/* ============================ SCENARIO + MOSCA ============================ */
+function buildScenario(){$('scenario').innerHTML=Object.entries(model.scenarios).map(([k,s])=>`<button class="sbtn" data-k="${k}" onclick="setScenario('${k}')">${s.label}</button>`).join('');}
 function setScenario(k){
-  active=k;qTarget=new Date(model.scenarios[k].date);
+  scen=k;qTarget=new Date(model.scenarios[k].date);
   document.querySelectorAll('.sbtn').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
   $('qScenarioLabel').textContent=model.scenarios[k].label;
   $('qDate').textContent=fmt(qTarget);$('scenText').textContent=model.scenarios[k].text;
-  setBuffer();tick();
+  const mz=$('mZ');if(mz&&mz.value!==k)mz.value=k;
+  setBuffer();tick();mosca();syncURL();
 }
-function buildScenario(){$('scenario').innerHTML=Object.entries(model.scenarios).map(([k,s])=>`<button class="sbtn" data-k="${k}" onclick="setScenario('${k}')">${s.label}</button>`).join('');}
-const linkIcon='<svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>';
+function moscaZ(){scen=$('mZ').value;setScenario(scen);}
+function mosca(){
+  const X=+$('mX').value,Y=+$('mY').value,Z=model.scenarios[$('mZ').value].year-nowYear();
+  $('xOut').textContent=X+'y';$('yOut').textContent=Y+'y';
+  const need=X+Y,scaleMax=Math.max(need,Z,1);
+  $('barX').style.width=(X/scaleMax*100)+'%';$('barY').style.width=(Y/scaleMax*100)+'%';
+  $('zScale').textContent='Z \u2248 '+Z+'y (to '+model.scenarios[$('mZ').value].year+')';
+  const r=$('mResult'),exposed=need>Z,over=need-Z;
+  r.className='mresult '+(exposed?'exposed':'ok');
+  $('mVerdict').textContent=exposed?('Exposed \u2014 X + Y > Z by ~'+over+' year'+(over===1?'':'s')):'On track \u2014 X + Y \u2264 Z';
+  $('mDetail').textContent=exposed
+    ?('You need ~'+need+' years (X '+X+' + Y '+Y+') but only ~'+Z+' remain before this scenario\u2019s Q-Day. Data with this shelf-life should be migrated now \u2014 harvest-now-decrypt-later already applies.')
+    :('You need ~'+need+' years (X '+X+' + Y '+Y+') and ~'+Z+' remain \u2014 a margin of ~'+(Z-need)+' year'+((Z-need)===1?'':'s')+'. Keep the plan moving; margins shrink as estimates accelerate.');
+}
+
+/* ============================ RENDER LISTS ============================ */
 function buildStack(){
-  $('stack').innerHTML=model.components.map((c,i)=>`<div class="comp" role="button" tabindex="0" aria-expanded="false" onclick="toggleCard(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCard(this)}"><div class="ctop"><b>${c.name}</b><span class="pct">${c.pct}%</span></div><div class="met">${c.metric}</div><div class="track"><i style="width:${c.pct}%"></i></div><div class="more-btn">Tap for how it works, plain terms &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="comp-more"><div class="lbl">Plain terms</div><div class="novice">${c.novice}</div><div class="lbl two">How it works</div><div class="detail">${c.detail}</div><a class="srclink" href="${c.href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${c.srcLabel} ↗</a></div></div>`).join('');
-  const pcts=model.components.map(c=>c.pct), sum=pcts.reduce((a,b)=>a+b,0), score=Math.round(sum/pcts.length);
+  $('stack').innerHTML=model.components.map(c=>`<div class="comp" role="button" tabindex="0" aria-expanded="false" onclick="toggleCard(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCard(this)}"><div class="ctop"><b>${c.name}</b><span class="pct">${c.pct}%</span></div><div class="met">${c.metric}</div><div class="track"><i style="width:${c.pct}%"></i></div><div class="more-btn">Tap for how it works, plain terms &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="comp-more"><div class="lbl">Plain terms</div><div class="novice">${c.novice}</div><div class="lbl two">How it works <span class="badge ${c.conf}">${c.conf}</span></div><div class="detail">${c.detail}</div><a class="srclink" href="${c.href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${c.srcLabel} ↗</a></div></div>`).join('');
+  const pcts=model.components.map(c=>c.pct),sum=pcts.reduce((a,b)=>a+b,0),score=Math.round(sum/pcts.length);
   $('score').textContent=score+'%';$('ring').style.setProperty('--p',score);
   $('scoreCalc').innerHTML='The simple, unweighted mean of the six readiness values below \u2014 ('+pcts.join(' + ')+') \u00f7 '+pcts.length+' \u2248 '+score+'%. It is a rough orientation aid, not a measurement: a low score on any single long-pole (logical qubits, physical scale, depth) gates the whole attack, so the true picture is closer to the weakest links than to the average.';
 }
 function buildNodes(){$('nodes').innerHTML=model.ncsc.map((n,i)=>`<div class="node"><div class="yr">${n.year}</div><div class="ttl">${n.title}</div><div class="days" data-i="${i}">${daysTo(n.date).toLocaleString('en-GB')} days left</div><div class="act">${n.info}</div><div class="novice">${n.novice}</div><a class="srclink" href="${n.href}" target="_blank" rel="noopener">${linkIcon}${n.srcLabel} ↗</a></div>`).join('');}
+function buildRegs(){$('regs').innerHTML=model.regulations.map(r=>`<div class="regcard"><div class="rtop"><span class="flag">${r.region}</span><span class="rbody">${r.body}</span></div>${r.milestones.map(m=>`<div class="milestone"><b>${m[0]}</b><span>${m[1]}</span></div>`).join('')}${r.href?`<a class="srclink" href="${r.href}" target="_blank" rel="noopener">${linkIcon}${r.srcLabel} ↗</a>`:`<div class="rsrc">${r.srcLabel}</div>`}</div>`).join('');}
+function buildChangelog(){$('changelog').innerHTML=model.changelog.map(c=>`<div class="logitem"><time>${c.d}</time><span>${c.t}</span></div>`).join('');}
 
 /* ============================ SVG CHARTS ============================ */
 const NS='http://www.w3.org/2000/svg';
 function el(tag,attrs,txt){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
+function showTip(svg,e,html){const tip=$('tip'),box=svg.closest('.chart').getBoundingClientRect();tip.innerHTML=html;tip.classList.add('show');let x=e.clientX-box.left+12,y=e.clientY-box.top+12;if(x>box.width-160)x=box.width-160;tip.style.left=Math.max(6,x)+'px';tip.style.top=Math.max(6,y)+'px';}
+function hideTip(){$('tip').classList.remove('show');}
+function addPt(svg,cx,cy,r,color,tip){const c=el('circle',{cx,cy,r,fill:cssvar('--bg'),stroke:color,'stroke-width':2,class:'pt',style:'cursor:pointer;pointer-events:all'});c.addEventListener('pointerenter',e=>showTip(svg,e,tip));c.addEventListener('pointermove',e=>showTip(svg,e,tip));c.addEventListener('pointerleave',hideTip);c.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});svg.appendChild(c);}
+
 function drawCollapse(){
-  const svg=$('chartCollapse'),W=540,H=320,L=44,R=22,T=20,B=44,yBot=0,yTop=9,log=Math.log10;
-  const req=collapse.required, rep=collapse.builtReported, road=collapse.builtRoadmap, floor=collapse.reqFloor;
-  // crossover: where the roadmap (last two points) reaches the required floor
-  const a=road[road.length-2], b=road[road.length-1];
-  const m=(log(b.y)-log(a.y))/(b.x-a.x);
-  const xstar=b.x+(log(floor)-log(b.y))/m, ystar=floor;
-  const x0=2012, x1=Math.max(2042,Math.ceil(xstar)+3);
-  const px=x=>L+(x-x0)/(x1-x0)*(W-L-R), py=ly=>T+(yTop-ly)/(yTop-yBot)*(H-T-B);
-  // scenario band
-  const bnd=collapse.scenarioBand;
-  svg.appendChild(el('rect',{x:px(bnd[0]),y:T,width:px(bnd[1])-px(bnd[0]),height:H-T-B,fill:'rgba(255,158,61,.08)',stroke:'rgba(255,158,61,.25)','stroke-width':1}));
-  svg.appendChild(el('text',{x:(px(bnd[0])+px(bnd[1]))/2,y:T-7,'text-anchor':'middle',fill:'#ffd08a','font-family':'IBM Plex Mono,monospace','font-size':9.5,'font-weight':600},'scenario window'));
+  const svg=$('chartCollapse');svg.innerHTML='';
+  const W=540,H=330,L=46,R=24,T=22,B=46,yBot=0,yTop=9,log=Math.log10;
+  const floor=model.targets[tgt].floor;
+  const req=collapse.required.slice();if(tgt==='ecc')req.push({x:2026,y:5e5,ev:'Google 2026: ECC-256 ~500k physical (~1,200 logical)'});
+  const rep=collapse.builtReported,road=collapse.builtRoadmap,vend=collapse.vendors;
+  const xstar=crossover(floor),ystar=floor,yr=Math.round(xstar);
+  const x0=2012,x1=Math.max(2044,Math.ceil(xstar)+3);
+  const px=x=>L+(x-x0)/(x1-x0)*(W-L-R),py=ly=>T+(yTop-ly)/(yTop-yBot)*(H-T-B);
+  const cT=cssvar('--threat'),cT2=cssvar('--threat-2'),cD=cssvar('--defence'),cD2=cssvar('--defence-2'),cInk=cssvar('--ink'),cF=cssvar('--faint');
+  const optY=Math.min(...vend.map(v=>v.y)),conY=Math.max(...vend.map(v=>v.y));
+  // scenario window band
+  svg.appendChild(el('rect',{x:px(2036),y:T,width:px(2041)-px(2036),height:H-T-B,fill:'rgba(255,158,61,.08)',stroke:'rgba(255,158,61,.25)','stroke-width':1}));
+  svg.appendChild(el('text',{x:(px(2036)+px(2041))/2,y:T-7,'text-anchor':'middle',fill:cT2,'font-family':'monospace','font-size':9.5,'font-weight':600},'scenario window'));
   // gridlines
   const lab={0:'1',3:'1K',6:'1M',9:'1B'};
-  for(let e=yBot;e<=yTop;e++){const y=py(e);svg.appendChild(el('line',{x1:L,y1:y,x2:W-R,y2:y,stroke:'rgba(180,205,202,.07)','stroke-width':1}));if(lab[e]!=null)svg.appendChild(el('text',{x:L-7,y:y+3.5,'text-anchor':'end',fill:'#6f8082','font-family':'IBM Plex Mono,monospace','font-size':10},lab[e]));}
-  [2015,2020,2025,2030,2035,2040].filter(t=>t<=x1).forEach(t=>svg.appendChild(el('text',{x:px(t),y:H-B+19,'text-anchor':'middle',fill:'#6f8082','font-family':'IBM Plex Mono,monospace','font-size':10},t)));
-  function poly(points,color,dashed){let d='';points.forEach((p,i)=>{d+=(i?'L':'M')+px(p.x)+' '+py(log(p.y))+' ';});const at={d,fill:'none',stroke:color,'stroke-width':2.3,'stroke-linejoin':'round','stroke-linecap':'round'};if(dashed)at['stroke-dasharray']='5 4';const path=el('path',at);svg.appendChild(path);return path;}
-  // required: solid descent, then dashed floor to right
-  const reqLine=poly(req,'#ff9e3d',false);
-  svg.appendChild(el('line',{x1:px(2025),y1:py(log(floor)),x2:px(x1),y2:py(log(floor)),stroke:'#ff9e3d','stroke-width':2,'stroke-dasharray':'5 4',opacity:.8}));
-  svg.appendChild(el('text',{x:px(x1)-2,y:py(log(floor))-6,'text-anchor':'end',fill:'#ffd08a','font-family':'IBM Plex Mono,monospace','font-size':9.5},'~1M floor'));
-  // built: solid reported, dashed roadmap, dashed to crossover
-  const bltLine=poly(rep,'#46d4c4',false);
-  const ix=px(xstar),iy=py(log(ystar));
-  poly(road.concat([{x:xstar,y:ystar}]),'#46d4c4',true);
+  for(let ex=yBot;ex<=yTop;ex++){const y=py(ex);svg.appendChild(el('line',{x1:L,y1:y,x2:W-R,y2:y,stroke:'rgba(160,200,195,.09)','stroke-width':1}));if(lab[ex]!=null)svg.appendChild(el('text',{x:L-7,y:y+3.5,'text-anchor':'end',fill:cF,'font-family':'monospace','font-size':10},lab[ex]));}
+  [2015,2020,2025,2030,2035,2040].filter(t=>t<=x1).forEach(t=>svg.appendChild(el('text',{x:px(t),y:H-B+19,'text-anchor':'middle',fill:cF,'font-family':'monospace','font-size':10},t)));
+  function poly(pts,color,dashed){let d='';pts.forEach((p,i)=>{d+=(i?'L':'M')+px(p.x)+' '+py(log(p.y))+' ';});const at={d,fill:'none',stroke:color,'stroke-width':2.3,'stroke-linejoin':'round','stroke-linecap':'round'};if(dashed)at['stroke-dasharray']='5 4';svg.appendChild(el('path',at));}
+  // required descent + floor
+  poly(req,cT,false);
+  svg.appendChild(el('line',{x1:px(req[req.length-1].x),y1:py(log(floor)),x2:px(x1),y2:py(log(floor)),stroke:cT,'stroke-width':2,'stroke-dasharray':'5 4',opacity:.8}));
+  svg.appendChild(el('text',{x:px(x1)-2,y:py(log(floor))-6,'text-anchor':'end',fill:cT2,'font-family':'monospace','font-size':9.5},floor>=1e6?'~1M floor':'~500k floor'));
+  // built
+  poly(rep,cD,false);
+  poly(road.concat([{x:xstar,y:ystar}]),cD,true);
+  // vendor range bracket + dots
+  svg.appendChild(el('line',{x1:px(optY),y1:py(log(floor)),x2:px(conY),y2:py(log(floor)),stroke:cD,'stroke-width':1.4,'stroke-dasharray':'2 3',opacity:.7}));
+  vend.forEach(v=>addPt(svg,px(v.y),py(log(floor)),3.2,cD2,'<b>'+v.name+'</b><br>'+v.ev));
   // dropline + crossover marker
+  const ix=px(xstar),iy=py(log(ystar));
   svg.appendChild(el('line',{x1:ix,y1:iy,x2:ix,y2:H-B,stroke:'rgba(238,244,242,.35)','stroke-width':1,'stroke-dasharray':'3 3'}));
-  req.forEach(p=>svg.appendChild(el('circle',{cx:px(p.x),cy:py(log(p.y)),r:3.2,fill:'#0b1114',stroke:'#ff9e3d','stroke-width':2})));
-  rep.forEach(p=>svg.appendChild(el('circle',{cx:px(p.x),cy:py(log(p.y)),r:2.8,fill:'#0b1114',stroke:'#46d4c4','stroke-width':2})));
-  road.slice(1).forEach(p=>svg.appendChild(el('circle',{cx:px(p.x),cy:py(log(p.y)),r:2.8,fill:'#0b1114',stroke:'#46d4c4','stroke-width':1.6})));
-  svg.appendChild(el('circle',{cx:ix,cy:iy,r:7,fill:'none',stroke:'#eef4f2','stroke-width':1.5}));
-  svg.appendChild(el('circle',{cx:ix,cy:iy,r:2.6,fill:'#eef4f2'}));
-  const yr=Math.round(xstar);
-  svg.appendChild(el('text',{x:ix,y:iy-11,'text-anchor':'middle',fill:'#eef4f2','font-family':'IBM Plex Mono,monospace','font-size':10.5,'font-weight':700},'Q-Day ≈'+yr));
-  // series labels
-  svg.appendChild(el('text',{x:px(req[0].x)+3,y:py(log(req[0].y))-8,'text-anchor':'start',fill:'#ffd08a','font-family':'IBM Plex Mono,monospace','font-size':10,'font-weight':600},'required'));
-  svg.appendChild(el('text',{x:px(rep[0].x)+3,y:py(log(rep[0].y))+14,'text-anchor':'start',fill:'#a6efe6','font-family':'IBM Plex Mono,monospace','font-size':10,'font-weight':600},'built'));
-  svg.appendChild(el('text',{x:px(road[2].x),y:py(log(road[2].y))-8,'text-anchor':'middle',fill:'#a6efe6','font-family':'IBM Plex Mono,monospace','font-size':9},'Blue Jay'));
-  svg.appendChild(el('text',{x:px(road[1].x),y:py(log(road[1].y))+14,'text-anchor':'middle',fill:'#a6efe6','font-family':'IBM Plex Mono,monospace','font-size':9},'Starling'));
-  const ys=$('xoverYear'); if(ys) ys.textContent='~'+yr;
-  if(!matchMedia('(prefers-reduced-motion:reduce)').matches){[reqLine,bltLine].forEach(line=>{const len=line.getTotalLength();line.setAttribute('stroke-dasharray',len);line.setAttribute('stroke-dashoffset',len);line.animate([{strokeDashoffset:len},{strokeDashoffset:0}],{duration:1000,easing:'cubic-bezier(.2,.7,.2,1)',fill:'forwards'});});}
+  svg.appendChild(el('circle',{cx:ix,cy:iy,r:7,fill:'none',stroke:cInk,'stroke-width':1.5}));
+  svg.appendChild(el('circle',{cx:ix,cy:iy,r:2.6,fill:cInk}));
+  svg.appendChild(el('text',{x:ix,y:iy-11,'text-anchor':'middle',fill:cInk,'font-family':'monospace','font-size':10.5,'font-weight':700},'Q-Day \u2248'+yr));
+  // data points with tips
+  req.forEach(p=>addPt(svg,px(p.x),py(log(p.y)),3.2,cT,'<b>'+p.x+'</b><br>'+p.ev));
+  rep.forEach(p=>addPt(svg,px(p.x),py(log(p.y)),2.9,cD,'<b>'+p.x+'</b><br>'+p.ev));
+  road.slice(1).forEach(p=>addPt(svg,px(p.x),py(log(p.y)),2.9,cD,'<b>'+p.x+'</b><br>'+p.ev));
+  // labels
+  svg.appendChild(el('text',{x:px(req[0].x)+3,y:py(log(req[0].y))-8,fill:cT2,'font-family':'monospace','font-size':10,'font-weight':600},'required'));
+  svg.appendChild(el('text',{x:px(rep[0].x)+3,y:py(log(rep[0].y))+14,fill:cD2,'font-family':'monospace','font-size':10,'font-weight':600},'built'));
+  applyTargetText(yr);
 }
 function drawOutlook(){
-  const svg=$('chartOutlook'),W=520,H=320,L=42,R=18,T=18,B=52,py=v=>T+(100-v)/100*(H-T-B);
-  for(let v=0;v<=100;v+=25){const y=py(v);svg.appendChild(el('line',{x1:L,y1:y,x2:W-R,y2:y,stroke:'rgba(180,205,202,.10)','stroke-width':1}));svg.appendChild(el('text',{x:L-8,y:y+3.5,'text-anchor':'end',fill:'#6f8082','font-family':'IBM Plex Mono,monospace','font-size':10},v+'%'));}
-  const n=outlook.length,slot=(W-L-R)/n,bw=slot*0.42;
-  outlook.forEach((o,i)=>{const cx=L+slot*i+slot/2,yt=py(o.hi),yb=py(o.lo),h=yb-yt,fill=o.kind==='15y'?'#ffd08a':'#ff9e3d';const rect=el('rect',{x:cx-bw/2,y:yt,width:bw,height:h,rx:5,fill,opacity:o.kind==='15y'?.92:1});svg.appendChild(rect);svg.appendChild(el('text',{x:cx,y:yt-7,'text-anchor':'middle',fill:'#eef4f2','font-family':'IBM Plex Mono,monospace','font-size':11,'font-weight':600},o.lo+'–'+o.hi+'%'));svg.appendChild(el('text',{x:cx,y:H-B+20,'text-anchor':'middle',fill:'#9fb0b2','font-family':'IBM Plex Mono,monospace','font-size':11,'font-weight':600},o.yr));svg.appendChild(el('text',{x:cx,y:H-B+34,'text-anchor':'middle',fill:'#6f8082','font-family':'IBM Plex Mono,monospace','font-size':9.5},o.kind==='15y'?'15-yr':'10-yr'));if(!matchMedia('(prefers-reduced-motion:reduce)').matches){rect.animate([{height:0,y:yb},{height:h,y:yt}],{duration:700,delay:i*110,easing:'cubic-bezier(.2,.7,.2,1)',fill:'backwards'});}});
+  const svg=$('chartOutlook');svg.innerHTML='';
+  const W=540,H=330,L=44,R=20,T=20,B=54,x0=2022,x1=2045;
+  const px=x=>L+(x-x0)/(x1-x0)*(W-L-R),py=v=>T+(100-v)/100*(H-T-B);
+  const cT=cssvar('--threat'),cT2=cssvar('--threat-2'),cD=cssvar('--defence'),cD2=cssvar('--defence-2'),cInk=cssvar('--ink'),cF=cssvar('--faint');
+  for(let v=0;v<=100;v+=25){const y=py(v);svg.appendChild(el('line',{x1:L,y1:y,x2:W-R,y2:y,stroke:'rgba(160,200,195,.09)','stroke-width':1}));svg.appendChild(el('text',{x:L-8,y:y+3.5,'text-anchor':'end',fill:cF,'font-family':'monospace','font-size':10},v+'%'));}
+  [2025,2030,2035,2040,2044].forEach(t=>svg.appendChild(el('text',{x:px(t),y:H-B+19,'text-anchor':'middle',fill:cF,'font-family':'monospace','font-size':10},t)));
+  // 10-yr range bars
+  outlook.forEach(o=>{const cx=px(+o.yr),yt=py(o.hi),h=py(o.lo)-py(o.hi);svg.appendChild(el('rect',{x:cx-9,y:yt,width:18,height:h,rx:4,fill:cT}));svg.appendChild(el('text',{x:cx,y:yt-6,'text-anchor':'middle',fill:cInk,'font-family':'monospace','font-size':10,'font-weight':600},o.lo+'\u2013'+o.hi));svg.appendChild(el('text',{x:cx,y:H-B+33,'text-anchor':'middle',fill:cF,'font-family':'monospace','font-size':9},o.yr));});
+  // cumulative curve
+  let d='';griCurve.forEach((g,i)=>{d+=(i?'L':'M')+px(g.y)+' '+py(g.p)+' ';});
+  svg.appendChild(el('path',{d,fill:'none',stroke:cD,'stroke-width':2.3,'stroke-linejoin':'round'}));
+  svg.appendChild(el('line',{x1:L,y1:py(50),x2:W-R,y2:py(50),stroke:cD2,'stroke-width':1,'stroke-dasharray':'2 4',opacity:.5}));
+  griCurve.forEach(g=>{addPt(svg,px(g.y),py(g.p),3.2,cD2,'<b>'+g.p+'% by '+g.y+'</b><br>GRI 2024 survey: cumulative P(CRQC)');svg.appendChild(el('text',{x:px(g.y),y:py(g.p)-9,'text-anchor':'middle',fill:cD2,'font-family':'monospace','font-size':9},g.p+'%'));});
 }
+
+/* ============================ TARGET TOGGLE ============================ */
+function applyTargetText(yr){
+  document.querySelectorAll('.seg button').forEach(b=>b.classList.remove('on'));
+  ($('seg'+(tgt==='ecc'?'Ecc':'Rsa'))||{}).classList&&$('seg'+(tgt==='ecc'?'Ecc':'Rsa')).classList.add('on');
+  $('tgtName').textContent=model.targets[tgt].label;
+  const y=yr||Math.round(crossover(model.targets[tgt].floor));
+  $('tkText').innerHTML=tgt==='ecc'
+    ?('ECC-256 needs ~half the qubits of RSA-2048 (~500k physical, Google 2026), so built meets required around <b>~'+y+'</b> \u2014 about a year before RSA. ECC underpins most TLS, SSH and signatures, making it the nearer practical threat. Vendors project reaching this scale as early as 2028\u20132030.')
+    :('Holding the requirement at Gidney\u2019s ~1M floor and scaling IBM\u2019s roadmap (Starling ~10k in 2029, Blue Jay ~100k in 2033), the lines cross around <b>~'+y+'</b> \u2014 inside the 2036\u20132041 expert window. Vendors (PsiQuantum, IonQ, Google) project reaching ~1M as early as 2028\u20132030, so the range spans ~2028\u20132037.');
+}
+function setTarget(t){tgt=t;if(charted)drawCollapse();else applyTargetText();syncURL();}
+
+/* ============================ SHARE + LINK ============================ */
+function shareCard(){
+  try{
+    const s=model.scenarios[scen],yr=Math.round(crossover(model.targets[tgt].floor)),gap=((qTarget-nTarget)/864e5/365).toFixed(1);
+    const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='1200' height='630' fill='#080c0e'/><rect x='0' y='0' width='1200' height='8' fill='#ff9e3d'/><text x='64' y='120' fill='#8fa1a3' font-family='monospace' font-size='26'>Q-DAY OBSERVATORY</text><text x='64' y='215' fill='#eef4f2' font-family='monospace' font-size='58' font-weight='700'>Est. Q-Day: ${fmt(s.date)}</text><text x='64' y='275' fill='#ffd08a' font-family='monospace' font-size='30'>${s.label} scenario</text><text x='64' y='380' fill='#46d4c4' font-family='monospace' font-size='40' font-weight='700'>Headroom vs 2035: ${gap>=0?'+':''}${gap} yr</text><text x='64' y='445' fill='#a6efe6' font-family='monospace' font-size='28'>Chart crossover (${model.targets[tgt].label}): ~${yr}</text><text x='64' y='555' fill='#5d6e70' font-family='monospace' font-size='22'>Built from verified public sources - estimates, not predictions - views are the author's own</text></svg>`;
+    const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'})),img=new Image();
+    img.onload=()=>{try{const cv=document.createElement('canvas');cv.width=1200;cv.height=630;cv.getContext('2d').drawImage(img,0,0);cv.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='qday-snapshot.png';a.click();URL.revokeObjectURL(url);});}catch(e){}};
+    img.src=url;
+  }catch(e){}
+}
+function copyLink(){syncURL();try{navigator.clipboard.writeText(location.href).then(()=>{const l=$('copyLbl');l.textContent='Copied!';setTimeout(()=>l.textContent='Copy link',1600);},()=>{});}catch(e){}}
+
+/* ============================ WELCOME ============================ */
+function showWelcome(){$('welcome').classList.add('open');}
+function closeWelcome(){$('welcome').classList.remove('open');try{localStorage.setItem('qday_seen','1');}catch(e){}}
 
 /* ============================ DRAWER ============================ */
 const panes={
-  menu:()=>`<h2>Reference & sources</h2><p>Background, evidence and links — kept off the main screens to stay compact.</p><div class="menu"><a href="#" onclick="open_('estimate');return false;">Estimate basis ↗</a><a href="#" onclick="open_('evidence');return false;">Verified evidence ↗</a><a href="#" onclick="open_('hndl');return false;">Why this matters now ↗</a><a href="#" onclick="open_('sources');return false;">All sources ↗</a></div><p style="margin-top:18px;color:#5d6e70">Planning anchors, not forecasts. No policy position is expressed or implied. UK English · last checked 30 Jun 2026.</p>`,
-  estimate:()=>`<h2>How the Q-Day clock is set</h2><p class="warn">A planning estimate for a cryptographically relevant quantum computer (CRQC) able to threaten RSA/ECC at scale — not a claim that a named machine breaks encryption on that exact date.</p><table><tr><th>Scenario</th><th>Date</th><th>Basis</th></tr>${Object.values(model.scenarios).map(s=>`<tr><td><b>${s.label}</b></td><td>${fmt(s.date)}</td><td>${s.text}</td></tr>`).join('')}</table><h3>The chart crossover</h3><p>The Trends chart holds the requirement at Gidney's ~1M-qubit floor and scales IBM's published roadmap (Starling ~10k physical qubits, 2029; Blue Jay ~100k, 2033). Extended to the floor, the lines cross around 2037 — inside the GRI 2036–2041 window, so the chart and the scenarios now agree. Both are planning aids, not forecasts.</p>`,
-  evidence:()=>`<h2>Verified evidence</h2><p>Each datapoint links to its primary or peer-reviewed source.</p><table><tr><th>Area</th><th>Datapoint &amp; source</th><th>Reading</th></tr><tr><td><b>Error correction</b></td><td>Willow: below-threshold; 101-qubit d=7; 0.143% ± 0.003%/cycle; Λ = 2.14; 2.4× break-even.<br><a href="https://www.nature.com/articles/s41586-024-08449-y" target="_blank" rel="noopener">Nature 2024 ↗</a></td><td>Improves with code distance — not yet CRQC scale.</td></tr><tr><td><b>Gate fidelity</b></td><td>Helios: 99.9975% single, 99.921% two-qubit; Nature + Sandia (2026).<br><a href="https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html" target="_blank" rel="noopener">Nature / Sandia ↗</a></td><td>Best-in-class gates — one layer of the stack.</td></tr><tr><td><b>Logical qubits</b></td><td>Quantinuum: 48 (Nov 2025), 94 (Mar 2026) on 98 physical.<br><a href="https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world" target="_blank" rel="noopener">Quantinuum ↗</a></td><td>Progress; still far below the thousands cited for RSA-2048.</td></tr><tr><td><b>Resource estimate</b></td><td>Gidney 2025: RSA-2048 in &lt; 1 week with &lt; 1M noisy qubits (was 20M in 2019).<br><a href="https://arxiv.org/abs/2505.15917" target="_blank" rel="noopener">Gidney 2025 ↗</a></td><td>Bar dropping fast — ~3 orders above today's hardware.</td></tr><tr><td><b>Roadmap</b></td><td>IBM Starling ~10k physical (2029, 200 logical); Blue Jay ~100k (2033, 2,000 logical).<br><a href="https://www.ibm.com/quantum/blog/large-scale-ftqc" target="_blank" rel="noopener">IBM roadmap ↗</a></td><td>Scaling to the ~1M requirement around the mid-2030s.</td></tr><tr><td><b>PQC deadline</b></td><td>NCSC: plan 2028, priority 2031, complete 2035.<br><a href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener">NCSC guidance ↗</a></td><td>Operational deadline — earlier than the capability estimate.</td></tr><tr><td><b>Standards</b></td><td>NIST FIPS 203/204/205 (Aug 2024); HQC backup (Mar 2025).<br><a href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener">NIST PQC ↗</a></td><td>The algorithms to migrate to already exist.</td></tr></table><p style="margin-top:14px"><a href="#" onclick="open_('sources');return false;">See the full source list ↗</a></p>`,
-  hndl:()=>`<h2>Why the deadline is really now</h2><p class="warn">Harvest now, decrypt later (HNDL): an adversary can record encrypted traffic or exfiltrate ciphertext today and wait. Once a CRQC exists, anything protected by RSA/ECC that was captured earlier can be decrypted retroactively.</p><h3>In practice</h3><p>For data with a long confidentiality lifetime — health records, legal and financial archives, state secrets, long-lived credentials and roots of trust — the meaningful deadline is when the data is first transmitted or stored. If it must stay secret for ten years, it needs quantum-safe protection now.</p><h3>ECC vs RSA</h3><p>The GRI survey is framed around RSA-2048 in 24 hours. Breaking ECC-256 — which underpins most TLS, SSH and modern signatures — generally needs fewer quantum resources, so for many estates ECC is the nearer threat.</p>`,
-  sources:()=>`<h2>Sources</h2><p>All free to access; primary or peer-reviewed where possible.</p>${model.sources.map(s=>`<p><a href="${s.u}" target="_blank" rel="noopener">${s.t} ↗</a><br><span style="color:#6f8082">${s.d}</span></p>`).join('')}`
+  menu:()=>`<h2>Reference & sources</h2><p>Background, evidence, methodology and links — kept off the main screens to stay compact.</p><div class="menu"><a href="#" onclick="open_('methodology');return false;">Methodology & assumptions ↗</a><a href="#" onclick="open_('estimate');return false;">Estimate basis ↗</a><a href="#" onclick="open_('evidence');return false;">Verified evidence ↗</a><a href="#" onclick="open_('hndl');return false;">Why this matters now ↗</a><a href="#" onclick="open_('sources');return false;">All sources ↗</a><a href="#" onclick="close_();window.print();return false;">Save as PDF / print ↗</a><a href="#" onclick="close_();showWelcome();return false;">Take the tour ↗</a></div><p style="margin-top:18px;color:var(--faint)">Planning anchors, not forecasts. No trackers or analytics. No policy position is expressed or implied. UK English · last checked 30 Jun 2026 · views are the author's own.</p>`,
+  methodology:()=>`<h2>Methodology & assumptions</h2><h3>The clocks</h3><p>Q-Day scenarios are anchored to the GRI 2025 expert window (10–15 years): Aggressive 2036, Source-weighted 2038, Cautious 2041. The defence clock is the NCSC 2035 deadline. Headroom = Q-Day − 2035.</p><h3>The crossover chart</h3><p>Required qubits are held at the best published floor — Gidney 2025 (~1M for RSA-2048) and Google 2026 (~500k for ECC-256); no source projects lower, so holding flat is conservative. Built follows IBM's published roadmap (Starling ~10k / 2029; Blue Jay ~100k / 2033), extrapolated on its own 2029→2033 slope to the floor. Crossover ≈ 2037 (RSA) / ~2036 (ECC). The vendor range marks when PsiQuantum, Google, IonQ and IBM project reaching ~1M physical qubits (2028–2037); these are aspirational and historically slip.</p><h3>Readiness score</h3><p>Unweighted mean of six component percentages — an orientation aid, not a measurement.</p><h3>Mosca test</h3><p>X (data shelf-life) + Y (migration time) vs Z (years to the selected scenario's Q-Day). If X+Y &gt; Z you are already exposed. Illustrative.</p><h3>Limits</h3><p>Raw qubit counts are not a running attack; roadmaps slip; expert surveys carry wide uncertainty. Everything here is a planning aid, not a forecast, and the views are the author's own.</p>`,
+  estimate:()=>`<h2>How the Q-Day clock is set</h2><p class="warn">A planning estimate for a CRQC able to threaten RSA/ECC at scale — not a claim that a named machine breaks encryption on that exact date.</p><table><tr><th>Scenario</th><th>Date</th><th>Basis</th></tr>${Object.values(model.scenarios).map(s=>`<tr><td><b>${s.label}</b></td><td>${fmt(s.date)}</td><td>${s.text}</td></tr>`).join('')}</table>`,
+  evidence:()=>`<h2>Verified evidence</h2><p>Each datapoint links to its primary or peer-reviewed source.</p><table><tr><th>Area</th><th>Datapoint & source</th><th>Reading</th></tr><tr><td><b>Error correction</b></td><td>Willow: below-threshold; d=7; 0.143%/cycle; \u039b=2.14; 2.4\u00d7 break-even.<br><a href="https://www.nature.com/articles/s41586-024-08449-y" target="_blank" rel="noopener">Nature 2024 \u2197</a></td><td>Improves with code distance — not yet CRQC scale.</td></tr><tr><td><b>Gate fidelity</b></td><td>Helios: 99.9975% single, 99.921% two-qubit; Nature + Sandia.<br><a href="https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html" target="_blank" rel="noopener">Nature / Sandia \u2197</a></td><td>Best-in-class gates — one layer of the stack.</td></tr><tr><td><b>Logical qubits</b></td><td>Quantinuum: 48 (Nov 2025), 94 (Mar 2026).<br><a href="https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world" target="_blank" rel="noopener">Quantinuum \u2197</a></td><td>Far below the thousands cited for RSA-2048.</td></tr><tr><td><b>RSA estimate</b></td><td>Gidney 2025: <1M physical (was 20M in 2019).<br><a href="https://arxiv.org/abs/2505.15917" target="_blank" rel="noopener">Gidney 2025 \u2197</a></td><td>~3 orders above today's hardware.</td></tr><tr><td><b>ECC estimate</b></td><td>Google 2026: ECC-256 ~500k physical (~half of RSA).<br><a href="https://physicsworld.com/a/new-findings-shorten-the-road-to-cryptographically-relevant-quantum-computers/" target="_blank" rel="noopener">Physics World \u2197</a></td><td>The nearer target — underpins most TLS/SSH.</td></tr><tr><td><b>Roadmap</b></td><td>IBM Starling ~10k (2029); Blue Jay ~100k (2033).<br><a href="https://www.ibm.com/quantum/blog/large-scale-ftqc" target="_blank" rel="noopener">IBM roadmap \u2197</a></td><td>Scaling toward the ~1M requirement mid-2030s.</td></tr><tr><td><b>Standards</b></td><td>NIST FIPS 203/204/205 (Aug 2024); HQC (Mar 2025).<br><a href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener">NIST PQC \u2197</a></td><td>The algorithms to migrate to already exist.</td></tr></table>`,
+  hndl:()=>`<h2>Why the deadline is really now</h2><p class="warn">Harvest now, decrypt later (HNDL): an adversary records encrypted traffic today and waits. Once a CRQC exists, anything protected by RSA/ECC captured earlier can be decrypted retroactively.</p><h3>In practice</h3><p>For data with a long confidentiality lifetime — health records, legal and financial archives, state secrets, long-lived credentials and roots of trust — the meaningful deadline is when the data is first transmitted or stored. If it must stay secret for ten years, it needs quantum-safe protection now.</p><h3>ECC vs RSA</h3><p>ECC-256 underpins most TLS, SSH and modern signatures and needs fewer quantum resources than RSA-2048, so for many estates ECC is the nearer threat.</p>`,
+  sources:()=>`<h2>Sources</h2><p>All free to access; primary or peer-reviewed where possible.</p>${model.sources.map(s=>`<p><a href="${s.u}" target="_blank" rel="noopener">${s.t} \u2197</a><br><span style="color:var(--faint)">${s.d}</span></p>`).join('')}`
 };
 function open_(k){$('paneBody').innerHTML=(panes[k]||panes.sources)();$('drawer').classList.add('open');document.body.style.overflow='hidden';}
 function close_(){$('drawer').classList.remove('open');document.body.style.overflow='';}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')close_();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){close_();}});
+document.addEventListener('pointerdown',e=>{if(!(e.target.classList&&e.target.classList.contains('pt')))hideTip();});
+addEventListener('scroll',hideTip,true);
 
 /* ============================ INIT ============================ */
-buildScenario();buildStack();buildNodes();
-setScenario('weighted');
+const _tab=readURL();paintTheme();
+buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();
+applyTargetText();setScenario(scen);mosca();
 tick();setInterval(tick,1000);
-requestAnimationFrame(fitDigits);
-addEventListener('resize',fitDigits);
-addEventListener('orientationchange',()=>setTimeout(fitDigits,80));
-setInterval(()=>document.querySelectorAll('.node .days').forEach(el=>{const i=+el.dataset.i;el.textContent=daysTo(model.ncsc[i].date).toLocaleString('en-GB')+' days left';}),6e4);
+requestAnimationFrame(fitDigits);addEventListener('resize',fitDigits);addEventListener('orientationchange',()=>setTimeout(fitDigits,80));
+setInterval(()=>document.querySelectorAll('.node .days').forEach(x=>{const i=+x.dataset.i;x.textContent=daysTo(model.ncsc[i].date).toLocaleString('en-GB')+' days left';}),6e4);
+if(_tab&&document.getElementById('view-'+_tab))showView(_tab);
+let _seen=false;try{_seen=localStorage.getItem('qday_seen')==='1';}catch(e){}
+if(!_tab&&!_seen)showWelcome();
 </script>
 </body>
 </html>
