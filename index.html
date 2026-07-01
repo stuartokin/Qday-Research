@@ -266,6 +266,12 @@ h1 em{font-style:normal;color:var(--threat)}
 .assess .asub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:0 0 14px;line-height:1.55}
 .assess .seg{margin:0}
 .aseghead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.apicker{display:flex;flex-wrap:wrap;align-items:center;gap:9px 12px;margin:2px 0 4px}
+.picklab{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--ink);letter-spacing:.01em;width:100%}
+.picknum{display:inline-grid;place-items:center;width:19px;height:19px;flex:none;border-radius:50%;background:var(--defence);color:#0a0e10;font-size:10px;font-weight:700}
+.apick{display:flex;align-items:flex-start;gap:9px;font-family:var(--mono);font-size:11.5px;color:var(--defence-2);line-height:1.5;margin:11px 0 4px;padding:11px 13px;background:rgba(70,212,196,.08);border:1px dashed var(--line2);border-radius:11px}
+.apick .ic{width:16px;height:16px;flex:none;color:var(--defence);margin-top:1px}
+.apick[hidden]{display:none}
 .assess .seg{flex-wrap:wrap}
 .areset{font-family:var(--mono);font-size:11px;color:var(--muted);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:2px}
 .areset:hover{color:var(--alert)}
@@ -355,6 +361,31 @@ h1 em{font-style:normal;color:var(--threat)}
 .sibytes{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--muted)}
 .silbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--threat-2);margin:9px 0 3px}
 .sitext{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.55}
+/* collapsible plan sections */
+.sechead{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:22px 0 0;padding:10px 2px;background:transparent;border:0;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;transition:.14s}
+.sechead .lab{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--threat-2);font-weight:600}
+.sechead .chev{width:15px;height:15px;color:var(--muted);transition:transform .22s ease}
+.sechead[aria-expanded=false] .chev{transform:rotate(-90deg)}
+.sechead:hover .lab{color:var(--threat)}
+.sechead:active{transform:scale(.99)}
+.secbody{animation:fade .25s ease}
+.secbody[hidden]{display:none}
+/* callout close button */
+.callout{position:relative}
+.cox{position:absolute;top:7px;right:8px;width:26px;height:26px;display:grid;place-items:center;border:0;border-radius:7px;background:var(--card);color:var(--muted);font-size:18px;line-height:1;cursor:pointer;transition:.14s}
+.cox:hover{color:var(--ink);background:rgba(255,90,95,.16)}
+.callout .siname{padding-right:30px}
+/* header three-dots menu */
+.hmenu{position:fixed;top:calc(var(--bar-h) + 6px);right:clamp(12px,3vw,22px);z-index:60;min-width:206px;display:flex;flex-direction:column;gap:2px;padding:6px;background:var(--panel2);backdrop-filter:blur(18px);border:1px solid var(--line2);border-radius:14px;box-shadow:0 16px 42px rgba(0,0,0,.5);animation:fade .16s ease}
+.hmenu[hidden]{display:none}
+.hmenu button{display:flex;align-items:center;gap:11px;width:100%;font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--ink);background:transparent;border:0;border-radius:9px;padding:11px 12px;cursor:pointer;text-align:left;transition:.14s}
+.hmenu button:hover{background:var(--card);color:var(--defence)}
+.hmenu button .ic{width:16px;height:16px;color:var(--muted)}
+.hmenu button:hover .ic{color:var(--defence)}
+/* clocks: keep the two countdowns aligned even when a label wraps */
+.cl{display:flex;flex-direction:column}
+.cl .tag{min-height:2.5em}
+.cl .counter{margin-top:auto}
 
 /* ---- app polish ---------------------------------------------------- */
 .appmain{animation:appin .45s ease both}
@@ -405,8 +436,13 @@ h1 em{font-style:normal;color:var(--threat)}
   <div class="wordmark">Q-Day<span>Observatory</span></div>
   <span class="sp"></span>
   <button class="ibtn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle light or dark theme" title="Theme"></button>
-  <button class="ibtn" onclick="open_('menu')" aria-label="Reference and sources" title="Reference &amp; sources"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
+  <button class="ibtn" onclick="toggleHmenu(event)" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-label="More options" title="More"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg></button>
 </header>
+<div class="hmenu" id="hmenu" hidden role="menu" aria-label="More">
+  <button role="menuitem" onclick="hmenuAct('share')"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7"/><path d="M12 3v13M8 7l4-4 4 4"/></svg>Share snapshot</button>
+  <button role="menuitem" onclick="hmenuAct('copy')"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg><span id="copyLbl">Copy link</span></button>
+  <button role="menuitem" onclick="hmenuAct('ref')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg>Reference &amp; sources</button>
+</div>
 
 <main class="appmain">
 
@@ -464,63 +500,59 @@ h1 em{font-style:normal;color:var(--threat)}
       </div>
     </div>
 
-    <div class="actions">
-      <button class="disc" onclick="shareCard()"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7"/><path d="M12 3v13M8 7l4-4 4 4"/></svg>Share snapshot</button>
-      <button class="disc" onclick="copyLink()"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg><span id="copyLbl">Copy link</span></button>
-    </div>
-
-    <div class="controls" style="margin-top:20px">
-      <button class="disc" id="assessToggle" aria-expanded="false" data-target="assessBox" onclick="toggle(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Not sure of your X and Y? Take the 2-minute readiness check<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
-    </div>
-    <div class="disc-body" id="assessBox" hidden>
-      <div class="assess">
-        <h3>Readiness assessment</h3>
-        <p class="asub">Answer a few questions and this maps you to a 5-level maturity model, then suggests starting values for X (data shelf-life) and Y (migration time) that you can apply to the Mosca test above. Optional, nothing is stored, and it's a self-assessment prompt — not an audit.</p>
-        <div class="aseghead">
-          <div class="seg" role="group" aria-label="Assessment type">
-            <button id="segExec" class="on" onclick="setAssess('exec')">Executive · 4</button>
-            <button id="segTech" onclick="setAssess('tech')">Technical · 10</button>
-            <button id="segAuditor" onclick="setAssess('auditor')">Auditor · 7</button>
-          </div>
-          <button class="areset" id="aresetBtn" onclick="resetAssess()" hidden>Reset answers</button>
-        </div>
-        <p class="anote" id="aNote"></p>
-        <div id="assessQs"></div>
-        <div class="aresult" id="assessResult" hidden>
-          <div class="lvlbar" id="lvlbar" aria-hidden="true"></div>
-          <div class="lvlname" id="lvlName"></div>
-          <div class="lvldesc" id="lvlDesc"></div>
-          <div class="asugg" id="asugg"></div>
-          <button class="applybtn" id="applyBtn" onclick="applyAssess()" disabled>Apply X &amp; Y to the Mosca test</button>
-          <div class="aprog" id="aprog"></div>
-        </div>
-      </div>
-    </div>
-
     <div class="controls" style="margin-top:20px">
       <button class="disc tk" id="moscaToggle" aria-expanded="false" data-target="moscaBox" onclick="toggle(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>Test your exposure — the Mosca test<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     </div>
     <div class="disc-body" id="moscaBox" hidden>
-    <div class="mosca">
-      <h3>Your exposure — the Mosca test</h3>
-      <p class="msub">If your data's shelf-life (X) plus your migration time (Y) is greater than the time until the quantum threat (Z), you're already exposed: <b>X + Y &gt; Z → act now</b>. Z follows the <b>scenario buttons above</b>.</p>
-      <div class="mgrid">
-        <div class="mfield">
-          <label><b>X</b> · data shelf-life</label>
-          <div class="mrow"><input id="mX" type="range" min="1" max="50" value="10" oninput="mosca()" aria-label="Data shelf-life in years"><output id="xOut">10y</output></div>
-        </div>
-        <div class="mfield">
-          <label><b>Y</b> · migration time</label>
-          <div class="mrow"><input id="mY" type="range" min="1" max="15" value="5" oninput="mosca()" aria-label="Migration time in years"><output id="yOut">5y</output></div>
+      <div class="controls" style="margin-bottom:2px">
+        <button class="disc" id="assessToggle" aria-expanded="false" data-target="assessBox" onclick="toggle(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Not sure of your X and Y? Fill in the readiness questionnaires (optional)<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="disc-body" id="assessBox" hidden>
+        <div class="assess">
+          <h3>Readiness assessment</h3>
+          <p class="asub">This maps you to a 5-level maturity model, then suggests starting values for X (data shelf-life) and Y (migration time) that you can apply to the Mosca test below. Optional, nothing is stored, and it's a self-assessment prompt — not an audit.</p>
+          <div class="apicker">
+            <span class="picklab"><span class="picknum">1</span> Choose the persona that fits you</span>
+            <div class="seg" role="group" aria-label="Assessment persona">
+              <button id="segExec" onclick="setAssess('exec')">Executive · 4</button>
+              <button id="segTech" onclick="setAssess('tech')">Technical · 10</button>
+              <button id="segAuditor" onclick="setAssess('auditor')">Auditor · 7</button>
+            </div>
+            <button class="areset" id="aresetBtn" onclick="resetAssess()" hidden>Reset answers</button>
+          </div>
+          <div class="apick" id="aPick"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5c0 3.5-5 9-5 9s-5-5.5-5-9a5 5 0 015-5z"/><circle cx="12" cy="7" r="1.7" fill="currentColor" stroke="none"/></svg><span>Select a persona above to begin — the questions and scoring adapt to your role. Nothing appears until you choose one.</span></div>
+          <p class="anote" id="aNote"></p>
+          <div id="assessQs"></div>
+          <div class="aresult" id="assessResult" hidden>
+            <div class="lvlbar" id="lvlbar" aria-hidden="true"></div>
+            <div class="lvlname" id="lvlName"></div>
+            <div class="lvldesc" id="lvlDesc"></div>
+            <div class="asugg" id="asugg"></div>
+            <button class="applybtn" id="applyBtn" onclick="applyAssess()" disabled>Apply X &amp; Y to the Mosca test</button>
+            <div class="aprog" id="aprog"></div>
+          </div>
         </div>
       </div>
-      <div class="mbar" aria-hidden="true"><i class="x" id="barX"></i><i class="y" id="barY"></i></div>
-      <div class="mscale" aria-hidden="true"><span>now</span><span id="zScale"></span></div>
-      <div class="mresult ok" id="mResult"><div class="verdict" id="mVerdict"></div><div class="detail" id="mDetail"></div></div>
-      <button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>If X + Y &gt; Z, what should you do? — NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="recbody" hidden><p>Being exposed on this test is common, and the response is the same one every major authority now gives: start now. Prioritise long-lived data (harvest-now-decrypt-later makes its deadline effectively today), build a cryptographic inventory, choose crypto-agile solutions, and migrate to the NIST standards (ML-KEM / ML-DSA / SLH-DSA) against the NCSC 2028 / 2031 / 2035 milestones.</p><div class="reclinks"><a class="srclink" href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NCSC timelines ↗</a><a class="srclink" href="https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>CISA/NSA/NIST factsheet ↗</a></div></div>
-      <p class="minifoot" style="margin-top:12px;text-align:left">Mosca inequality (M. Mosca / GRI). Illustrative — Z uses the selected scenario, not a forecast.</p>
-    </div>
+      <div class="mosca">
+        <h3>Your exposure — the Mosca test</h3>
+        <p class="msub">If your data's shelf-life (X) plus your migration time (Y) is greater than the time until the quantum threat (Z), you're already exposed: <b>X + Y &gt; Z → act now</b>. Z follows the <b>scenario buttons above</b>.</p>
+        <div class="mgrid">
+          <div class="mfield">
+            <label><b>X</b> · data shelf-life</label>
+            <div class="mrow"><input id="mX" type="range" min="1" max="50" value="10" oninput="mosca()" aria-label="Data shelf-life in years"><output id="xOut">10y</output></div>
+          </div>
+          <div class="mfield">
+            <label><b>Y</b> · migration time</label>
+            <div class="mrow"><input id="mY" type="range" min="1" max="15" value="5" oninput="mosca()" aria-label="Migration time in years"><output id="yOut">5y</output></div>
+          </div>
+        </div>
+        <div class="mbar" aria-hidden="true"><i class="x" id="barX"></i><i class="y" id="barY"></i></div>
+        <div class="mscale" aria-hidden="true"><span>now</span><span id="zScale"></span></div>
+        <div class="mresult ok" id="mResult"><div class="verdict" id="mVerdict"></div><div class="detail" id="mDetail"></div></div>
+        <button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>If X + Y &gt; Z, what should you do? — NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="recbody" hidden><p>Being exposed on this test is common, and the response is the same one every major authority now gives: start now. Prioritise long-lived data (harvest-now-decrypt-later makes its deadline effectively today), build a cryptographic inventory, choose crypto-agile solutions, and migrate to the NIST standards (ML-KEM / ML-DSA / SLH-DSA) against the NCSC 2028 / 2031 / 2035 milestones.</p><div class="reclinks"><a class="srclink" href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NCSC timelines ↗</a><a class="srclink" href="https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>CISA/NSA/NIST factsheet ↗</a></div></div>
+        <p class="minifoot" style="margin-top:12px;text-align:left">Mosca inequality (M. Mosca / GRI). Illustrative — Z uses the selected scenario, not a forecast.</p>
+      </div>
     </div>
 
     <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
@@ -540,7 +572,7 @@ h1 em{font-style:normal;color:var(--threat)}
           <button id="segEcc" onclick="setTarget('ecc')">ECC-256</button>
         </div>
         <svg id="chartCollapse" viewBox="0 0 540 330" role="img" aria-label="Log-scale chart of physical qubits required to break the selected algorithm against the largest machines built along vendor roadmaps, crossing in the mid-2030s within the expert scenario window."></svg>
-        <div class="legend"><span><i class="swatch" style="background:var(--threat)"></i> Required floor</span><span><i class="swatch" style="background:var(--defence)"></i> Built (roadmap)</span><span><i class="swatch range"></i> Vendor range</span><span><i class="swatch band"></i> Scenario window</span></div>
+        <div class="legend"><span><i class="swatch" style="background:var(--threat)"></i> Qubits Required</span><span><i class="swatch" style="background:var(--defence)"></i> Qubits Built</span><span><i class="swatch range"></i> Vendor range</span><span><i class="swatch band"></i> Scenario window</span></div>
         <button class="disc tk" aria-expanded="false" data-target="t1" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
         <div class="takeaway" id="t1" hidden><span id="tkText"></span>
           <div style="margin-top:9px;display:flex;gap:14px;flex-wrap:wrap">
@@ -561,6 +593,7 @@ h1 em{font-style:normal;color:var(--threat)}
     </div>
     <div class="vhead" style="margin-top:22px"><span class="lab">What's changed</span></div>
     <div class="grid-auto log" id="changelog"></div>
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
   </section>
 
   <section class="view" id="view-stack">
@@ -573,54 +606,72 @@ h1 em{font-style:normal;color:var(--threat)}
       <div class="txt"><h3>Indicative readiness</h3><p>Hardware quality is advancing fast; raw scale and sustained fault-tolerant execution remain the long poles. ECC-256 is the nearer target — fewer resources than RSA-2048.</p><button class="disc calc-btn" aria-expanded="false" data-target="scoreCalc" onclick="toggle(this)"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg>How it's calculated<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="disc-body" id="scoreCalc" hidden></div></div>
     </div>
     <div class="grid-auto stack" id="stack"></div>
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
   </section>
 
   <section class="view" id="view-plan">
     <div class="vhead"><span class="lab">Migration plan</span>
       <button class="ibtn" aria-expanded="false" data-target="dPlan" onclick="toggle(this)" aria-label="About"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
     </div>
-    <p class="vdesc" id="dPlan" hidden>The UK NCSC milestones, what you migrate to, and how global regulators' deadlines compare. Counters are live.</p>
-    <div class="tl">
-      <div class="track-line"></div>
-      <div class="grid-auto nodes" id="nodes"></div>
-      <button class="disc" aria-expanded="false" data-target="hndlBox" onclick="toggle(this)" style="margin-top:14px"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Harvest now, decrypt later<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="hndl" id="hndlBox" hidden><b>HNDL:</b> data captured today can be stored and decrypted once a CRQC exists. For anything that must stay secret beyond Q-Day, the effective deadline is already here — not 2035.</div>
-      <div class="std">
-        <h4>What you migrate to</h4>
-        <p class="ssub">NIST's finalised post-quantum standards · published 13 Aug 2024</p>
-        <div class="row"><b>FIPS 203 · ML-KEM</b><span>General encryption and key exchange — the replacement for RSA and ECDH.</span></div>
-        <div class="row"><b>FIPS 204 · ML-DSA</b><span>Primary digital signatures — the replacement for RSA and ECDSA.</span></div>
-        <div class="row"><b>FIPS 205 · SLH-DSA</b><span>Hash-based backup signatures, using different maths for resilience.</span></div>
-        <p class="note">A backup KEM, HQC, was selected in March 2025 (final ~2027); FIPS 206 (FN-DSA / Falcon) is in draft. In plain terms: ML-KEM and ML-DSA are the defaults; the others are fallbacks if one maths family is ever broken.</p>
-        <div class="links">
-          <a class="srclink" href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NIST PQC project ↗</a>
-          <a class="srclink" href="https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>HQC selection ↗</a>
+    <p class="vdesc" id="dPlan" hidden>Every regulator's milestones against the expert Q-Day window, how global deadlines compare, the UK NCSC plan, and the size cost of the new algorithms. Counters are live; tap any heading to minimise a section.</p>
+
+    <button class="sechead" aria-expanded="true" data-target="secGantt" onclick="toggle(this)"><span class="lab">All Milestones vs Q-Day</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="secGantt" class="secbody">
+      <div class="chart">
+        <h3>The migration window is closing</h3>
+        <p class="csub">Regulator milestones (2024–2035) against the expert Q-Day window · tap a milestone</p>
+        <svg id="chartGantt" viewBox="0 0 540 300" role="img" aria-label="Timeline showing UK, US, EU, Australia and NIST post-quantum migration milestones, all completing by 2035, set against the 2036 to 2041 expert quantum-threat window."></svg>
+        <div class="sizeinfo callout" id="ganttInfo" hidden></div>
+        <div class="legend"><span><i class="swatch" style="background:var(--defence)"></i> Migration window</span><span><i class="swatch" style="background:var(--threat)"></i> Milestone</span><span><i class="swatch band"></i> Est. Q-Day window</span></div>
+        <button class="disc tk" aria-expanded="false" data-target="tGantt" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="takeaway" id="tGantt" hidden>The UK, US and EU all target completion by <b>2035</b> — which is essentially the leading edge of the expert Q-Day window (2036–2041). There is little or no slack: for long-lived data the harvest-now-decrypt-later deadline is already here.<div style="margin-top:9px;display:flex;gap:14px;flex-wrap:wrap"><a class="srclink" href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener">NCSC ↗</a><a class="srclink" href="https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography" target="_blank" rel="noopener">EU roadmap ↗</a><a class="srclink" href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener">NIST ↗</a></div></div>
+      </div>
+    </div>
+
+    <button class="sechead" aria-expanded="true" data-target="secRegs" onclick="toggle(this)"><span class="lab">Global Deadlines</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="secRegs" class="secbody">
+      <div class="grid-auto reg" id="regs"></div>
+      <p class="minifoot" style="text-align:left">Dates compiled from public government publications (2025–26). EU / Australia rows link out via Methodology &amp; sources.</p>
+    </div>
+
+    <button class="sechead" aria-expanded="true" data-target="secNcsc" onclick="toggle(this)"><span class="lab">NCSC Migration Plan</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="secNcsc" class="secbody">
+      <div class="tl">
+        <div class="track-line"></div>
+        <div class="grid-auto nodes" id="nodes"></div>
+        <button class="disc" aria-expanded="false" data-target="hndlBox" onclick="toggle(this)" style="margin-top:14px"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Harvest now, decrypt later<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="hndl" id="hndlBox" hidden><b>HNDL:</b> data captured today can be stored and decrypted once a CRQC exists. For anything that must stay secret beyond Q-Day, the effective deadline is already here — not 2035.</div>
+        <div class="std">
+          <h4>What you migrate to</h4>
+          <p class="ssub">NIST's finalised post-quantum standards · published 13 Aug 2024</p>
+          <div class="row"><b>FIPS 203 · ML-KEM</b><span>General encryption and key exchange — the replacement for RSA and ECDH.</span></div>
+          <div class="row"><b>FIPS 204 · ML-DSA</b><span>Primary digital signatures — the replacement for RSA and ECDSA.</span></div>
+          <div class="row"><b>FIPS 205 · SLH-DSA</b><span>Hash-based backup signatures, using different maths for resilience.</span></div>
+          <p class="note">A backup KEM, HQC, was selected in March 2025 (final ~2027); FIPS 206 (FN-DSA / Falcon) is in draft. In plain terms: ML-KEM and ML-DSA are the defaults; the others are fallbacks if one maths family is ever broken.</p>
+          <div class="links">
+            <a class="srclink" href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NIST PQC project ↗</a>
+            <a class="srclink" href="https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>HQC selection ↗</a>
+          </div>
         </div>
       </div>
     </div>
-    <div class="vhead" style="margin-top:22px"><span class="lab">The cost of migrating</span></div>
-    <div class="chart">
-      <h3>Key &amp; signature sizes: classical vs post-quantum</h3>
-      <p class="csub">Bytes on the wire · log scale · tap a bar for a plain-terms explanation</p>
-      <svg id="chartSizes" viewBox="0 0 540 300" role="img" aria-label="Horizontal bar chart comparing the byte sizes of classical and post-quantum keys and signatures on a log scale, showing post-quantum artefacts are far larger."></svg>
-      <div class="sizeinfo" id="sizeInfo" hidden></div>
-      <div class="legend"><span><i class="swatch" style="background:var(--defence)"></i> Classical (RSA/ECC)</span><span><i class="swatch" style="background:var(--threat)"></i> Post-quantum (NIST)</span></div>
-      <button class="disc tk" aria-expanded="false" data-target="tSize" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="takeaway" id="tSize" hidden>Post-quantum keys and signatures are far larger — an ML-DSA-65 signature is ~50× an ECDSA one, and an SLH-DSA signature is ~17KB (≈260× RSA-2048). That inflates TLS handshakes, certificate chains and firmware images, and can break assumptions in older hardware, protocols and buffers — which is why interoperability testing and crypto-agility matter.<div style="margin-top:9px;display:flex;gap:14px;flex-wrap:wrap"><a class="srclink" href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener">NIST PQC (FIPS 203/204/205) ↗</a></div></div>
+
+    <button class="sechead" aria-expanded="true" data-target="secSize" onclick="toggle(this)"><span class="lab">The Encryption Size</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="secSize" class="secbody">
+      <div class="chart">
+        <h3>Key &amp; signature sizes: classical vs post-quantum</h3>
+        <p class="csub">Bytes on the wire · log scale · tap a bar for a plain-terms explanation</p>
+        <svg id="chartSizes" viewBox="0 0 540 300" role="img" aria-label="Horizontal bar chart comparing the byte sizes of classical and post-quantum keys and signatures on a log scale, showing post-quantum artefacts are far larger."></svg>
+        <div class="sizeinfo callout" id="sizeInfo" hidden></div>
+        <div class="legend"><span><i class="swatch" style="background:var(--defence)"></i> Classical (RSA/ECC)</span><span><i class="swatch" style="background:var(--threat)"></i> Post-quantum (NIST)</span></div>
+        <button class="disc tk" aria-expanded="false" data-target="tSize" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="takeaway" id="tSize" hidden>Post-quantum keys and signatures are far larger — an ML-DSA-65 signature is ~50× an ECDSA one, and an SLH-DSA signature is ~17KB (≈260× RSA-2048). That inflates TLS handshakes, certificate chains and firmware images, and can break assumptions in older hardware, protocols and buffers — which is why interoperability testing and crypto-agility matter.<div style="margin-top:9px;display:flex;gap:14px;flex-wrap:wrap"><a class="srclink" href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener">NIST PQC (FIPS 203/204/205) ↗</a></div></div>
+      </div>
     </div>
-    <div class="vhead" style="margin-top:22px"><span class="lab">Global deadlines</span></div>
-    <div class="grid-auto reg" id="regs"></div>
-    <p class="minifoot" style="text-align:left">Dates compiled from public government publications (2025–26). EU / Australia rows link out via Methodology &amp; sources.</p>
-    <div class="vhead" style="margin-top:22px"><span class="lab">All deadlines vs the threat</span></div>
-    <div class="chart">
-      <h3>The migration window is closing</h3>
-      <p class="csub">Regulator deadlines (2024–2035) against the expert Q-Day window · tap a milestone</p>
-      <svg id="chartGantt" viewBox="0 0 540 300" role="img" aria-label="Timeline showing UK, US, EU, Australia and NIST post-quantum migration deadlines, all completing by 2035, set against the 2036 to 2041 expert quantum-threat window."></svg>
-      <div class="legend"><span><i class="swatch" style="background:var(--defence)"></i> Migration window</span><span><i class="swatch" style="background:var(--threat)"></i> Milestone</span><span><i class="swatch band"></i> Est. Q-Day window</span></div>
-      <button class="disc tk" aria-expanded="false" data-target="tGantt" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="takeaway" id="tGantt" hidden>The UK, US and EU all target completion by <b>2035</b> — which is essentially the leading edge of the expert Q-Day window (2036–2041). There is little or no slack: for long-lived data the harvest-now-decrypt-later deadline is already here.<div style="margin-top:9px;display:flex;gap:14px;flex-wrap:wrap"><a class="srclink" href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener">NCSC ↗</a><a class="srclink" href="https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography" target="_blank" rel="noopener">EU roadmap ↗</a><a class="srclink" href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener">NIST ↗</a></div></div>
-    </div>
+
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
   </section>
+
   <section class="view" id="view-threats">
     <div class="vhead"><span class="lab">Attacks &amp; vulnerabilities</span>
       <button class="ibtn" aria-expanded="false" data-target="dThreats" onclick="toggle(this)" aria-label="About"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
@@ -638,6 +689,7 @@ h1 em{font-style:normal;color:var(--threat)}
     <p class="thead-lead">Documented, attributed incidents where cryptographic keys, certificates or trust were the pivot. Dollar losses are frequently undisclosed, so impact is shown by verified scale — victims, records and scope — not invented figures.</p>
     <div class="grid-auto attacks" id="attackList"></div>
     <p class="minifoot" style="text-align:left">CVSS are NVD base scores where available; PKfail is vendor-rated. Attack diamonds are placed and sized by an editorial impact rating (0–10) reflecting verified scale, not CVSS. A curated, verified selection — not exhaustive.</p>
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
   </section>
 
 </main>
@@ -770,11 +822,26 @@ const attacks=[
 ];
 let catOff={},threatsCharted=false,attacksOff=false;
 const gantt=[
-  {region:'UK',body:'NCSC',start:2028,end:2035,marks:[[2028,'Discover & plan'],[2031,'Priority migration'],[2035,'Complete']],url:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines'},
-  {region:'US',body:'CNSA 2.0 / NSM-10',start:2027,end:2035,marks:[[2027,'New acquisitions'],[2030,'Firmware & networking'],[2033,'OS, apps & cloud'],[2035,'All NSS']],url:'https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography'},
-  {region:'EU',body:'PQC roadmap',start:2026,end:2035,marks:[[2026,'National plans'],[2030,'High-risk migrated'],[2035,'Full transition']],url:'https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography'},
-  {region:'AU',body:'ASD ISM',start:2026,end:2030,marks:[[2026,'Transition plan'],[2030,'Cease RSA/ECC']],url:''},
-  {region:'NIST',body:'Standards & deprecation',start:2024,end:2035,marks:[[2024,'FIPS 203/204/205'],[2030,'Deprecate RSA/ECC (IR 8547)'],[2035,'Disallowed']],url:'https://csrc.nist.gov/projects/post-quantum-cryptography'}
+  {region:'UK',body:'NCSC',start:2028,end:2035,url:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',marks:[
+    {y:2028,l:'Discover & plan',d:'NCSC step 1: define your migration goals, build a full cryptographic inventory and identify your highest-priority systems.'},
+    {y:2031,l:'Priority migration',d:'NCSC step 2: complete migration of your highest-priority systems and services to post-quantum cryptography.'},
+    {y:2035,l:'Complete',d:'NCSC step 3: migration to post-quantum cryptography complete across all systems.'}]},
+  {region:'US',body:'CNSA 2.0 / NSM-10',start:2027,end:2035,url:'https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography',marks:[
+    {y:2027,l:'New acquisitions',d:'CNSA 2.0: software and firmware signing begins supporting PQC; new acquisitions expected to be quantum-resistant.'},
+    {y:2030,l:'Firmware & networking',d:'CNSA 2.0: networking equipment and firmware/software signing should use PQC by default.'},
+    {y:2033,l:'OS, apps & cloud',d:'CNSA 2.0: operating systems, applications, cloud services and the remaining estate transitioned.'},
+    {y:2035,l:'All NSS',d:'CNSA 2.0 / NSM-10 target: all US National Security Systems fully quantum-resistant.'}]},
+  {region:'EU',body:'PQC roadmap',start:2026,end:2035,url:'https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography',marks:[
+    {y:2026,l:'National plans',d:'EU coordinated roadmap: member states publish national PQC transition plans and align approaches.'},
+    {y:2030,l:'High-risk migrated',d:'EU roadmap: high-risk use cases such as critical infrastructure migrated to PQC.'},
+    {y:2035,l:'Full transition',d:'EU roadmap: complete transition to post-quantum cryptography across the Union.'}]},
+  {region:'AU',body:'ASD ISM',start:2026,end:2030,url:'',marks:[
+    {y:2026,l:'Transition plan',d:'Australian Signals Directorate: organisations plan their transition away from traditional asymmetric cryptography.'},
+    {y:2030,l:'Cease RSA/ECC',d:'ASD Information Security Manual: RSA, ECDH and ECDSA no longer approved for protecting sensitive information.'}]},
+  {region:'NIST',body:'Standards & deprecation',start:2024,end:2035,url:'https://csrc.nist.gov/projects/post-quantum-cryptography',marks:[
+    {y:2024,l:'FIPS 203/204/205',d:'NIST published the first three finalised PQC standards — ML-KEM, ML-DSA and SLH-DSA — on 13 August 2024.'},
+    {y:2030,l:'Deprecate RSA/ECC',d:'NIST IR 8547: RSA-2048 and ECC (P-256) deprecated for US federal use from around 2030.'},
+    {y:2035,l:'Disallowed',d:'NIST IR 8547: quantum-vulnerable algorithms (RSA, ECDSA, EdDSA, DH) disallowed after 2035.'}]}
 ];
 const sizes=[
   {name:'ECDSA P-256 signature',bytes:64,pqc:false,std:'Classical',what:'Elliptic-curve digital signature \u2014 the modern default for TLS, SSH, code-signing and documents.',lay:'Today\u2019s tiny digital \u201cwax seal\u201d: fast and small, but a future quantum computer could forge it.',url:'https://csrc.nist.gov/projects/post-quantum-cryptography'},
@@ -924,7 +991,7 @@ const recMap={
   auditor:['inventory','criticality','agility','agility','migrate','evidence','data']
 };
 function toggleRec(b){const x=b.nextElementSibling;const open=!x.hidden;x.hidden=open;b.setAttribute('aria-expanded',String(!open));}
-let aMode='exec';const aAns={exec:{},tech:{},auditor:{}};let aX=null,aY=null;
+let aMode=null;const aAns={exec:{},tech:{},auditor:{}};let aX=null,aY=null;
 const aNotes={
   exec:'The three questions a CIO or CISO should be able to answer instantly — plus your data-confidentiality horizon.',
   tech:'A deeper self-check across discovery, criticality, key management, agility, suppliers, technology and governance.',
@@ -933,7 +1000,7 @@ const aNotes={
 function saveAns(){try{sessionStorage.setItem('qday_assess',JSON.stringify(aAns));}catch(e){}}
 function loadAns(){try{const s=sessionStorage.getItem('qday_assess');if(s){const o=JSON.parse(s);['exec','tech','auditor'].forEach(k=>{if(o&&o[k])aAns[k]=o[k];});}}catch(e){}}
 function segId(k){return 'seg'+k[0].toUpperCase()+k.slice(1);}
-function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];buildAssess();scoreAssess();}
+function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];const pk=$('aPick');if(pk)pk.hidden=true;buildAssess();scoreAssess();}
 function buildAssess(){
   $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div>${recHtml}</div>`;}).join('');
   $('aresetBtn').hidden=Object.keys(aAns[aMode]).length===0;
@@ -1049,13 +1116,13 @@ function drawSizes(){
     g.appendChild(el('text',{x:L,y:yLab,fill:cInk,'font-family':'monospace','font-size':10,'font-weight':600},d.name+'  ·  '+d.std));
     g.appendChild(el('rect',{x:L,y:yBar-7,width:bw,height:14,rx:3,fill:col,opacity:d.pqc?.92:.85}));
     g.appendChild(el('text',{x:L+bw+6,y:yBar+3.5,fill:col,'font-family':'monospace','font-size':9.5,'font-weight':700},(d.approx?'~':'')+d.bytes.toLocaleString('en-GB')+' B'));
-    g.addEventListener('click',()=>showSizeInfo(d.name));
+    g.addEventListener('click',e=>{e.stopPropagation();showSizeInfo(d.name);});
     svg.appendChild(g);
   });
 }
 function showSizeInfo(name){
   const d=sizes.find(s=>s.name===name);if(!d)return;const box=$('sizeInfo');
-  box.innerHTML=`<div class="siname">${d.name} <span class="sistd ${d.pqc?'pq':'cl'}">${d.std}</span> <span class="sibytes">${(d.approx?'~':'')+d.bytes.toLocaleString('en-GB')} bytes</span></div><div class="silbl">What it is</div><div class="sitext">${d.what}</div><div class="silbl">In plain terms</div><div class="sitext">${d.lay}</div><a class="srclink" href="${d.url}" target="_blank" rel="noopener" style="margin-top:10px">${linkIcon}NIST PQC (FIPS 203/204/205) ↗</a>`;
+  box.innerHTML=`<button class="cox" onclick="closeCallout('sizeInfo')" aria-label="Close">×</button><div class="siname">${d.name} <span class="sistd ${d.pqc?'pq':'cl'}">${d.std}</span> <span class="sibytes">${(d.approx?'~':'')+d.bytes.toLocaleString('en-GB')} bytes</span></div><div class="silbl">What it is</div><div class="sitext">${d.what}</div><div class="silbl">In plain terms</div><div class="sitext">${d.lay}</div><a class="srclink" href="${d.url}" target="_blank" rel="noopener" style="margin-top:10px">${linkIcon}NIST PQC (FIPS 203/204/205) ↗</a>`;
   box.hidden=false;
 }
 function drawGantt(){
@@ -1077,15 +1144,23 @@ function drawGantt(){
     svg.appendChild(el('text',{x:L-8,y:y+9,'text-anchor':'end',fill:cF,'font-family':'monospace','font-size':7.5},g.body.length>16?g.body.slice(0,15)+'…':g.body));
     svg.appendChild(el('rect',{x:px(g.start),y:y-4,width:Math.max(3,px(g.end)-px(g.start)),height:8,rx:4,fill:cD,opacity:.32}));
     g.marks.forEach(m=>{
-      const cx=px(m[0]);
-      const dot=el('circle',{cx,cy:y,r:4.5,fill:cT,stroke:bg,'stroke-width':1.4,style:'cursor:pointer;pointer-events:all'});
-      const tip='<b>'+g.region+' · '+m[0]+'</b><br>'+m[1];
-      dot.addEventListener('pointerenter',e=>showTip(svg,e,tip));dot.addEventListener('pointermove',e=>showTip(svg,e,tip));dot.addEventListener('pointerleave',hideTip);dot.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});
+      const cx=px(m.y);
+      const dot=el('circle',{cx,cy:y,r:5,fill:cT,stroke:bg,'stroke-width':1.4,style:'cursor:pointer;pointer-events:all'});
+      const tip='<b>'+g.region+' · '+m.y+'</b><br>'+m.l+'<br><span style="opacity:.7">tap for detail</span>';
+      dot.addEventListener('pointerenter',e=>showTip(svg,e,tip));dot.addEventListener('pointermove',e=>showTip(svg,e,tip));dot.addEventListener('pointerleave',hideTip);
+      dot.addEventListener('click',e=>{e.stopPropagation();hideTip();showGanttInfo(g,m);});
       svg.appendChild(dot);
     });
-    svg.appendChild(el('text',{x:px(g.end)+7,y:y+3,fill:cT2,'font-family':'monospace','font-size':8.5,'font-weight':700},g.marks[g.marks.length-1][0]));
+    svg.appendChild(el('text',{x:px(g.end)+7,y:y+3,fill:cT2,'font-family':'monospace','font-size':8.5,'font-weight':700},g.marks[g.marks.length-1].y));
   });
 }
+function showGanttInfo(g,m){
+  const box=$('ganttInfo');if(!box)return;
+  const link=g.url?`<a class="srclink" href="${g.url}" target="_blank" rel="noopener" style="margin-top:9px">${linkIcon}${g.region} source ↗</a>`:'<div class="vhint" style="margin-top:8px">No public link for this row — see Methodology &amp; sources.</div>';
+  box.innerHTML=`<button class="cox" onclick="closeCallout('ganttInfo')" aria-label="Close">×</button><div class="siname">${g.region} · ${m.y} <span class="sistd pq">${g.body}</span></div><div class="silbl">${m.l}</div><div class="sitext">${m.d}</div>${link}`;
+  box.hidden=false;
+}
+function closeCallout(id){const b=$(id);if(b)b.hidden=true;}
 
 /* ============================ SVG CHARTS ============================ */
 const NS='http://www.w3.org/2000/svg';
@@ -1193,19 +1268,23 @@ const panes={
 };
 function open_(k){$('paneBody').innerHTML=(panes[k]||panes.sources)();$('drawer').classList.add('open');document.body.style.overflow='hidden';}
 function close_(){$('drawer').classList.remove('open');document.body.style.overflow='';}
+function toggleHmenu(e){if(e){e.stopPropagation();}const m=$('hmenu'),b=$('menuBtn');const willOpen=m.hidden;m.hidden=!willOpen;b.setAttribute('aria-expanded',willOpen?'true':'false');}
+function hmenuAct(a){const m=$('hmenu'),b=$('menuBtn');m.hidden=true;b.setAttribute('aria-expanded','false');if(a==='share')shareCard();else if(a==='copy')copyLink();else if(a==='ref')open_('menu');}
+document.addEventListener('click',e=>{const m=$('hmenu');if(!m||m.hidden)return;if(!e.target.closest('#hmenu')&&!e.target.closest('#menuBtn')){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}});
+document.addEventListener('click',e=>{['ganttInfo','sizeInfo'].forEach(id=>{const b=$(id);if(b&&!b.hidden&&!e.target.closest('#'+id))b.hidden=true;});});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=$('hmenu');if(m&&!m.hidden){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){close_();}});
 document.addEventListener('pointerdown',e=>{if(!(e.target.classList&&e.target.classList.contains('pt')))hideTip();});
 addEventListener('scroll',hideTip,true);
 
 /* ============================ INIT ============================ */
 const _tab=readURL();paintTheme();
-buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();buildCatFilter();buildVulns();buildAttacks();loadAns();setAssess('exec');
+buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();buildCatFilter();buildVulns();buildAttacks();loadAns();
 applyTargetText();setScenario(scen);mosca();
 tick();setInterval(tick,1000);
 requestAnimationFrame(fitDigits);addEventListener('resize',fitDigits);addEventListener('orientationchange',()=>setTimeout(fitDigits,80));
 setInterval(()=>document.querySelectorAll('.node .days').forEach(x=>{const i=+x.dataset.i;x.textContent=daysTo(model.ncsc[i].date).toLocaleString('en-GB')+' days left';}),6e4);
 if(_tab&&document.getElementById('view-'+_tab))showView(_tab);
-try{if(matchMedia('(min-width:760px)').matches){$('moscaToggle').setAttribute('aria-expanded','true');$('moscaBox').hidden=false;}}catch(e){}
 let _seen=false;try{_seen=localStorage.getItem('qday_seen')==='1';}catch(e){}
 if(!_tab&&!_seen)showWelcome();
 </script>
