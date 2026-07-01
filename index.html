@@ -337,9 +337,13 @@ h1 em{font-style:normal;color:var(--threat)}
       <button class="disc" onclick="copyLink()"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg><span id="copyLbl">Copy link</span></button>
     </div>
 
+    <div class="controls" style="margin-top:20px">
+      <button class="disc tk" id="moscaToggle" aria-expanded="false" data-target="moscaBox" onclick="toggle(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>Test your exposure — the Mosca test<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    </div>
+    <div class="disc-body" id="moscaBox" hidden>
     <div class="mosca">
       <h3>Your exposure — the Mosca test</h3>
-      <p class="msub">If your data's shelf-life (X) plus your migration time (Y) is greater than the time until a quantum threat (Z), you're already exposed: <b>X + Y &gt; Z → act now</b>.</p>
+      <p class="msub">If your data's shelf-life (X) plus your migration time (Y) is greater than the time until the quantum threat (Z), you're already exposed: <b>X + Y &gt; Z → act now</b>. Z follows the <b>scenario buttons above</b>.</p>
       <div class="mgrid">
         <div class="mfield">
           <label><b>X</b> · data shelf-life</label>
@@ -349,19 +353,12 @@ h1 em{font-style:normal;color:var(--threat)}
           <label><b>Y</b> · migration time</label>
           <div class="mrow"><input id="mY" type="range" min="1" max="15" value="5" oninput="mosca()" aria-label="Migration time in years"><output id="yOut">5y</output></div>
         </div>
-        <div class="mfield">
-          <label><b>Z</b> · time to quantum threat</label>
-          <select id="mZ" onchange="moscaZ()" aria-label="Threat scenario">
-            <option value="fast">Aggressive — 2036</option>
-            <option value="weighted" selected>Source-weighted — 2038</option>
-            <option value="cautious">Cautious — 2041</option>
-          </select>
-        </div>
       </div>
       <div class="mbar" aria-hidden="true"><i class="x" id="barX"></i><i class="y" id="barY"></i></div>
       <div class="mscale" aria-hidden="true"><span>now</span><span id="zScale"></span></div>
       <div class="mresult ok" id="mResult"><div class="verdict" id="mVerdict"></div><div class="detail" id="mDetail"></div></div>
       <p class="minifoot" style="margin-top:12px;text-align:left">Mosca inequality (M. Mosca / GRI). Illustrative — Z uses the selected scenario, not a forecast.</p>
+    </div>
     </div>
 
     <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
@@ -592,16 +589,14 @@ function setScenario(k){
   document.querySelectorAll('.sbtn').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
   $('qScenarioLabel').textContent=model.scenarios[k].label;
   $('qDate').textContent=fmt(qTarget);$('scenText').textContent=model.scenarios[k].text;
-  const mz=$('mZ');if(mz&&mz.value!==k)mz.value=k;
   setBuffer();tick();mosca();syncURL();
 }
-function moscaZ(){scen=$('mZ').value;setScenario(scen);}
 function mosca(){
-  const X=+$('mX').value,Y=+$('mY').value,Z=model.scenarios[$('mZ').value].year-nowYear();
+  const X=+$('mX').value,Y=+$('mY').value,Z=model.scenarios[scen].year-nowYear();
   $('xOut').textContent=X+'y';$('yOut').textContent=Y+'y';
   const need=X+Y,scaleMax=Math.max(need,Z,1);
   $('barX').style.width=(X/scaleMax*100)+'%';$('barY').style.width=(Y/scaleMax*100)+'%';
-  $('zScale').textContent='Z \u2248 '+Z+'y (to '+model.scenarios[$('mZ').value].year+')';
+  $('zScale').textContent='Z \u2248 '+Z+'y (to '+model.scenarios[scen].year+')';
   const r=$('mResult'),exposed=need>Z,over=need-Z;
   r.className='mresult '+(exposed?'exposed':'ok');
   $('mVerdict').textContent=exposed?('Exposed \u2014 X + Y > Z by ~'+over+' year'+(over===1?'':'s')):'On track \u2014 X + Y \u2264 Z';
@@ -739,6 +734,7 @@ tick();setInterval(tick,1000);
 requestAnimationFrame(fitDigits);addEventListener('resize',fitDigits);addEventListener('orientationchange',()=>setTimeout(fitDigits,80));
 setInterval(()=>document.querySelectorAll('.node .days').forEach(x=>{const i=+x.dataset.i;x.textContent=daysTo(model.ncsc[i].date).toLocaleString('en-GB')+' days left';}),6e4);
 if(_tab&&document.getElementById('view-'+_tab))showView(_tab);
+try{if(matchMedia('(min-width:760px)').matches){$('moscaToggle').setAttribute('aria-expanded','true');$('moscaBox').hidden=false;}}catch(e){}
 let _seen=false;try{_seen=localStorage.getItem('qday_seen')==='1';}catch(e){}
 if(!_tab&&!_seen)showWelcome();
 </script>
