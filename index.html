@@ -234,7 +234,7 @@ h1 em{font-style:normal;color:var(--threat)}
 .drawer{position:fixed;inset:0;z-index:70;display:none}
 .drawer.open{display:block}
 .shade{position:absolute;inset:0;background:rgba(4,7,8,.66);backdrop-filter:blur(6px)}
-.sheet{position:absolute;right:0;top:0;bottom:0;width:min(580px,100%);overflow:auto;background:linear-gradient(180deg,var(--panel2),var(--bg));border-left:1px solid var(--line2);padding:clamp(20px,3vw,30px);box-shadow:-30px 0 80px rgba(0,0,0,.6);transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.7,.2,1)}
+.sheet{position:absolute;right:0;top:0;bottom:0;width:min(580px,100%);overflow:auto;background:var(--solid);border-left:1px solid var(--line2);padding:clamp(20px,3vw,30px);box-shadow:-30px 0 80px rgba(0,0,0,.6);transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.7,.2,1)}
 .drawer.open .sheet{transform:none}
 .sheet h2{margin:0 44px 6px 0;font-size:20px;letter-spacing:-.02em}
 .sheet h3{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--threat-2);margin:20px 0 8px}
@@ -248,9 +248,11 @@ h1 em{font-style:normal;color:var(--threat)}
 .xbtn{position:absolute;right:16px;top:16px;font-family:var(--mono);font-size:12px;color:var(--ink);border:1px solid var(--line2);background:var(--card);border-radius:9px;padding:7px 11px;cursor:pointer}
 .xbtn:hover{border-color:var(--alert)}
 .sheet a{display:inline}.sheet .menu a{display:block}
-.welcome{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px}
+:root{--solid:#0d1417}
+:root[data-theme=light]{--solid:#ffffff}
+.welcome{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(4,7,8,.74);backdrop-filter:blur(7px);overflow:auto}
 .welcome.open{display:flex}
-.welcome .card{position:relative;max-width:440px;width:100%;background:linear-gradient(180deg,var(--panel2),var(--bg));border:1px solid var(--line2);border-radius:20px;padding:26px 24px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.welcome .card{position:relative;max-width:440px;width:100%;background:var(--solid);border:1px solid var(--line2);border-radius:20px;padding:26px 24px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .welcome h2{margin:0 0 6px;font-size:20px}
 .welcome p{font-family:var(--mono);font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 10px}
 .welcome ul{margin:8px 0 16px;padding-left:18px}
@@ -259,7 +261,30 @@ h1 em{font-style:normal;color:var(--threat)}
 @media(max-width:660px){.clocks{grid-template-columns:1fr}.buffer{order:3;flex-direction:row;justify-content:center;gap:13px;min-width:0}.buffer .big{margin:0}.arrowrow{transform:rotate(90deg)}}
 @media(max-width:380px){.counter{gap:4px}.unit{padding:7px 2px}.wordmark span{display:none}.tab{min-width:50px;padding:7px 6px}.tab .lbl2{display:none}.std .row b{min-width:100%}}
 @media(max-height:540px) and (orientation:landscape){h1{font-size:clamp(18px,3.4vw,26px)}}
-@media(min-width:1080px){:root{--appw:1040px}}
+.assess{border:1px solid var(--line2);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--panel2));padding:clamp(15px,2.4vw,22px);margin-top:12px}
+.assess h3{margin:0 0 3px;font-size:16px}
+.assess .asub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:0 0 14px;line-height:1.55}
+.assess .seg{margin:0 0 6px}
+.aq{border-top:1px solid var(--line);padding:12px 0}
+.aq .qt{font-family:var(--mono);font-size:12px;color:var(--ink);margin-bottom:8px;line-height:1.5}
+.aopts{display:flex;flex-wrap:wrap;gap:6px}
+.aopt{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--line2);background:var(--card);border-radius:9px;padding:7px 10px;cursor:pointer;transition:.14s;text-align:left}
+.aopt:hover{color:var(--ink);border-color:var(--defence)}
+.aopt.on{color:#0a0e10;background:var(--defence);border-color:var(--defence);font-weight:600}
+.aresult{margin-top:15px;border-top:1px solid var(--line2);padding-top:15px}
+.lvlbar{display:flex;gap:5px;margin:9px 0 4px}
+.lvlbar i{flex:1;height:9px;border-radius:3px;background:var(--field);transition:.2s}
+.lvlbar i.on{background:linear-gradient(90deg,var(--threat),var(--threat-2))}
+.lvlname{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--threat-2)}
+.lvldesc{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.55;margin:5px 0 0}
+.asugg{display:flex;gap:10px;flex-wrap:wrap;margin:13px 0 3px}
+.asugg .chip{font-family:var(--mono);font-size:11.5px;color:var(--ink);border:1px solid var(--line2);background:var(--field);border-radius:10px;padding:8px 12px}
+.asugg .chip b{color:var(--defence-2);font-weight:700}
+.applybtn{font-family:var(--mono);font-size:12.5px;font-weight:700;color:#0a0e10;background:var(--defence);border:0;border-radius:11px;padding:11px 16px;cursor:pointer;margin-top:13px;transition:.16s}
+.applybtn[disabled]{opacity:.4;cursor:not-allowed}
+.applybtn:not([disabled]):hover{box-shadow:0 0 20px rgba(70,212,196,.35)}
+.aprog{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:9px}
+
 @media(min-width:1440px){:root{--appw:1200px}}
 @media(min-width:1720px){:root{--appw:1320px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
@@ -335,6 +360,29 @@ h1 em{font-style:normal;color:var(--threat)}
     <div class="actions">
       <button class="disc" onclick="shareCard()"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7"/><path d="M12 3v13M8 7l4-4 4 4"/></svg>Share snapshot</button>
       <button class="disc" onclick="copyLink()"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg><span id="copyLbl">Copy link</span></button>
+    </div>
+
+    <div class="controls" style="margin-top:20px">
+      <button class="disc" id="assessToggle" aria-expanded="false" data-target="assessBox" onclick="toggle(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Not sure of your X and Y? Take the 2-minute readiness check<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    </div>
+    <div class="disc-body" id="assessBox" hidden>
+      <div class="assess">
+        <h3>Readiness assessment</h3>
+        <p class="asub">Answer a few questions and this maps you to a 5-level maturity model, then suggests starting values for X (data shelf-life) and Y (migration time) that you can apply to the Mosca test above. Optional, nothing is stored, and it's a self-assessment prompt — not an audit.</p>
+        <div class="seg" role="group" aria-label="Assessment type">
+          <button id="segExec" class="on" onclick="setAssess('exec')">Executive · 4</button>
+          <button id="segTech" onclick="setAssess('tech')">Technical · 10</button>
+        </div>
+        <div id="assessQs"></div>
+        <div class="aresult" id="assessResult" hidden>
+          <div class="lvlbar" id="lvlbar" aria-hidden="true"></div>
+          <div class="lvlname" id="lvlName"></div>
+          <div class="lvldesc" id="lvlDesc"></div>
+          <div class="asugg" id="asugg"></div>
+          <button class="applybtn" id="applyBtn" onclick="applyAssess()" disabled>Apply X &amp; Y to the Mosca test</button>
+          <div class="aprog" id="aprog"></div>
+        </div>
+      </div>
     </div>
 
     <div class="controls" style="margin-top:20px">
@@ -532,6 +580,33 @@ const collapse={
 };
 const outlook=[{yr:'2023',lo:17,hi:31},{yr:'2024',lo:19,hi:34},{yr:'2025',lo:28,hi:49}];
 const griCurve=[{y:2029,p:14},{y:2034,p:34},{y:2039,p:55},{y:2044,p:79}];
+const assess={
+  exec:[
+    {q:'Can you say, today, everywhere RSA and ECC are used across your organisation?',dim:'ag',o:[['No central inventory',1],['Partially — some systems known',2],['Mostly — a maintained inventory',3],['Yes — complete, automated discovery',5]]},
+    {q:'If a critical crypto flaw were announced tomorrow, how long to replace every affected certificate, key and signature?',dim:'ag',o:[['Months, or unknown',1],['Weeks',2],['A few days',4],['Hours — largely automated',5]]},
+    {q:'Can you prove critical systems can move to post-quantum crypto without major redesign or prolonged outages?',dim:'ag',o:[['No — not assessed',1],['Some analysis done',2],['Plan exists, partly tested',3],['Yes — tested and hybrid-ready',5]]},
+    {q:'How long must your most sensitive data stay confidential?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years (health, legal, state)',30]]}
+  ],
+  tech:[
+    {q:'1 · Discovery — do you hold a complete cryptographic inventory (every key, cert and trust store)?',dim:'ag',o:[['No inventory',1],['Partial / manual',2],['Centrally maintained',3],['Automated, continuous',5]]},
+    {q:'2 · Business criticality — do you know which services fail if public-key crypto breaks?',dim:'mat',o:[['Not mapped',1],['Some known',2],['Documented for key services',3],['Fully mapped & maintained',4]]},
+    {q:'3 · Key management — where do keys live and is the lifecycle defined?',dim:'mat',o:[['Mostly software, ad hoc',1],['Mixed, partly documented',2],['HSM/KMS with lifecycles',4],['HSM/KMS, owned, fully governed',5]]},
+    {q:'4 · Agility — how long to rotate the TLS certificate estate?',dim:'ag',o:[['Weeks / manual',1],['Days',2],['Hours',4],['Minutes — automated (ACME)',5]]},
+    {q:'5 · Agility — could you rotate all internet-facing certificates within 24 hours?',dim:'ag',o:[['No',1],['With major effort',2],['Yes, most',4],['Yes, automated',5]]},
+    {q:'6 · Algorithms — are deprecated algorithms (e.g. RSA-1024) still in production?',dim:'ag',o:[['Unknown',1],['Likely, some',2],['No, but unverified',3],['No — verified; PQC/hybrid piloted',5]]},
+    {q:'7 · Suppliers — do you track your PKI / SaaS providers\u2019 post-quantum roadmaps?',dim:'mat',o:[['Not checked',1],['Aware of a few',2],['Tracked for key suppliers',3],['Contractual PQC readiness',5]]},
+    {q:'8 · Data risk — what is your longest data-confidentiality requirement?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years',30]]},
+    {q:'9 · Technology — are HSMs, VPNs, load-balancers and identity platforms hybrid/PQC-capable?',dim:'ag',o:[['Unknown',1],['Mostly not',2],['Some, upgrade path exists',3],['Yes — interoperability tested',5]]},
+    {q:'10 · Governance — named accountable exec, PQC programme and board oversight?',dim:'mat',o:[['None',1],['Informal ownership',2],['Programme exists',3],['Board-reported programme',5]]}
+  ]
+};
+const levels=[null,
+  {n:'Level 1 — Unknown',d:'No inventory of cryptography; manual processes. You cannot yet see your exposure.'},
+  {n:'Level 2 — Visible',d:'Most keys and certificates identified, but change is still slow and manual.'},
+  {n:'Level 3 — Managed',d:'Centralised PKI and key management with defined lifecycles.'},
+  {n:'Level 4 — Agile',d:'Automated discovery, issuance and rotation; cryptographic changes can be made quickly.'},
+  {n:'Level 5 — Quantum-ready',d:'Inventory complete, migration tested, hybrid/PQC supported, rapid enterprise-wide replacement possible.'}
+];
 
 /* ============================ HELPERS ============================ */
 const $=id=>document.getElementById(id);
@@ -605,7 +680,48 @@ function mosca(){
     :('You need ~'+need+' years (X '+X+' + Y '+Y+') and ~'+Z+' remain \u2014 a margin of ~'+(Z-need)+' year'+((Z-need)===1?'':'s')+'. Keep the plan moving; margins shrink as estimates accelerate.');
 }
 
-/* ============================ RENDER LISTS ============================ */
+/* ============================ READINESS ASSESSMENT ============================ */
+let aMode='exec';const aAns={exec:{},tech:{}};let aX=null,aY=null;
+function setAssess(m){aMode=m;$('segExec').classList.toggle('on',m==='exec');$('segTech').classList.toggle('on',m==='tech');buildAssess();scoreAssess();}
+function buildAssess(){
+  $('assessQs').innerHTML=assess[aMode].map((q,i)=>`<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${aAns[aMode][i]===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div></div>`).join('');
+}
+function pickAns(i,j,val){
+  aAns[aMode][i]={j,val};
+  const q=$('assessQs').children[i];[...q.querySelectorAll('.aopt')].forEach((b,k)=>b.classList.toggle('on',k===j));
+  scoreAssess();
+}
+function scoreAssess(){
+  const set=assess[aMode],ans=aAns[aMode],done=Object.keys(ans).length;
+  const res=$('assessResult');
+  if(!done){res.hidden=true;return;}
+  res.hidden=false;
+  let agSum=0,agN=0,matSum=0,matN=0,shelf=null;
+  set.forEach((q,i)=>{const a=ans[i];if(!a)return;if(q.dim==='shelf')shelf=a.val;else if(q.dim==='ag'){agSum+=a.val;agN++;}else{matSum+=a.val;matN++;}});
+  const scoreVals=[];if(agN)scoreVals.push(agSum/agN);if(matN)scoreVals.push(matSum/matN);
+  const mean=scoreVals.length?scoreVals.reduce((a,b)=>a+b,0)/scoreVals.length:0;
+  const lvl=Math.min(5,Math.max(1,Math.round(mean||1)));
+  $('lvlbar').innerHTML=[1,2,3,4,5].map(n=>`<i class="${n<=lvl?'on':''}"></i>`).join('');
+  $('lvlName').textContent=levels[lvl].n;$('lvlDesc').textContent=levels[lvl].d;
+  // suggested Y from agility mean (lower agility -> longer migration)
+  aY=agN?Math.min(15,Math.max(1,Math.round(15-(agSum/agN)*2.6))):null;
+  aX=shelf;
+  const chips=[];
+  chips.push(`<span class="chip">Suggested <b>Y \u2248 ${aY!=null?aY+'y':'\u2014'}</b> migration</span>`);
+  chips.push(`<span class="chip">Suggested <b>X \u2248 ${aX!=null?aX+'y':'\u2014'}</b> shelf-life</span>`);
+  $('asugg').innerHTML=chips.join('');
+  $('applyBtn').disabled=(aX==null&&aY==null);
+  const total=set.length;
+  $('aprog').textContent=done+' of '+total+' answered'+((aX==null||aY==null)?' \u2014 answer the data-risk question for X'+(agN?'':' and an agility question for Y'):'');
+}
+function applyAssess(){
+  if(aX!=null){$('mX').value=Math.min(50,Math.max(1,aX));}
+  if(aY!=null){$('mY').value=Math.min(15,Math.max(1,aY));}
+  const box=$('moscaBox');if(box.hidden){$('moscaToggle').setAttribute('aria-expanded','true');box.hidden=false;}
+  mosca();
+  box.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 function buildStack(){
   $('stack').innerHTML=model.components.map(c=>`<div class="comp" role="button" tabindex="0" aria-expanded="false" onclick="toggleCard(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCard(this)}"><div class="ctop"><b>${c.name}</b><span class="pct">${c.pct}%</span></div><div class="met">${c.metric}</div><div class="track"><i style="width:${c.pct}%"></i></div><div class="more-btn">Tap for how it works, plain terms &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="comp-more"><div class="lbl">Plain terms</div><div class="novice">${c.novice}</div><div class="lbl two">How it works <span class="badge ${c.conf}">${c.conf}</span></div><div class="detail">${c.detail}</div><a class="srclink" href="${c.href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${c.srcLabel} ↗</a></div></div>`).join('');
   const pcts=model.components.map(c=>c.pct),sum=pcts.reduce((a,b)=>a+b,0),score=Math.round(sum/pcts.length);
@@ -728,7 +844,7 @@ addEventListener('scroll',hideTip,true);
 
 /* ============================ INIT ============================ */
 const _tab=readURL();paintTheme();
-buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();
+buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();buildAssess();
 applyTargetText();setScenario(scen);mosca();
 tick();setInterval(tick,1000);
 requestAnimationFrame(fitDigits);addEventListener('resize',fitDigits);addEventListener('orientationchange',()=>setTimeout(fitDigits,80));
