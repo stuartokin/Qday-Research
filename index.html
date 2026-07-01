@@ -264,7 +264,16 @@ h1 em{font-style:normal;color:var(--threat)}
 .assess{border:1px solid var(--line2);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--panel2));padding:clamp(15px,2.4vw,22px);margin-top:12px}
 .assess h3{margin:0 0 3px;font-size:16px}
 .assess .asub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:0 0 14px;line-height:1.55}
-.assess .seg{margin:0 0 6px}
+.assess .seg{margin:0}
+.aseghead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.assess .seg{flex-wrap:wrap}
+.areset{font-family:var(--mono);font-size:11px;color:var(--muted);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:2px}
+.areset:hover{color:var(--alert)}
+.anote{font-family:var(--mono);font-size:11px;color:var(--defence-2);line-height:1.55;margin:0 0 6px;padding:9px 11px;border-left:2px solid rgba(70,212,196,.4);background:rgba(70,212,196,.05);border-radius:0 8px 8px 0}
+.anote:empty{display:none}
+.applybtn.ready{box-shadow:0 0 0 rgba(70,212,196,.5);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(70,212,196,.45)}50%{box-shadow:0 0 0 7px rgba(70,212,196,0)}}
+
 .aq{border-top:1px solid var(--line);padding:12px 0}
 .aq .qt{font-family:var(--mono);font-size:12px;color:var(--ink);margin-bottom:8px;line-height:1.5}
 .aopts{display:flex;flex-wrap:wrap;gap:6px}
@@ -369,10 +378,15 @@ h1 em{font-style:normal;color:var(--threat)}
       <div class="assess">
         <h3>Readiness assessment</h3>
         <p class="asub">Answer a few questions and this maps you to a 5-level maturity model, then suggests starting values for X (data shelf-life) and Y (migration time) that you can apply to the Mosca test above. Optional, nothing is stored, and it's a self-assessment prompt — not an audit.</p>
-        <div class="seg" role="group" aria-label="Assessment type">
-          <button id="segExec" class="on" onclick="setAssess('exec')">Executive · 4</button>
-          <button id="segTech" onclick="setAssess('tech')">Technical · 10</button>
+        <div class="aseghead">
+          <div class="seg" role="group" aria-label="Assessment type">
+            <button id="segExec" class="on" onclick="setAssess('exec')">Executive · 4</button>
+            <button id="segTech" onclick="setAssess('tech')">Technical · 10</button>
+            <button id="segAuditor" onclick="setAssess('auditor')">Auditor · 7</button>
+          </div>
+          <button class="areset" id="aresetBtn" onclick="resetAssess()" hidden>Reset answers</button>
         </div>
+        <p class="anote" id="aNote"></p>
         <div id="assessQs"></div>
         <div class="aresult" id="assessResult" hidden>
           <div class="lvlbar" id="lvlbar" aria-hidden="true"></div>
@@ -550,12 +564,12 @@ const model={
     {region:'AU',body:'ASD Information Security Manual',milestones:[['2026','Refined transition plan'],['2030','Cease traditional asymmetric']],href:'',srcLabel:'Australian Signals Directorate'}
   ],
   changelog:[
-    {d:'Jun 2026',t:'Helios two-qubit fidelity (99.921%) peer-reviewed in Nature, validated by Sandia.'},
-    {d:'Mar 2026',t:'GRI 2025: 10-year CRQC likelihood jumps to 28\u201349% \u2014 highest in the report\u2019s seven-year history.'},
-    {d:'2026',t:'Google whitepaper: ECC-256 breakable with ~500k physical qubits \u2014 about half of RSA-2048.'},
-    {d:'Jun 2025',t:'IBM roadmap: Starling (2029, 200 logical / ~10k physical) and Blue Jay (2033, 2,000 logical / ~100k).'},
-    {d:'May 2025',t:'Gidney (Google): RSA-2048 factorable with <1M noisy qubits \u2014 down ~20\u00d7 from 20M (2019).'},
-    {d:'Mar 2025',t:'NIST selects HQC as a backup KEM (final standard expected ~2027).'}
+    {d:'Jun 2026',t:'Helios two-qubit fidelity (99.921%) peer-reviewed in Nature, validated by Sandia.',u:'https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html',s:'phys.org'},
+    {d:'Mar 2026',t:'GRI 2025: 10-year CRQC likelihood jumps to 28\u201349% \u2014 highest in the report\u2019s seven-year history.',u:'https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/',s:'GRI'},
+    {d:'2026',t:'Google whitepaper: ECC-256 breakable with ~500k physical qubits \u2014 about half of RSA-2048.',u:'https://physicsworld.com/a/new-findings-shorten-the-road-to-cryptographically-relevant-quantum-computers/',s:'Physics World'},
+    {d:'Jun 2025',t:'IBM roadmap: Starling (2029, 200 logical / ~10k physical) and Blue Jay (2033, 2,000 logical / ~100k).',u:'https://www.ibm.com/quantum/blog/large-scale-ftqc',s:'IBM'},
+    {d:'May 2025',t:'Gidney (Google): RSA-2048 factorable with <1M noisy qubits \u2014 down ~20\u00d7 from 20M (2019).',u:'https://arxiv.org/abs/2505.15917',s:'arXiv'},
+    {d:'Mar 2025',t:'NIST selects HQC as a backup KEM (final standard expected ~2027).',u:'https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption',s:'NIST'}
   ],
   sources:[
     {t:'NCSC — Timelines for migration to post-quantum cryptography',u:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',d:'ncsc.gov.uk · guidance · checked Jun 2026'},
@@ -598,6 +612,15 @@ const assess={
     {q:'8 · Data risk — what is your longest data-confidentiality requirement?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years',30]]},
     {q:'9 · Technology — are HSMs, VPNs, load-balancers and identity platforms hybrid/PQC-capable?',dim:'ag',o:[['Unknown',1],['Mostly not',2],['Some, upgrade path exists',3],['Yes — interoperability tested',5]]},
     {q:'10 · Governance — named accountable exec, PQC programme and board oversight?',dim:'mat',o:[['None',1],['Informal ownership',2],['Programme exists',3],['Board-reported programme',5]]}
+  ],
+  auditor:[
+    {q:'Can you discover every cryptographic key across the estate?',dim:'ag',o:[['No reliable way',1],['Partial / manual',2],['Central inventory, periodic',3],['Automated, continuous discovery',5]]},
+    {q:'Do you know where every certificate is used and what depends on it?',dim:'mat',o:[['Largely unknown',1],['Some mappings',2],['Documented for critical systems',3],['Full dependency mapping',5]]},
+    {q:'Can you rotate keys and certificates automatically?',dim:'ag',o:[['No — manual',1],['Some automation',2],['Most, automated',4],['Fully automated (e.g. ACME)',5]]},
+    {q:'Could you replace compromised keys within hours?',dim:'ag',o:[['No — days or weeks',1],['With major effort',2],['Yes, for critical systems',4],['Yes, enterprise-wide',5]]},
+    {q:'Can you migrate rapidly to post-quantum cryptography if required?',dim:'ag',o:[['Not assessed',1],['Analysis started',2],['Plan in place',3],['Tested & hybrid-ready',5]]},
+    {q:'Can you demonstrate cryptographic agility with evidence, not assertion?',dim:'mat',o:[['No evidence',1],['Informal',2],['Documented',3],['Auditable, board-reported',5]]},
+    {q:'What is your longest data-confidentiality requirement (harvest-now-decrypt-later exposure)?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years',30]]}
   ]
 };
 const levels=[null,
@@ -681,16 +704,27 @@ function mosca(){
 }
 
 /* ============================ READINESS ASSESSMENT ============================ */
-let aMode='exec';const aAns={exec:{},tech:{}};let aX=null,aY=null;
-function setAssess(m){aMode=m;$('segExec').classList.toggle('on',m==='exec');$('segTech').classList.toggle('on',m==='tech');buildAssess();scoreAssess();}
+let aMode='exec';const aAns={exec:{},tech:{},auditor:{}};let aX=null,aY=null;
+const aNotes={
+  exec:'The three questions a CIO or CISO should be able to answer instantly — plus your data-confidentiality horizon.',
+  tech:'A deeper self-check across discovery, criticality, key management, agility, suppliers, technology and governance.',
+  auditor:'Supervisors across the UK, EU and US are moving beyond \u201chow often do you rotate keys?\u201d to whether you can discover, rotate, replace and migrate at speed — demonstrable cryptographic agility against harvest-now-decrypt-later.'
+};
+function saveAns(){try{sessionStorage.setItem('qday_assess',JSON.stringify(aAns));}catch(e){}}
+function loadAns(){try{const s=sessionStorage.getItem('qday_assess');if(s){const o=JSON.parse(s);['exec','tech','auditor'].forEach(k=>{if(o&&o[k])aAns[k]=o[k];});}}catch(e){}}
+function segId(k){return 'seg'+k[0].toUpperCase()+k.slice(1);}
+function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];buildAssess();scoreAssess();}
 function buildAssess(){
-  $('assessQs').innerHTML=assess[aMode].map((q,i)=>`<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${aAns[aMode][i]===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div></div>`).join('');
+  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div></div>`;}).join('');
+  $('aresetBtn').hidden=Object.keys(aAns[aMode]).length===0;
 }
 function pickAns(i,j,val){
-  aAns[aMode][i]={j,val};
+  aAns[aMode][i]={j,val};saveAns();
   const q=$('assessQs').children[i];[...q.querySelectorAll('.aopt')].forEach((b,k)=>b.classList.toggle('on',k===j));
+  $('aresetBtn').hidden=false;
   scoreAssess();
 }
+function resetAssess(){aAns[aMode]={};saveAns();aX=null;aY=null;$('applyBtn').classList.remove('ready');buildAssess();$('assessResult').hidden=true;}
 function scoreAssess(){
   const set=assess[aMode],ans=aAns[aMode],done=Object.keys(ans).length;
   const res=$('assessResult');
@@ -703,16 +737,17 @@ function scoreAssess(){
   const lvl=Math.min(5,Math.max(1,Math.round(mean||1)));
   $('lvlbar').innerHTML=[1,2,3,4,5].map(n=>`<i class="${n<=lvl?'on':''}"></i>`).join('');
   $('lvlName').textContent=levels[lvl].n;$('lvlDesc').textContent=levels[lvl].d;
-  // suggested Y from agility mean (lower agility -> longer migration)
   aY=agN?Math.min(15,Math.max(1,Math.round(15-(agSum/agN)*2.6))):null;
   aX=shelf;
-  const chips=[];
-  chips.push(`<span class="chip">Suggested <b>Y \u2248 ${aY!=null?aY+'y':'\u2014'}</b> migration</span>`);
-  chips.push(`<span class="chip">Suggested <b>X \u2248 ${aX!=null?aX+'y':'\u2014'}</b> shelf-life</span>`);
-  $('asugg').innerHTML=chips.join('');
-  $('applyBtn').disabled=(aX==null&&aY==null);
-  const total=set.length;
-  $('aprog').textContent=done+' of '+total+' answered'+((aX==null||aY==null)?' \u2014 answer the data-risk question for X'+(agN?'':' and an agility question for Y'):'');
+  $('asugg').innerHTML=`<span class="chip">Suggested <b>Y \u2248 ${aY!=null?aY+'y':'\u2014'}</b> migration</span><span class="chip">Suggested <b>X \u2248 ${aX!=null?aX+'y':'\u2014'}</b> shelf-life</span>`;
+  const b=$('applyBtn');b.disabled=(aX==null&&aY==null);
+  const total=set.length,complete=done===total;
+  b.textContent=(complete&&!b.disabled?'\u2713 ':'')+'Apply X & Y to the Mosca test';
+  b.classList.toggle('ready',complete&&!b.disabled);
+  $('aresetBtn').hidden=false;
+  $('aprog').textContent=complete
+    ?('All '+total+' answered — apply your results below.')
+    :(done+' of '+total+' answered'+((aX==null||aY==null)?' \u2014 answer the data-risk question for X'+(agN?'':' and an agility question for Y'):' \u2014 finish for a full picture, or apply now'));
 }
 function applyAssess(){
   if(aX!=null){$('mX').value=Math.min(50,Math.max(1,aX));}
@@ -730,7 +765,7 @@ function buildStack(){
 }
 function buildNodes(){$('nodes').innerHTML=model.ncsc.map((n,i)=>`<div class="node"><div class="yr">${n.year}</div><div class="ttl">${n.title}</div><div class="days" data-i="${i}">${daysTo(n.date).toLocaleString('en-GB')} days left</div><div class="act">${n.info}</div><div class="novice">${n.novice}</div><a class="srclink" href="${n.href}" target="_blank" rel="noopener">${linkIcon}${n.srcLabel} ↗</a></div>`).join('');}
 function buildRegs(){$('regs').innerHTML=model.regulations.map(r=>`<div class="regcard"><div class="rtop"><span class="flag">${r.region}</span><span class="rbody">${r.body}</span></div>${r.milestones.map(m=>`<div class="milestone"><b>${m[0]}</b><span>${m[1]}</span></div>`).join('')}${r.href?`<a class="srclink" href="${r.href}" target="_blank" rel="noopener">${linkIcon}${r.srcLabel} ↗</a>`:`<div class="rsrc">${r.srcLabel}</div>`}</div>`).join('');}
-function buildChangelog(){$('changelog').innerHTML=model.changelog.map(c=>`<div class="logitem"><time>${c.d}</time><span>${c.t}</span></div>`).join('');}
+function buildChangelog(){$('changelog').innerHTML=model.changelog.map(c=>`<div class="logitem"><time>${c.d}</time><span>${c.t} <a class="srclink" href="${c.u}" target="_blank" rel="noopener">${c.s} ↗</a></span></div>`).join('');}
 
 /* ============================ SVG CHARTS ============================ */
 const NS='http://www.w3.org/2000/svg';
@@ -844,7 +879,7 @@ addEventListener('scroll',hideTip,true);
 
 /* ============================ INIT ============================ */
 const _tab=readURL();paintTheme();
-buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();buildAssess();
+buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();loadAns();setAssess('exec');
 applyTargetText();setScenario(scen);mosca();
 tick();setInterval(tick,1000);
 requestAnimationFrame(fitDigits);addEventListener('resize',fitDigits);addEventListener('orientationchange',()=>setTimeout(fitDigits,80));
