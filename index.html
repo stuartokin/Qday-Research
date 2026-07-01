@@ -307,6 +307,7 @@ h1 em{font-style:normal;color:var(--threat)}
 .catfilter{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0 2px}
 .catchip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink);border:1px solid var(--line2);background:var(--card);border-radius:999px;padding:6px 11px;cursor:pointer;transition:.14s}
 .catchip .dot{width:9px;height:9px;border-radius:50%;flex:none}
+.catchip .dot.dia{border-radius:1px;transform:rotate(45deg)}
 .catchip.off{opacity:.38}
 .catchip:hover{border-color:var(--defence)}
 .vulns{grid-template-columns:repeat(auto-fill,minmax(248px,1fr));margin-top:14px}
@@ -559,8 +560,8 @@ h1 em{font-style:normal;color:var(--threat)}
     </div>
     <p class="vdesc" id="dThreats" hidden>Critical vulnerabilities in cryptography, certificates, PKI and associated components/OS from the last decade, clustered by type, and real, attributed attacks (2020–2023) that pivoted on cryptographic or certificate trust. Every item links to a primary source. Tap points and cards for detail; use the legend to filter.</p>
     <div class="chart">
-      <h3>Vulnerability landscape</h3>
-      <p class="csub">Year vs severity (CVSS) · clustered by category · tap a point</p>
+      <h3>Threat landscape</h3>
+      <p class="csub">Year × severity · ● vulnerability (size ∝ CVSS) · ◆ attack (size ∝ impact) · tap a marker</p>
       <svg id="chartVuln" viewBox="0 0 540 340" role="img" aria-label="Scatter plot of major cryptographic, certificate and component vulnerabilities plotted by year and CVSS severity, coloured and clustered by category."></svg>
       <div class="catfilter" id="catFilter"></div>
     </div>
@@ -569,7 +570,7 @@ h1 em{font-style:normal;color:var(--threat)}
     <div class="vhead" style="margin-top:24px"><span class="lab">Attacks that abused them</span></div>
     <p class="thead-lead">Documented, attributed incidents where cryptographic keys, certificates or trust were the pivot. Dollar losses are frequently undisclosed, so impact is shown by verified scale — victims, records and scope — not invented figures.</p>
     <div class="grid-auto attacks" id="attackList"></div>
-    <p class="minifoot" style="text-align:left">CVSS are NVD base scores where available; PKfail is vendor-rated. Severity framing varies by source. A curated, verified selection — not exhaustive.</p>
+    <p class="minifoot" style="text-align:left">CVSS are NVD base scores where available; PKfail is vendor-rated. Attack diamonds are placed and sized by an editorial impact rating (0–10) reflecting verified scale, not CVSS. A curated, verified selection — not exhaustive.</p>
   </section>
 
 </main>
@@ -693,13 +694,13 @@ const vulns=[
   {name:'PKfail',cve:'BRLY-2024-005',year:2024,cvss:8.2,cvssNote:'Binarly-rated (no NVD CVSS assigned)',cat:'pki',affects:'UEFI Secure Boot Platform Key (hundreds of device models)',desc:'Hundreds of device models shipped with an AMI test Platform Key \u2014 the root of trust for Secure Boot \u2014 whose private key had leaked. Anyone holding it can sign boot code and defeat Secure Boot, enabling bootkits such as BlackLotus.',url:'https://www.binarly.io/advisories/brly-2024-005',src:'Binarly'}
 ];
 const attacks=[
-  {name:'Storm-0558 \u2014 forged Microsoft tokens',year:2023,type:'Nation-state espionage',brand:'Microsoft / US government',attribution:'China (Storm-0558)',method:'Stole a 2016 Microsoft consumer (MSA) token-signing key and exploited a token-validation flaw to forge authentication tokens, reading Exchange Online mail.',impact:'~22\u201325 organisations and 500+ individuals; roughly 60,000 US State Department emails; mailboxes of Commerce Secretary Raimondo and the US Ambassador to China. The CSRB judged it \u201cpreventable\u201d.',url:'https://www.bleepingcomputer.com/news/security/microsoft-still-unsure-how-hackers-stole-msa-key-in-2023-exchange-attack/',src:'CSRB / BleepingComputer'},
-  {name:'SolarWinds / SUNBURST \u2014 Golden SAML',year:2020,type:'Supply-chain espionage',brand:'SolarWinds Orion customers',attribution:'Russia (SVR \u2014 APT29 / Cozy Bear)',method:'Implanted a backdoor in Orion updates, then stole ADFS token-signing certificates to forge SAML tokens (\u201cGolden SAML\u201d), accessing cloud mail while bypassing MFA.',impact:'~18,000 organisations received the trojaned update; confirmed victims included the US Treasury and Commerce departments and the security firm FireEye/Mandiant. Years of remediation across government and industry.',url:'https://cloud.google.com/blog/topics/threat-intelligence/unc2452-merged-into-apt29',src:'Mandiant'},
-  {name:'Citrix Bleed ransomware wave',year:2023,type:'Ransomware / extortion',brand:'Boeing, ICBC, Comcast Xfinity, DP World\u2026',attribution:'LockBit 3.0 affiliates (also Medusa)',method:'Exploited CVE-2023-4966 to steal NetScaler session tokens, bypass MFA, then deploy ransomware and exfiltrate data.',impact:'Boeing\u2019s parts business breached; ICBC (the world\u2019s largest bank) had its US unit disrupted, affecting Treasury-market trades; Comcast Xfinity notified 35,879,455 individuals; DP World Australia\u2019s ports were halted for days.',url:'https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a',src:'CISA AA23-325A'},
-  {name:'Zerologon domain takeovers',year:2020,type:'Ransomware & APT',brand:'Windows AD environments (many sectors)',attribution:'Ransomware crews + nation-state APTs',method:'Exploited the Netlogon AES-CFB8 zero-IV flaw (CVE-2020-1472) to reset domain-controller passwords and seize Active Directory, then spread ransomware.',impact:'CISA issued Emergency Directive 20-04 ordering federal agencies to patch within days; the flaw was widely chained with VPN bugs for ransomware and espionage intrusions.',url:'https://www.secura.com/blog/zero-logon',src:'Secura / CISA'},
-  {name:'Nvidia code-signing certificate abuse',year:2022,type:'Extortion + trust abuse',brand:'Nvidia',attribution:'Lapsus$',method:'Breached Nvidia, stole two code-signing certificates and leaked them; attackers then signed malware (Cobalt Strike, Mimikatz, RATs) that Windows would trust \u2014 expired certs still load as drivers.',impact:'~1TB exfiltrated including 71,000+ employee credentials; the leaked certificates were abused within a day to sign malicious drivers and tooling.',url:'https://www.bleepingcomputer.com/news/security/malware-now-using-nvidias-stolen-code-signing-certificates/',src:'BleepingComputer'}
+  {name:'Storm-0558 \u2014 forged Microsoft tokens',year:2023,impactScore:9.0,type:'Nation-state espionage',brand:'Microsoft / US government',attribution:'China (Storm-0558)',method:'Stole a 2016 Microsoft consumer (MSA) token-signing key and exploited a token-validation flaw to forge authentication tokens, reading Exchange Online mail.',impact:'~22\u201325 organisations and 500+ individuals; roughly 60,000 US State Department emails; mailboxes of Commerce Secretary Raimondo and the US Ambassador to China. The CSRB judged it \u201cpreventable\u201d.',url:'https://www.bleepingcomputer.com/news/security/microsoft-still-unsure-how-hackers-stole-msa-key-in-2023-exchange-attack/',src:'CSRB / BleepingComputer'},
+  {name:'SolarWinds / SUNBURST \u2014 Golden SAML',year:2020,impactScore:9.8,type:'Supply-chain espionage',brand:'SolarWinds Orion customers',attribution:'Russia (SVR \u2014 APT29 / Cozy Bear)',method:'Implanted a backdoor in Orion updates, then stole ADFS token-signing certificates to forge SAML tokens (\u201cGolden SAML\u201d), accessing cloud mail while bypassing MFA.',impact:'~18,000 organisations received the trojaned update; confirmed victims included the US Treasury and Commerce departments and the security firm FireEye/Mandiant. Years of remediation across government and industry.',url:'https://cloud.google.com/blog/topics/threat-intelligence/unc2452-merged-into-apt29',src:'Mandiant'},
+  {name:'Citrix Bleed ransomware wave',year:2023,impactScore:9.2,type:'Ransomware / extortion',brand:'Boeing, ICBC, Comcast Xfinity, DP World\u2026',attribution:'LockBit 3.0 affiliates (also Medusa)',method:'Exploited CVE-2023-4966 to steal NetScaler session tokens, bypass MFA, then deploy ransomware and exfiltrate data.',impact:'Boeing\u2019s parts business breached; ICBC (the world\u2019s largest bank) had its US unit disrupted, affecting Treasury-market trades; Comcast Xfinity notified 35,879,455 individuals; DP World Australia\u2019s ports were halted for days.',url:'https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a',src:'CISA AA23-325A'},
+  {name:'Zerologon domain takeovers',year:2020,impactScore:8.8,type:'Ransomware & APT',brand:'Windows AD environments (many sectors)',attribution:'Ransomware crews + nation-state APTs',method:'Exploited the Netlogon AES-CFB8 zero-IV flaw (CVE-2020-1472) to reset domain-controller passwords and seize Active Directory, then spread ransomware.',impact:'CISA issued Emergency Directive 20-04 ordering federal agencies to patch within days; the flaw was widely chained with VPN bugs for ransomware and espionage intrusions.',url:'https://www.secura.com/blog/zero-logon',src:'Secura / CISA'},
+  {name:'Nvidia code-signing certificate abuse',year:2022,impactScore:7.0,type:'Extortion + trust abuse',brand:'Nvidia',attribution:'Lapsus$',method:'Breached Nvidia, stole two code-signing certificates and leaked them; attackers then signed malware (Cobalt Strike, Mimikatz, RATs) that Windows would trust \u2014 expired certs still load as drivers.',impact:'~1TB exfiltrated including 71,000+ employee credentials; the leaked certificates were abused within a day to sign malicious drivers and tooling.',url:'https://www.bleepingcomputer.com/news/security/malware-now-using-nvidias-stolen-code-signing-certificates/',src:'BleepingComputer'}
 ];
-let catOff={},threatsCharted=false;
+let catOff={},threatsCharted=false,attacksOff=false;
 const assess={
   exec:[
     {q:'Can you say, today, everywhere RSA and ECC are used across your organisation?',dim:'ag',o:[['No central inventory',1],['Partially — some systems known',2],['Mostly — a maintained inventory',3],['Yes — complete, automated discovery',5]]},
@@ -902,29 +903,44 @@ function buildChangelog(){$('changelog').innerHTML=model.changelog.map(c=>`<div 
 
 /* ============================ THREATS ============================ */
 function sevClass(c){return c>=9?'sevpill-crit':c>=7?'sevpill-high':'sevpill-med';}
-function cardTog(el){el.setAttribute('aria-expanded',el.getAttribute('aria-expanded')==='true'?'false':'true');}
+function cardTog(el){const next=el.getAttribute('aria-expanded')==='true'?'false':'true';const top=el.offsetTop,par=el.parentElement;[...par.children].filter(k=>k.hasAttribute('aria-expanded')&&Math.abs(k.offsetTop-top)<2).forEach(k=>k.setAttribute('aria-expanded',next));}
 function cardKey(e,el){if(e.key==='Enter'||e.key===' '){e.preventDefault();cardTog(el);}}
-function buildCatFilter(){$('catFilter').innerHTML=Object.entries(catMeta).map(([k,m])=>`<button class="catchip" data-c="${k}" onclick="toggleCat('${k}')"><span class="dot" style="background:${m.color}"></span>${m.label}</button>`).join('');}
-function toggleCat(k){catOff[k]=!catOff[k];const b=document.querySelector('.catchip[data-c="'+k+'"]');if(b)b.classList.toggle('off',catOff[k]);drawVulnCluster();buildVulns();}
+function buildCatFilter(){$('catFilter').innerHTML=Object.entries(catMeta).map(([k,m])=>`<button class="catchip" data-c="${k}" onclick="toggleCat('${k}')"><span class="dot" style="background:${m.color}"></span>${m.label}</button>`).join('')+`<button class="catchip" data-c="attacks" onclick="toggleCat('attacks')"><span class="dot dia" style="background:var(--alert)"></span>Attacks</button>`;}
+function toggleCat(k){if(k==='attacks'){attacksOff=!attacksOff;}else{catOff[k]=!catOff[k];}const b=document.querySelector('.catchip[data-c="'+k+'"]');if(b)b.classList.toggle('off',k==='attacks'?attacksOff:catOff[k]);drawVulnCluster();buildVulns();}
 function drawVulnCluster(){
   const svg=$('chartVuln');if(!svg)return;svg.innerHTML='';
   const W=540,H=340,L=42,R=18,T=18,B=52,x0=2013,x1=2025,y0=4,y1=10.6;
   const px=x=>L+(x-x0)/(x1-x0)*(W-L-R),py=v=>T+(y1-v)/(y1-y0)*(H-T-B);
-  const cF=cssvar('--faint');
+  const cF=cssvar('--faint'),bg=cssvar('--bg'),alert=cssvar('--alert');
   for(let v=5;v<=10;v++){const y=py(v);svg.appendChild(el('line',{x1:L,y1:y,x2:W-R,y2:y,stroke:'rgba(160,200,195,.08)','stroke-width':1}));svg.appendChild(el('text',{x:L-6,y:y+3.5,'text-anchor':'end',fill:cF,'font-family':'monospace','font-size':9},v));}
   [2014,2016,2018,2020,2022,2024].forEach(t=>svg.appendChild(el('text',{x:px(t),y:H-B+18,'text-anchor':'middle',fill:cF,'font-family':'monospace','font-size':9},t)));
-  svg.appendChild(el('text',{x:L-34,y:T-5,fill:cF,'font-family':'monospace','font-size':9},'CVSS'));
+  svg.appendChild(el('text',{x:L-34,y:T-5,fill:cF,'font-family':'monospace','font-size':9},'severity'));
+  // vulnerabilities: circles sized by CVSS
   const byYear={};vulns.forEach(v=>{(byYear[v.year]=byYear[v.year]||[]).push(v);});
   vulns.forEach(v=>{
     if(catOff[v.cat])return;
     const grp=byYear[v.year],idx=grp.indexOf(v),n=grp.length,jx=(n>1?(idx-(n-1)/2)*8:0);
-    const cx=px(v.year)+jx,cy=py(v.cvss),col=catMeta[v.cat].color;
-    svg.appendChild(el('circle',{cx,cy,r:10,fill:col,opacity:.13}));
-    const c=el('circle',{cx,cy,r:5.5,fill:col,stroke:cssvar('--bg'),'stroke-width':1.5,style:'cursor:pointer;pointer-events:all'});
+    const cx=px(v.year)+jx,cy=py(v.cvss),col=catMeta[v.cat].color,r=Math.max(3,3+(v.cvss-5)*0.9);
+    svg.appendChild(el('circle',{cx,cy,r:r+4,fill:col,opacity:.13}));
+    const c=el('circle',{cx,cy,r,fill:col,stroke:bg,'stroke-width':1.5,style:'cursor:pointer;pointer-events:all'});
     const tip='<b>'+v.name+'</b><br>'+v.cve+' \u00b7 '+v.year+'<br>CVSS '+v.cvss+(v.cvssNote?'*':'')+' \u00b7 '+catMeta[v.cat].label;
     c.addEventListener('pointerenter',e=>showTip(svg,e,tip));c.addEventListener('pointermove',e=>showTip(svg,e,tip));c.addEventListener('pointerleave',hideTip);c.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});
     svg.appendChild(c);
   });
+  // attacks: diamonds sized by impact
+  if(!attacksOff){
+    const byYa={};attacks.forEach(a=>{(byYa[a.year]=byYa[a.year]||[]).push(a);});
+    attacks.forEach(a=>{
+      const grp=byYa[a.year],idx=grp.indexOf(a),n=grp.length,jx=(n>1?(idx-(n-1)/2)*10:0)+6;
+      const cx=px(a.year)+jx,cy=py(a.impactScore),s=Math.max(4,4+(a.impactScore-6)*1.3);
+      const dia=(S)=>`${cx} ${cy-S} ${cx+S} ${cy} ${cx} ${cy+S} ${cx-S} ${cy}`;
+      svg.appendChild(el('polygon',{points:dia(s+4),fill:alert,opacity:.14}));
+      const d=el('polygon',{points:dia(s),fill:alert,stroke:bg,'stroke-width':1.5,style:'cursor:pointer;pointer-events:all'});
+      const tip='<b>'+a.name+'</b><br>'+a.year+' \u00b7 '+a.attribution+'<br>impact '+a.impactScore.toFixed(1)+'/10 (editorial)';
+      d.addEventListener('pointerenter',e=>showTip(svg,e,tip));d.addEventListener('pointermove',e=>showTip(svg,e,tip));d.addEventListener('pointerleave',hideTip);d.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});
+      svg.appendChild(d);
+    });
+  }
 }
 function buildVulns(){
   $('vulnList').innerHTML=vulns.filter(v=>!catOff[v.cat]).map(v=>{const col=catMeta[v.cat].color;return `<div class="vuln" role="button" tabindex="0" aria-expanded="false" style="border-left-color:${col}" onclick="cardTog(this)" onkeydown="cardKey(event,this)"><div class="vtop"><span class="vname">${v.name}</span><span class="sev ${sevClass(v.cvss)}">${v.cvss}</span></div><div class="cve">${v.cve} · ${v.year}</div><div class="cat" style="color:${col}">${catMeta[v.cat].label}</div><div class="more-btn">Tap for detail &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="vmore"><div class="vaff">Affects: ${v.affects}</div><div class="vdesc2">${v.desc}</div><a class="srclink" href="${v.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${v.src} ↗</a>${v.cvssNote?`<div class="vhint">${v.cvssNote}</div>`:''}</div></div>`;}).join('');
