@@ -276,6 +276,16 @@ h1 em{font-style:normal;color:var(--threat)}
 
 .aq{border-top:1px solid var(--line);padding:12px 0}
 .aq .qt{font-family:var(--mono);font-size:12px;color:var(--ink);margin-bottom:8px;line-height:1.5}
+.reccall{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--defence-2);background:none;border:0;cursor:pointer;padding:9px 0 2px;letter-spacing:.02em}
+.reccall:hover{color:var(--ink)}
+.reccall .ic{width:12px;height:12px;stroke-width:1.8}
+.reccall .chev{width:11px;height:11px;transition:transform .2s ease}
+.reccall[aria-expanded=true]{color:var(--ink)}
+.reccall[aria-expanded=true] .chev{transform:rotate(180deg)}
+.recbody{margin:5px 0 2px;padding:11px 13px;border-left:2px solid var(--defence);background:rgba(70,212,196,.06);border-radius:0 8px 8px 0;animation:fade .22s ease}
+.recbody[hidden]{display:none}
+.recbody p{font-family:var(--mono);font-size:10.5px;color:var(--ink);line-height:1.55;margin:0 0 9px}
+.reclinks{display:flex;gap:14px;flex-wrap:wrap}
 .aopts{display:flex;flex-wrap:wrap;gap:6px}
 .aopt{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--line2);background:var(--card);border-radius:9px;padding:7px 10px;cursor:pointer;transition:.14s;text-align:left}
 .aopt:hover{color:var(--ink);border-color:var(--defence)}
@@ -293,7 +303,46 @@ h1 em{font-style:normal;color:var(--threat)}
 .applybtn[disabled]{opacity:.4;cursor:not-allowed}
 .applybtn:not([disabled]):hover{box-shadow:0 0 20px rgba(70,212,196,.35)}
 .aprog{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:9px}
+.thead-lead{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.6;margin:2px 0 6px;padding:10px 12px;border-left:2px solid var(--alert);background:rgba(255,90,95,.05);border-radius:0 8px 8px 0}
+.catfilter{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0 2px}
+.catchip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink);border:1px solid var(--line2);background:var(--card);border-radius:999px;padding:6px 11px;cursor:pointer;transition:.14s}
+.catchip .dot{width:9px;height:9px;border-radius:50%;flex:none}
+.catchip.off{opacity:.38}
+.catchip:hover{border-color:var(--defence)}
+.vulns{grid-template-columns:repeat(auto-fill,minmax(248px,1fr));margin-top:14px}
+.vuln{border:1px solid var(--line2);border-left-width:3px;border-radius:12px;background:var(--card);padding:13px;cursor:pointer;transition:.16s;min-width:0}
+.vuln:hover{box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.vuln .vtop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.vuln .vname{font-size:13px;font-weight:600;line-height:1.25}
+.vuln .sev{font-family:var(--mono);font-size:11px;font-weight:700;flex:none;padding:2px 7px;border-radius:6px}
+.vuln .cve{font-family:var(--mono);font-size:10px;color:var(--muted);margin:5px 0 0}
+.vuln .cat{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:7px}
+.vuln .more-btn{display:flex;align-items:center;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-top:9px}
+.vuln .more-btn .chev,.atk .more-btn .chev{width:11px;height:11px;flex:none;transition:transform .2s}
+.vuln[aria-expanded=true] .more-btn .chev,.atk[aria-expanded=true] .more-btn .chev{transform:rotate(180deg)}
+.vuln .vmore{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.vuln[aria-expanded=true] .vmore{display:block;animation:fade .2s ease}
+.vuln .vaff{font-family:var(--mono);font-size:10px;color:var(--defence-2);line-height:1.45;margin-bottom:7px}
+.vuln .vdesc2{font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.55;margin:0 0 9px}
+.vuln .vhint{font-family:var(--mono);font-size:9px;color:var(--faint);margin-top:8px}
+.attacks{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));margin-top:14px}
+.atk{border:1px solid var(--line2);border-radius:14px;background:linear-gradient(180deg,var(--panel),var(--panel2));padding:15px;min-width:0;cursor:pointer;transition:.16s}
+.atk:hover{border-color:var(--alert);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.atk .atop{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.atk .aname{font-size:14px;font-weight:600;line-height:1.25}
+.atk .ayear{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--alert);flex:none}
+.atk .atype{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--threat-2);border:1px solid rgba(255,158,61,.35);border-radius:5px;padding:2px 6px;margin-bottom:9px}
+.atk .arow{font-family:var(--mono);font-size:10.5px;line-height:1.5;margin:6px 0;color:var(--ink)}
+.atk .arow b{color:var(--defence-2);font-weight:600}
+.atk .more-btn{display:flex;align-items:center;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-top:9px}
+.atk .amore{display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.atk[aria-expanded=true] .amore{display:block;animation:fade .2s ease}
+.atk .srclink{margin-top:10px}
+.sevpill-crit{color:#0a0e10;background:var(--alert)}
+.sevpill-high{color:#0a0e10;background:var(--threat)}
+.sevpill-med{color:#0a0e10;background:var(--threat-2)}
 
+@media(min-width:1080px){:root{--appw:1040px}}
 @media(min-width:1440px){:root{--appw:1200px}}
 @media(min-width:1720px){:root{--appw:1320px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
@@ -419,6 +468,8 @@ h1 em{font-style:normal;color:var(--threat)}
       <div class="mbar" aria-hidden="true"><i class="x" id="barX"></i><i class="y" id="barY"></i></div>
       <div class="mscale" aria-hidden="true"><span>now</span><span id="zScale"></span></div>
       <div class="mresult ok" id="mResult"><div class="verdict" id="mVerdict"></div><div class="detail" id="mDetail"></div></div>
+      <button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>If X + Y &gt; Z, what should you do? — NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="recbody" hidden><p>Being exposed on this test is common, and the response is the same one every major authority now gives: start now. Prioritise long-lived data (harvest-now-decrypt-later makes its deadline effectively today), build a cryptographic inventory, choose crypto-agile solutions, and migrate to the NIST standards (ML-KEM / ML-DSA / SLH-DSA) against the NCSC 2028 / 2031 / 2035 milestones.</p><div class="reclinks"><a class="srclink" href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NCSC timelines ↗</a><a class="srclink" href="https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>CISA/NSA/NIST factsheet ↗</a></div></div>
       <p class="minifoot" style="margin-top:12px;text-align:left">Mosca inequality (M. Mosca / GRI). Illustrative — Z uses the selected scenario, not a forecast.</p>
     </div>
     </div>
@@ -502,6 +553,24 @@ h1 em{font-style:normal;color:var(--threat)}
     <div class="grid-auto reg" id="regs"></div>
     <p class="minifoot" style="text-align:left">Dates compiled from public government publications (2025–26). EU / Australia rows link out via Methodology &amp; sources.</p>
   </section>
+  <section class="view" id="view-threats">
+    <div class="vhead"><span class="lab">Attacks &amp; vulnerabilities</span>
+      <button class="ibtn" aria-expanded="false" data-target="dThreats" onclick="toggle(this)" aria-label="About"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
+    </div>
+    <p class="vdesc" id="dThreats" hidden>Critical vulnerabilities in cryptography, certificates, PKI and associated components/OS from the last decade, clustered by type, and real, attributed attacks (2020–2023) that pivoted on cryptographic or certificate trust. Every item links to a primary source. Tap points and cards for detail; use the legend to filter.</p>
+    <div class="chart">
+      <h3>Vulnerability landscape</h3>
+      <p class="csub">Year vs severity (CVSS) · clustered by category · tap a point</p>
+      <svg id="chartVuln" viewBox="0 0 540 340" role="img" aria-label="Scatter plot of major cryptographic, certificate and component vulnerabilities plotted by year and CVSS severity, coloured and clustered by category."></svg>
+      <div class="catfilter" id="catFilter"></div>
+    </div>
+    <div class="vhead" style="margin-top:22px"><span class="lab">Critical vulnerabilities</span></div>
+    <div class="grid-auto vulns" id="vulnList"></div>
+    <div class="vhead" style="margin-top:24px"><span class="lab">Attacks that abused them</span></div>
+    <p class="thead-lead">Documented, attributed incidents where cryptographic keys, certificates or trust were the pivot. Dollar losses are frequently undisclosed, so impact is shown by verified scale — victims, records and scope — not invented figures.</p>
+    <div class="grid-auto attacks" id="attackList"></div>
+    <p class="minifoot" style="text-align:left">CVSS are NVD base scores where available; PKfail is vendor-rated. Severity framing varies by source. A curated, verified selection — not exhaustive.</p>
+  </section>
 
 </main>
 
@@ -510,6 +579,7 @@ h1 em{font-style:normal;color:var(--threat)}
   <button class="tab" data-v="trends" onclick="showView('trends')"><svg class="ic" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M19 8l-5 6-3-2-4 5"/></svg><span class="lbl2">Trends</span></button>
   <button class="tab" data-v="stack" onclick="showView('stack')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><span class="lbl2">Stack</span></button>
   <button class="tab" data-v="plan" onclick="showView('plan')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg><span class="lbl2">Plan</span></button>
+  <button class="tab" data-v="threats" onclick="showView('threats')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><line x1="12" y1="9" x2="12" y2="12.5"/><circle cx="12" cy="15.4" r=".5" fill="currentColor" stroke="none"/></svg><span class="lbl2">Threats</span></button>
 </div></nav>
 
 <div class="drawer" id="drawer"><div class="shade" onclick="close_()"></div>
@@ -560,7 +630,7 @@ const model={
   regulations:[
     {region:'UK',body:'NCSC PQC migration',milestones:[['2028','Discover & plan'],['2031','Priority migration'],['2035','Complete']],href:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',srcLabel:'NCSC'},
     {region:'US',body:'NSA CNSA 2.0 / NSM-10',milestones:[['2027','New acquisitions support PQC'],['2030','Firmware & networking exclusive'],['2033','OS, apps & cloud exclusive'],['2035','All NSS quantum-resistant']],href:'https://csrc.nist.gov/projects/post-quantum-cryptography',srcLabel:'NIST / NSA'},
-    {region:'EU',body:'Coordinated PQC roadmap (Jun 2025)',milestones:[['2026','National transition roadmaps'],['2030','High-risk use cases migrated'],['2035','Full transition']],href:'',srcLabel:'EU NIS Cooperation Group'},
+    {region:'EU',body:'Coordinated PQC roadmap (Jun 2025)',milestones:[['2026','National transition roadmaps'],['2030','High-risk use cases migrated'],['2035','Full transition']],href:'https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography',srcLabel:'EU NIS Cooperation Group'},
     {region:'AU',body:'ASD Information Security Manual',milestones:[['2026','Refined transition plan'],['2030','Cease traditional asymmetric']],href:'',srcLabel:'Australian Signals Directorate'}
   ],
   changelog:[
@@ -583,7 +653,15 @@ const model={
     {t:'phys.org — Helios fidelity verified in Nature (Sandia)',u:'https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html',d:'phys.org · Jun 2026'},
     {t:'Physics World — ECC-256 with ~500k physical qubits (Google 2026)',u:'https://physicsworld.com/a/new-findings-shorten-the-road-to-cryptographically-relevant-quantum-computers/',d:'physicsworld.com · 2026'},
     {t:'NIST — Post-Quantum Cryptography project',u:'https://csrc.nist.gov/projects/post-quantum-cryptography',d:'nist.gov'},
-    {t:'NIST — Selects HQC as fifth (backup) PQC algorithm',u:'https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption',d:'nist.gov · Mar 2025'}
+    {t:'NIST — Selects HQC as fifth (backup) PQC algorithm',u:'https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption',d:'nist.gov · Mar 2025'},
+    {t:'CISA / NSA / NIST — Quantum-Readiness: Migration to PQC (factsheet)',u:'https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography',d:'cisa.gov · roadmap, inventory, risk, vendors'},
+    {t:'NIST NCCoE — Migration to Post-Quantum Cryptography (practice guide)',u:'https://pages.nist.gov/nccoe-migration-post-quantum-cryptography/',d:'pages.nist.gov · cryptographic inventory / CBOM'},
+    {t:'European Commission — Coordinated Implementation Roadmap for the transition to PQC',u:'https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography',d:'digital-strategy.ec.europa.eu · NIS Cooperation Group'},
+    {t:'CISA — LockBit 3.0 exploits Citrix Bleed (AA23-325A)',u:'https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a',d:'cisa.gov · CVE-2023-4966 advisory'},
+    {t:'Mandiant / Google Cloud — UNC2452 merged into APT29 (SolarWinds)',u:'https://cloud.google.com/blog/topics/threat-intelligence/unc2452-merged-into-apt29',d:'cloud.google.com · Golden SAML attribution'},
+    {t:'Secura — Zerologon: subverting Netlogon cryptography (CVE-2020-1472)',u:'https://www.secura.com/blog/zero-logon',d:'secura.com · original disclosure'},
+    {t:'Binarly — PKfail: default test keys break UEFI Secure Boot',u:'https://www.binarly.io/advisories/brly-2024-005',d:'binarly.io · BRLY-2024-005'},
+    {t:'Terrapin Attack — SSH protocol integrity flaw (CVE-2023-48795)',u:'https://terrapin-attack.com',d:'terrapin-attack.com · Ruhr University Bochum'}
   ]
 };
 const collapse={
@@ -594,6 +672,34 @@ const collapse={
 };
 const outlook=[{yr:'2023',lo:17,hi:31},{yr:'2024',lo:19,hi:34},{yr:'2025',lo:28,hi:49}];
 const griCurve=[{y:2029,p:14},{y:2034,p:34},{y:2039,p:55},{y:2044,p:79}];
+const catMeta={
+  proto:{label:'Crypto / protocol flaw',color:'#ff9e3d'},
+  pki:{label:'Certificate, key & signing',color:'#46d4c4'},
+  lib:{label:'Library memory-safety',color:'#b08cff'},
+  session:{label:'Session / credential theft',color:'#ff6ea6'},
+  os:{label:'OS / component RCE',color:'#5ac8ff'}
+};
+const vulns=[
+  {name:'Heartbleed',cve:'CVE-2014-0160',year:2014,cvss:7.5,cat:'lib',affects:'OpenSSL 1.0.1\u20131.0.1f (TLS heartbeat)',desc:'A missing bounds check in OpenSSL\u2019s TLS heartbeat let attackers read up to 64KB of server memory per request \u2014 leaking private keys, session cookies and credentials. Foundational, and still occasionally found unpatched.',url:'https://heartbleed.com',src:'heartbleed.com'},
+  {name:'ROCA',cve:'CVE-2017-15361',year:2017,cvss:5.9,cat:'pki',affects:'Infineon RSA key generation (TPMs, smartcards, YubiKeys, national eID)',desc:'A flaw in Infineon\u2019s RSA key generation made public keys factorable, so the private key could be recovered from the public key alone. It forced re-keying of ~750,000 Estonian national ID cards.',url:'https://nvd.nist.gov/vuln/detail/CVE-2017-15361',src:'NVD'},
+  {name:'CurveBall / Chain of Fools',cve:'CVE-2020-0601',year:2020,cvss:8.1,cat:'pki',affects:'Windows CryptoAPI (Crypt32.dll) ECC certificate validation',desc:'Windows failed to fully validate ECC certificate parameters (the curve generator), letting an attacker forge certificates that chain to a trusted root \u2014 spoofing code-signing and TLS. The first Windows bug publicly credited to the NSA.',url:'https://unit42.paloaltonetworks.com/threat-brief-windows-cryptoapi-spoofing-vulnerability-cve-2020-0601/',src:'Unit 42'},
+  {name:'Zerologon',cve:'CVE-2020-1472',year:2020,cvss:10.0,cat:'proto',affects:'Windows Netlogon (MS-NRPC), AES-CFB8',desc:'Netlogon used AES-CFB8 with a fixed all-zero IV, so ~1 in 256 attempts yielded all-zero ciphertext \u2014 letting an unauthenticated attacker on the network reset the domain-controller password and seize the whole Active Directory domain in seconds.',url:'https://www.secura.com/blog/zero-logon',src:'Secura'},
+  {name:'Log4Shell',cve:'CVE-2021-44228',year:2021,cvss:10.0,cat:'lib',affects:'Apache Log4j 2 (JNDI lookups)',desc:'A JNDI lookup in the ubiquitous Log4j logging library let a single crafted string trigger unauthenticated remote code execution. Not cryptographic, but an associated-component flaw that touched a vast share of enterprise software.',url:'https://nvd.nist.gov/vuln/detail/CVE-2021-44228',src:'NVD'},
+  {name:'SpookySSL',cve:'CVE-2022-3602 / -3786',year:2022,cvss:7.5,cat:'pki',affects:'OpenSSL 3.0.0\u20133.0.6 (X.509 punycode)',desc:'A stack buffer overflow while verifying the email field of an X.509 certificate. Initially feared \u201ccritical\u201d, later downgraded to high \u2014 a reminder that certificate parsing itself is attack surface.',url:'https://www.openssl.org/news/secadv/20221101.txt',src:'OpenSSL'},
+  {name:'Terrapin',cve:'CVE-2023-48795',year:2023,cvss:5.9,cat:'proto',affects:'SSH transport (OpenSSH and most implementations)',desc:'A prefix-truncation attack on the SSH handshake let an active network attacker silently delete messages and downgrade the connection\u2019s integrity \u2014 the first practically exploitable flaw in the SSH binary-packet protocol.',url:'https://terrapin-attack.com',src:'terrapin-attack.com'},
+  {name:'Citrix Bleed',cve:'CVE-2023-4966',year:2023,cvss:9.4,cat:'session',affects:'Citrix NetScaler ADC & Gateway',desc:'A memory over-read leaked valid session tokens from NetScaler appliances, letting attackers hijack authenticated sessions and bypass MFA entirely. Weaponised at scale by ransomware crews.',url:'https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a',src:'CISA'},
+  {name:'KeyTrap',cve:'CVE-2023-50387',year:2024,cvss:7.5,cat:'proto',affects:'DNSSEC validating resolvers (BIND, Unbound, PowerDNS\u2026)',desc:'A single crafted DNSSEC response could force a validating resolver into extreme CPU exhaustion, stalling it for minutes \u2014 a design-level flaw the researchers described as one of the worst ever found in DNS.',url:'https://nvd.nist.gov/vuln/detail/CVE-2023-50387',src:'NVD'},
+  {name:'regreSSHion',cve:'CVE-2024-6387',year:2024,cvss:8.1,cat:'os',affects:'OpenSSH server on glibc-based Linux',desc:'A signal-handler race condition reintroduced an old bug, allowing unauthenticated remote code execution as root on glibc Linux \u2014 a rare, serious pre-auth hole in the most-deployed remote-access service.',url:'https://nvd.nist.gov/vuln/detail/CVE-2024-6387',src:'NVD'},
+  {name:'PKfail',cve:'BRLY-2024-005',year:2024,cvss:8.2,cvssNote:'Binarly-rated (no NVD CVSS assigned)',cat:'pki',affects:'UEFI Secure Boot Platform Key (hundreds of device models)',desc:'Hundreds of device models shipped with an AMI test Platform Key \u2014 the root of trust for Secure Boot \u2014 whose private key had leaked. Anyone holding it can sign boot code and defeat Secure Boot, enabling bootkits such as BlackLotus.',url:'https://www.binarly.io/advisories/brly-2024-005',src:'Binarly'}
+];
+const attacks=[
+  {name:'Storm-0558 \u2014 forged Microsoft tokens',year:2023,type:'Nation-state espionage',brand:'Microsoft / US government',attribution:'China (Storm-0558)',method:'Stole a 2016 Microsoft consumer (MSA) token-signing key and exploited a token-validation flaw to forge authentication tokens, reading Exchange Online mail.',impact:'~22\u201325 organisations and 500+ individuals; roughly 60,000 US State Department emails; mailboxes of Commerce Secretary Raimondo and the US Ambassador to China. The CSRB judged it \u201cpreventable\u201d.',url:'https://www.bleepingcomputer.com/news/security/microsoft-still-unsure-how-hackers-stole-msa-key-in-2023-exchange-attack/',src:'CSRB / BleepingComputer'},
+  {name:'SolarWinds / SUNBURST \u2014 Golden SAML',year:2020,type:'Supply-chain espionage',brand:'SolarWinds Orion customers',attribution:'Russia (SVR \u2014 APT29 / Cozy Bear)',method:'Implanted a backdoor in Orion updates, then stole ADFS token-signing certificates to forge SAML tokens (\u201cGolden SAML\u201d), accessing cloud mail while bypassing MFA.',impact:'~18,000 organisations received the trojaned update; confirmed victims included the US Treasury and Commerce departments and the security firm FireEye/Mandiant. Years of remediation across government and industry.',url:'https://cloud.google.com/blog/topics/threat-intelligence/unc2452-merged-into-apt29',src:'Mandiant'},
+  {name:'Citrix Bleed ransomware wave',year:2023,type:'Ransomware / extortion',brand:'Boeing, ICBC, Comcast Xfinity, DP World\u2026',attribution:'LockBit 3.0 affiliates (also Medusa)',method:'Exploited CVE-2023-4966 to steal NetScaler session tokens, bypass MFA, then deploy ransomware and exfiltrate data.',impact:'Boeing\u2019s parts business breached; ICBC (the world\u2019s largest bank) had its US unit disrupted, affecting Treasury-market trades; Comcast Xfinity notified 35,879,455 individuals; DP World Australia\u2019s ports were halted for days.',url:'https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a',src:'CISA AA23-325A'},
+  {name:'Zerologon domain takeovers',year:2020,type:'Ransomware & APT',brand:'Windows AD environments (many sectors)',attribution:'Ransomware crews + nation-state APTs',method:'Exploited the Netlogon AES-CFB8 zero-IV flaw (CVE-2020-1472) to reset domain-controller passwords and seize Active Directory, then spread ransomware.',impact:'CISA issued Emergency Directive 20-04 ordering federal agencies to patch within days; the flaw was widely chained with VPN bugs for ransomware and espionage intrusions.',url:'https://www.secura.com/blog/zero-logon',src:'Secura / CISA'},
+  {name:'Nvidia code-signing certificate abuse',year:2022,type:'Extortion + trust abuse',brand:'Nvidia',attribution:'Lapsus$',method:'Breached Nvidia, stole two code-signing certificates and leaked them; attackers then signed malware (Cobalt Strike, Mimikatz, RATs) that Windows would trust \u2014 expired certs still load as drivers.',impact:'~1TB exfiltrated including 71,000+ employee credentials; the leaked certificates were abused within a day to sign malicious drivers and tooling.',url:'https://www.bleepingcomputer.com/news/security/malware-now-using-nvidias-stolen-code-signing-certificates/',src:'BleepingComputer'}
+];
+let catOff={},threatsCharted=false;
 const assess={
   exec:[
     {q:'Can you say, today, everywhere RSA and ECC are used across your organisation?',dim:'ag',o:[['No central inventory',1],['Partially — some systems known',2],['Mostly — a maintained inventory',3],['Yes — complete, automated discovery',5]]},
@@ -651,6 +757,7 @@ function showView(v){
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.id==='view-'+v));
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
   if(v==='trends'&&!charted){drawCollapse();drawOutlook();charted=true;}
+  if(v==='threats'&&!threatsCharted){drawVulnCluster();threatsCharted=true;}
   if(v==='clocks')requestAnimationFrame(fitDigits);
   syncURL(v);window.scrollTo({top:0,behavior:'auto'});
 }
@@ -662,7 +769,7 @@ function readURL(){try{const p=new URLSearchParams(location.search);if(p.get('th
 const sunI='<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
 const moonI='<svg class="ic" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>';
 function paintTheme(){const light=document.documentElement.dataset.theme==='light';$('themeBtn').innerHTML=light?sunI:moonI;$('themeBtn').title=light?'Switch to dark':'Switch to light';}
-function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==='light'?'dark':'light';paintTheme();if(charted){drawCollapse();drawOutlook();}syncURL();}
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==='light'?'dark':'light';paintTheme();if(charted){drawCollapse();drawOutlook();}if(threatsCharted){drawVulnCluster();}syncURL();}
 
 /* ============================ COUNTDOWN ============================ */
 function parts(ms){ms=Math.max(0,ms);return{d:Math.floor(ms/864e5),h:Math.floor(ms%864e5/36e5),m:Math.floor(ms%36e5/6e4),s:Math.floor(ms%6e4/1e3)};}
@@ -704,6 +811,32 @@ function mosca(){
 }
 
 /* ============================ READINESS ASSESSMENT ============================ */
+const G={
+  ncsc:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',
+  cisa:'https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography',
+  nccoe:'https://pages.nist.gov/nccoe-migration-post-quantum-cryptography/',
+  nist:'https://csrc.nist.gov/projects/post-quantum-cryptography',
+  eu:'https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography'
+};
+const recTopics={
+  inventory:{t:'Start with discovery. Build and maintain a cryptographic inventory \u2014 effectively a Cryptographic Bill of Materials (CBOM) \u2014 covering every algorithm, key, certificate and protocol across IT and OT. NCSC, CISA/NSA/NIST and the EU all treat this as the essential first step: you cannot prioritise, protect or migrate what you cannot see.',l:[['NCSC timelines',G.ncsc],['CISA/NSA/NIST factsheet',G.cisa],['NIST NCCoE (CBOM)',G.nccoe]]},
+  criticality:{t:'Map cryptography to the business services, partners and data it protects, then feed the inventory into your risk-assessment process to prioritise the highest-impact and longest-lived systems first \u2014 NCSC\u2019s 2031 priority-migration milestone and the CISA/NSA/NIST risk-based approach.',l:[['NCSC timelines',G.ncsc],['CISA/NSA/NIST factsheet',G.cisa]]},
+  keymgmt:{t:'Bring keys into managed HSMs/KMS with a documented lifecycle and clear ownership. NCSC expects cryptographic hardware roots of trust (HSMs, secure boot) supporting the NIST standards \u2014 the same foundation that makes rapid rotation and PQC adoption possible.',l:[['NCSC timelines',G.ncsc]]},
+  agility:{t:'Prioritise cryptographic agility \u2014 changing algorithms without re-engineering systems. NCSC advises choosing solutions that readily support alternative algorithm suites; automate certificate and key lifecycle (e.g. ACME) so you can rotate or replace at scale in hours, not weeks. Supervisors increasingly treat demonstrable agility as the core capability.',l:[['NCSC timelines',G.ncsc],['CISA/NSA/NIST factsheet',G.cisa]]},
+  migrate:{t:'Produce a migration plan covering the whole estate and choose a route per system \u2014 in-place upgrade, re-platform, retire, run-to-end-of-life, or (explicitly) tolerate the risk. Use standardised, tested hybrid (traditional + PQC) where suitable, and adopt the NIST algorithms ML-KEM / ML-DSA / SLH-DSA.',l:[['NCSC timelines',G.ncsc],['NIST PQC',G.nist]]},
+  data:{t:'Identify data that must stay confidential for 5, 10 or 25+ years and protect it first. \u201cHarvest now, decrypt later\u201d means the deadline for long-lived secrets is effectively today, not 2035 \u2014 NCSC and CISA/NSA/NIST both single out long-secrecy-lifetime data as the priority.',l:[['NCSC timelines',G.ncsc],['CISA/NSA/NIST factsheet',G.cisa]]},
+  algorithms:{t:'Adopt the finalised NIST standards \u2014 FIPS 203 (ML-KEM), 204 (ML-DSA), 205 (SLH-DSA) \u2014 and remove deprecated algorithms. NIST plans to deprecate RSA-2048 / ECC-P256 around 2030 and disallow them by 2035; ENISA advises supporting more than one algorithm family for resilience.',l:[['NIST PQC',G.nist],['NCSC timelines',G.ncsc]]},
+  suppliers:{t:'Actively manage the supply chain: obtain each vendor\u2019s and cloud provider\u2019s published PQC roadmap, and write post-quantum readiness into new contracts and procurement (as Canada now mandates and CISA/NSA/NIST recommend). Buying non-PQC-ready technology today is buying a liability.',l:[['CISA/NSA/NIST factsheet',G.cisa],['EU roadmap',G.eu]]},
+  techready:{t:'Check that HSMs, load balancers, VPNs and identity platforms can run hybrid/PQC and handle larger key and signature sizes, and test interoperability before rollout. NCSC expects PQC-capable roots of trust and hybrid key exchange to mature through 2026\u201327.',l:[['NCSC timelines',G.ncsc]]},
+  governance:{t:'Make cryptographic risk a board-level, named-owner responsibility with a resourced PQC programme and reporting. CISA/NSA/NIST advise an executive mandate and a dedicated project team; NCSC frames migration as part of good cyber-security governance. Insurers are beginning to ask for exactly this.',l:[['CISA/NSA/NIST factsheet',G.cisa],['NCSC timelines',G.ncsc]]},
+  evidence:{t:'Be ready to demonstrate cryptographic agility with evidence, not assertion: a current inventory, automated rotation you can show, tested migration playbooks and board reporting. UK, EU and US supervisors are converging on precisely these questions.',l:[['NCSC timelines',G.ncsc],['CISA/NSA/NIST factsheet',G.cisa]]}
+};
+const recMap={
+  exec:['inventory','agility','migrate','data'],
+  tech:['inventory','criticality','keymgmt','agility','agility','algorithms','suppliers','data','techready','governance'],
+  auditor:['inventory','criticality','agility','agility','migrate','evidence','data']
+};
+function toggleRec(b){const x=b.nextElementSibling;const open=!x.hidden;x.hidden=open;b.setAttribute('aria-expanded',String(!open));}
 let aMode='exec';const aAns={exec:{},tech:{},auditor:{}};let aX=null,aY=null;
 const aNotes={
   exec:'The three questions a CIO or CISO should be able to answer instantly — plus your data-confidentiality horizon.',
@@ -715,7 +848,7 @@ function loadAns(){try{const s=sessionStorage.getItem('qday_assess');if(s){const
 function segId(k){return 'seg'+k[0].toUpperCase()+k.slice(1);}
 function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];buildAssess();scoreAssess();}
 function buildAssess(){
-  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div></div>`;}).join('');
+  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div>${recHtml}</div>`;}).join('');
   $('aresetBtn').hidden=Object.keys(aAns[aMode]).length===0;
 }
 function pickAns(i,j,val){
@@ -766,6 +899,39 @@ function buildStack(){
 function buildNodes(){$('nodes').innerHTML=model.ncsc.map((n,i)=>`<div class="node"><div class="yr">${n.year}</div><div class="ttl">${n.title}</div><div class="days" data-i="${i}">${daysTo(n.date).toLocaleString('en-GB')} days left</div><div class="act">${n.info}</div><div class="novice">${n.novice}</div><a class="srclink" href="${n.href}" target="_blank" rel="noopener">${linkIcon}${n.srcLabel} ↗</a></div>`).join('');}
 function buildRegs(){$('regs').innerHTML=model.regulations.map(r=>`<div class="regcard"><div class="rtop"><span class="flag">${r.region}</span><span class="rbody">${r.body}</span></div>${r.milestones.map(m=>`<div class="milestone"><b>${m[0]}</b><span>${m[1]}</span></div>`).join('')}${r.href?`<a class="srclink" href="${r.href}" target="_blank" rel="noopener">${linkIcon}${r.srcLabel} ↗</a>`:`<div class="rsrc">${r.srcLabel}</div>`}</div>`).join('');}
 function buildChangelog(){$('changelog').innerHTML=model.changelog.map(c=>`<div class="logitem"><time>${c.d}</time><span>${c.t} <a class="srclink" href="${c.u}" target="_blank" rel="noopener">${c.s} ↗</a></span></div>`).join('');}
+
+/* ============================ THREATS ============================ */
+function sevClass(c){return c>=9?'sevpill-crit':c>=7?'sevpill-high':'sevpill-med';}
+function cardTog(el){el.setAttribute('aria-expanded',el.getAttribute('aria-expanded')==='true'?'false':'true');}
+function cardKey(e,el){if(e.key==='Enter'||e.key===' '){e.preventDefault();cardTog(el);}}
+function buildCatFilter(){$('catFilter').innerHTML=Object.entries(catMeta).map(([k,m])=>`<button class="catchip" data-c="${k}" onclick="toggleCat('${k}')"><span class="dot" style="background:${m.color}"></span>${m.label}</button>`).join('');}
+function toggleCat(k){catOff[k]=!catOff[k];const b=document.querySelector('.catchip[data-c="'+k+'"]');if(b)b.classList.toggle('off',catOff[k]);drawVulnCluster();buildVulns();}
+function drawVulnCluster(){
+  const svg=$('chartVuln');if(!svg)return;svg.innerHTML='';
+  const W=540,H=340,L=42,R=18,T=18,B=52,x0=2013,x1=2025,y0=4,y1=10.6;
+  const px=x=>L+(x-x0)/(x1-x0)*(W-L-R),py=v=>T+(y1-v)/(y1-y0)*(H-T-B);
+  const cF=cssvar('--faint');
+  for(let v=5;v<=10;v++){const y=py(v);svg.appendChild(el('line',{x1:L,y1:y,x2:W-R,y2:y,stroke:'rgba(160,200,195,.08)','stroke-width':1}));svg.appendChild(el('text',{x:L-6,y:y+3.5,'text-anchor':'end',fill:cF,'font-family':'monospace','font-size':9},v));}
+  [2014,2016,2018,2020,2022,2024].forEach(t=>svg.appendChild(el('text',{x:px(t),y:H-B+18,'text-anchor':'middle',fill:cF,'font-family':'monospace','font-size':9},t)));
+  svg.appendChild(el('text',{x:L-34,y:T-5,fill:cF,'font-family':'monospace','font-size':9},'CVSS'));
+  const byYear={};vulns.forEach(v=>{(byYear[v.year]=byYear[v.year]||[]).push(v);});
+  vulns.forEach(v=>{
+    if(catOff[v.cat])return;
+    const grp=byYear[v.year],idx=grp.indexOf(v),n=grp.length,jx=(n>1?(idx-(n-1)/2)*8:0);
+    const cx=px(v.year)+jx,cy=py(v.cvss),col=catMeta[v.cat].color;
+    svg.appendChild(el('circle',{cx,cy,r:10,fill:col,opacity:.13}));
+    const c=el('circle',{cx,cy,r:5.5,fill:col,stroke:cssvar('--bg'),'stroke-width':1.5,style:'cursor:pointer;pointer-events:all'});
+    const tip='<b>'+v.name+'</b><br>'+v.cve+' \u00b7 '+v.year+'<br>CVSS '+v.cvss+(v.cvssNote?'*':'')+' \u00b7 '+catMeta[v.cat].label;
+    c.addEventListener('pointerenter',e=>showTip(svg,e,tip));c.addEventListener('pointermove',e=>showTip(svg,e,tip));c.addEventListener('pointerleave',hideTip);c.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});
+    svg.appendChild(c);
+  });
+}
+function buildVulns(){
+  $('vulnList').innerHTML=vulns.filter(v=>!catOff[v.cat]).map(v=>{const col=catMeta[v.cat].color;return `<div class="vuln" role="button" tabindex="0" aria-expanded="false" style="border-left-color:${col}" onclick="cardTog(this)" onkeydown="cardKey(event,this)"><div class="vtop"><span class="vname">${v.name}</span><span class="sev ${sevClass(v.cvss)}">${v.cvss}</span></div><div class="cve">${v.cve} · ${v.year}</div><div class="cat" style="color:${col}">${catMeta[v.cat].label}</div><div class="more-btn">Tap for detail &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="vmore"><div class="vaff">Affects: ${v.affects}</div><div class="vdesc2">${v.desc}</div><a class="srclink" href="${v.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${v.src} ↗</a>${v.cvssNote?`<div class="vhint">${v.cvssNote}</div>`:''}</div></div>`;}).join('');
+}
+function buildAttacks(){
+  $('attackList').innerHTML=attacks.map(a=>`<div class="atk" role="button" tabindex="0" aria-expanded="false" onclick="cardTog(this)" onkeydown="cardKey(event,this)"><div class="atop"><span class="aname">${a.name}</span><span class="ayear">${a.year}</span></div><span class="atype">${a.type}</span><div class="arow"><b>Target:</b> ${a.brand}</div><div class="arow"><b>Attribution:</b> ${a.attribution}</div><div class="more-btn">Tap for method, impact &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="amore"><div class="arow"><b>Method:</b> ${a.method}</div><div class="arow"><b>Impact:</b> ${a.impact}</div><a class="srclink" href="${a.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${a.src} ↗</a></div></div>`).join('');
+}
 
 /* ============================ SVG CHARTS ============================ */
 const NS='http://www.w3.org/2000/svg';
@@ -879,7 +1045,7 @@ addEventListener('scroll',hideTip,true);
 
 /* ============================ INIT ============================ */
 const _tab=readURL();paintTheme();
-buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();loadAns();setAssess('exec');
+buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();buildCatFilter();buildVulns();buildAttacks();loadAns();setAssess('exec');
 applyTargetText();setScenario(scen);mosca();
 tick();setInterval(tick,1000);
 requestAnimationFrame(fitDigits);addEventListener('resize',fitDigits);addEventListener('orientationchange',()=>setTimeout(fitDigits,80));
