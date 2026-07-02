@@ -246,6 +246,28 @@ h1 em{font-style:normal;color:var(--threat)}
 .sheet .menu a{display:block;border:1px solid var(--line2);border-radius:11px;padding:13px 15px;margin:9px 0;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:13px;font-weight:600;transition:.16s}
 .gloss{margin-top:14px}
 #chartGantt circle,#chartSizes g{touch-action:manipulation}
+#chartVuln circle,#chartVuln polygon,#chartCollapse circle,#chartOutlook circle{touch-action:manipulation}
+/* chart fullscreen */
+.fsbtn{position:absolute;top:10px;right:10px;z-index:3;width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--line2);border-radius:9px;background:var(--card);color:var(--muted);cursor:pointer;transition:.14s}
+.fsbtn:hover{color:var(--defence);border-color:var(--defence)}
+.fsbtn .ic{width:15px;height:15px}
+#fsdim{position:fixed;inset:0;z-index:63;background:rgba(4,7,8,.78);backdrop-filter:blur(4px);animation:fade .2s ease}
+#fsdim[hidden]{display:none}
+.chart.fs{position:fixed;z-index:64;top:14px;left:14px;right:14px;bottom:calc(72px + env(safe-area-inset-bottom));max-width:none;overflow:auto;display:flex;flex-direction:column;background:var(--solid)}
+.chart.fs>svg{flex:1 1 auto;min-height:0;width:100%;height:100%}
+.chart.fs .ic{width:15px;height:15px;flex:none}
+.chart.fs .chev{width:15px;height:15px}
+body.noscroll{overflow:hidden}
+.tabbar{z-index:75}
+.drawer{z-index:78}
+/* threat card focus flash + back-to-graph */
+.vuln.flash,.atk.flash{animation:cardFlash 1.4s ease}
+@keyframes cardFlash{0%{box-shadow:0 0 0 0 rgba(70,212,196,.6)}100%{box-shadow:0 0 0 14px rgba(70,212,196,0)}}
+.backg{display:inline-flex;align-items:center;gap:6px;margin-top:11px;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--defence);background:rgba(70,212,196,.09);border:1px solid rgba(70,212,196,.3);border-radius:9px;padding:8px 12px;cursor:pointer;transition:.14s}
+.backg:hover{background:rgba(70,212,196,.16)}
+/* why size matters */
+.why{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.6;margin:10px 0 2px;padding:10px 12px;border-left:2px solid var(--threat);background:rgba(255,158,61,.06);border-radius:0 8px 8px 0}
+.why b{color:var(--threat-2)}
 .gloss .gl{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
 .gloss .gl:last-child{border-bottom:0}
 .gloss b{font-family:var(--mono);font-size:11px;color:var(--defence);letter-spacing:.03em;word-break:break-word}
@@ -506,8 +528,8 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
     </div>
 
     <div class="clocks">
-      <div class="cl threat">
-        <div class="tag"><svg class="ic" viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 7-8"/><path d="M21 7v5h-5"/></svg> Capability · est. Q-Day</div>
+      <div class="cl threat" role="button" tabindex="0" style="cursor:pointer" title="See how this estimate is derived — open Trends" onclick="showView('trends')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('trends')}">
+        <div class="tag"><svg class="ic" viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 7-8"/><path d="M21 7v5h-5"/></svg> Capability · est. Q-Day <span style="opacity:.55;font-size:.85em">→ Trends</span></div>
         <div class="sub" id="qScenarioLabel">Source-weighted</div>
         <div class="date" id="qDate">—</div>
         <div class="counter" aria-hidden="true">
@@ -622,6 +644,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
           <button id="segRsa" class="on" onclick="setTarget('rsa')">RSA-2048</button>
           <button id="segEcc" onclick="setTarget('ecc')">ECC-256</button>
         </div>
+        <button class="fsbtn" onclick="toggleFS(this)" aria-label="Expand chart" title="Expand"><svg class="ic" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg></button>
         <svg id="chartCollapse" viewBox="0 0 540 330" role="img" aria-label="Log-scale chart of physical qubits required to break the selected algorithm against the largest machines built along vendor roadmaps, crossing in the mid-2030s within the expert scenario window."></svg>
         <div class="legend"><span><i class="swatch" style="background:var(--threat)"></i> Qubits Required</span><span><i class="swatch" style="background:var(--defence)"></i> Qubits Built</span><span><i class="swatch range"></i> Vendor range</span><span><i class="swatch band"></i> Scenario window</span></div>
         <button class="disc tk" aria-expanded="false" data-target="t1" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
@@ -636,6 +659,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
       <div class="chart">
         <h3>Expert outlook &amp; probability by year</h3>
         <p class="csub">GRI / evolutionQ · 10-yr range (bars) + cumulative P (line)</p>
+        <button class="fsbtn" onclick="toggleFS(this)" aria-label="Expand chart" title="Expand"><svg class="ic" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3"/></svg></button>
         <svg id="chartOutlook" viewBox="0 0 540 330" role="img" aria-label="Bars showing the 10-year expert probability rising 2023 to 2025, with a line showing cumulative probability of a CRQC reaching 14 percent by 2029, 34 by 2034, 55 by 2039 and 79 by 2044."></svg>
         <div class="legend"><span><i class="swatch" style="background:var(--threat)"></i> 10-yr range</span><span><i class="swatch" style="background:var(--defence)"></i> Cumulative P (2024 survey)</span></div>
         <button class="disc tk" aria-expanded="false" data-target="t2" onclick="toggle(this)" style="margin-top:11px">Key takeaway<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
@@ -714,6 +738,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
       <div class="chart">
         <h3>Key &amp; signature sizes: classical vs post-quantum</h3>
         <p class="csub">Bytes on the wire · log scale · tap a bar for a plain-terms explanation</p>
+        <p class="why"><b>Why size matters:</b> these bytes travel in every TLS handshake, certificate chain and signed firmware image. An ML-DSA-65 signature is ~50× an ECDSA one, so handshakes that fitted in a single network packet now span several — slowing connections, breaking fixed-size buffers in older hardware and protocols, and straining constrained OT devices and low-bandwidth links. The size gap, not the maths, is where most migration pain lives — which is why interoperability testing and crypto-agility sit at the heart of every national migration plan.</p>
         <svg id="chartSizes" viewBox="0 0 540 300" role="img" aria-label="Horizontal bar chart comparing the byte sizes of classical and post-quantum keys and signatures on a log scale, showing post-quantum artefacts are far larger."></svg>
         <div class="sizeinfo callout" id="sizeInfo" hidden></div>
         <div class="legend"><span><i class="swatch" style="background:var(--defence)"></i> Classical (RSA/ECC)</span><span><i class="swatch" style="background:var(--threat)"></i> Post-quantum (NIST)</span></div>
@@ -726,13 +751,13 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
   </section>
 
   <section class="view" id="view-threats">
-    <div class="vhead"><span class="lab">Attacks &amp; vulnerabilities</span>
+    <div class="vhead"><span class="lab">Cryptographic Attacks &amp; Vulnerabilities</span>
       <button class="ibtn" aria-expanded="false" data-target="dThreats" onclick="toggle(this)" aria-label="About"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
     </div>
     <p class="vdesc" id="dThreats" hidden>Critical vulnerabilities in cryptography, certificates, PKI and associated components/OS from the last decade, clustered by type, and real, attributed attacks (2020–2023) that pivoted on cryptographic or certificate trust. Every item links to a primary source. Tap points and cards for detail; use the legend to filter.</p>
     <div class="chart">
       <h3>Threat landscape</h3>
-      <p class="csub">Year × severity · ● vulnerability (size ∝ CVSS) · ◆ attack (size ∝ impact) · tap a marker</p>
+      <p class="csub">Year × severity · ● vulnerability (size ∝ CVSS) · ◆ attack (size ∝ impact) · tap a marker · double-tap to open its card</p>
       <svg id="chartVuln" viewBox="0 0 540 340" role="img" aria-label="Scatter plot of major cryptographic, certificate and component vulnerabilities plotted by year and CVSS severity, coloured and clustered by category."></svg>
       <div class="catfilter" id="catFilter"></div>
       <p class="cathint">Tap a category to show or hide it — dimmed chips are hidden from the chart and cards.</p>
@@ -776,6 +801,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
   <button class="go" onclick="closeWelcome()">Explore →</button>
 </div></div>
 
+<div id="fsdim" hidden onclick="exitFS()"></div>
 <div class="tip" id="tip"></div>
 
 <script>
@@ -1170,7 +1196,7 @@ function drawVulnCluster(){
     svg.appendChild(el('circle',{cx,cy,r:r+4,fill:col,opacity:.13}));
     const c=el('circle',{cx,cy,r,fill:col,stroke:bg,'stroke-width':1.5,class:'pt',style:'cursor:pointer;pointer-events:all'});
     const tip='<b>'+v.name+'</b><br>'+v.cve+' \u00b7 '+v.year+'<br>CVSS '+v.cvss+(v.cvssNote?'*':'')+' \u00b7 '+catMeta[v.cat].label;
-    c.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});c.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});c.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')hideTip();});tapOpen(c,e=>showTip(svg,e,tip));
+    c.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});c.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});c.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')hideTip();});tapOpen(c,e=>showTip(svg,e,tip),e=>{hideTip();focusThreatCard('v',v.cve);});
     kbd(c,v.name+', '+v.cve+', CVSS '+v.cvss,e=>showTip(svg,e,tip));c.addEventListener('blur',hideTip);
     svg.appendChild(c);
   });
@@ -1184,17 +1210,17 @@ function drawVulnCluster(){
       svg.appendChild(el('polygon',{points:dia(s+4),fill:alert,opacity:.14}));
       const d=el('polygon',{points:dia(s),fill:alert,stroke:bg,'stroke-width':1.5,class:'pt',style:'cursor:pointer;pointer-events:all'});
       const tip='<b>'+a.name+'</b><br>'+a.year+' \u00b7 '+a.attribution+'<br>impact '+a.impactScore.toFixed(1)+'/10 (editorial)';
-      d.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});d.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});d.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')hideTip();});tapOpen(d,e=>showTip(svg,e,tip));
+      d.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});d.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});d.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')hideTip();});tapOpen(d,e=>showTip(svg,e,tip),e=>{hideTip();focusThreatCard('a',a.name);});
       kbd(d,a.name+', '+a.year+', impact '+a.impactScore.toFixed(1),e=>showTip(svg,e,tip));d.addEventListener('blur',hideTip);
       svg.appendChild(d);
     });
   }
 }
 function buildVulns(){
-  $('vulnList').innerHTML=vulns.filter(v=>!catOff[v.cat]).map(v=>{const col=catMeta[v.cat].color;return `<div class="vuln" role="button" tabindex="0" aria-expanded="false" style="border-left-color:${col}" onclick="cardTog(this)" onkeydown="cardKey(event,this)"><div class="vtop"><span class="vname">${v.name}</span><span class="sev ${sevClass(v.cvss)}">${v.cvss}</span></div><div class="cve">${v.cve} · ${v.year}</div><div class="cat" style="color:${col}">${catMeta[v.cat].label}</div><div class="more-btn">Tap for detail &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="vmore"><div class="vaff">Affects: ${v.affects}</div><div class="vdesc2">${v.desc}</div><div class="vfix"><span class="fixlbl">✓ Fix / mitigation</span>${v.fix}</div><a class="srclink" href="${v.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${v.src} ↗</a>${v.cvssNote?`<div class="vhint">${v.cvssNote}</div>`:''}</div></div>`;}).join('');
+  $('vulnList').innerHTML=vulns.filter(v=>!catOff[v.cat]).map(v=>{const col=catMeta[v.cat].color;return `<div class="vuln" role="button" tabindex="0" aria-expanded="false" data-k="${v.cve}" style="border-left-color:${col}" onclick="cardTog(this)" onkeydown="cardKey(event,this)"><div class="vtop"><span class="vname">${v.name}</span><span class="sev ${sevClass(v.cvss)}">${v.cvss}</span></div><div class="cve">${v.cve} · ${v.year}</div><div class="cat" style="color:${col}">${catMeta[v.cat].label}</div><div class="more-btn">Tap for detail &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="vmore"><div class="vaff">Affects: ${v.affects}</div><div class="vdesc2">${v.desc}</div><div class="vfix"><span class="fixlbl">✓ Fix / mitigation</span>${v.fix}</div><a class="srclink" href="${v.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${v.src} ↗</a>${v.cvssNote?`<div class="vhint">${v.cvssNote}</div>`:''}<button class="backg" onclick="backToGraph(event)">↑ Back to graph</button></div></div>`;}).join('');
 }
 function buildAttacks(){
-  $('attackList').innerHTML=attacks.map(a=>`<div class="atk" role="button" tabindex="0" aria-expanded="false" onclick="cardTog(this)" onkeydown="cardKey(event,this)"><div class="atop"><span class="aname">${a.name}</span><span class="ayear">${a.year}</span></div><span class="atype">${a.type}</span><div class="arow"><b>Target:</b> ${a.brand}</div><div class="arow"><b>Attribution:</b> ${a.attribution}</div><div class="more-btn">Tap for method, impact &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="amore"><div class="arow"><b>Method:</b> ${a.method}</div><div class="arow"><b>Impact:</b> ${a.impact}</div><div class="arow prevent"><b>✓ Prevented by:</b> ${a.prevented}</div><a class="srclink" href="${a.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${a.src} ↗</a></div></div>`).join('');
+  $('attackList').innerHTML=attacks.map(a=>`<div class="atk" role="button" tabindex="0" aria-expanded="false" data-k="${a.name}" onclick="cardTog(this)" onkeydown="cardKey(event,this)"><div class="atop"><span class="aname">${a.name}</span><span class="ayear">${a.year}</span></div><span class="atype">${a.type}</span><div class="arow"><b>Target:</b> ${a.brand}</div><div class="arow"><b>Attribution:</b> ${a.attribution}</div><div class="more-btn">Tap for method, impact &amp; source<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="amore"><div class="arow"><b>Method:</b> ${a.method}</div><div class="arow"><b>Impact:</b> ${a.impact}</div><div class="arow prevent"><b>✓ Prevented by:</b> ${a.prevented}</div><a class="srclink" href="${a.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${linkIcon}${a.src} ↗</a><button class="backg" onclick="backToGraph(event)">↑ Back to graph</button></div></div>`).join('');
 }
 function drawSizes(){
   const svg=$('chartSizes');if(!svg)return;svg.innerHTML='';
@@ -1268,16 +1294,50 @@ function closeCallout(id){if(Date.now()-_coAt<450)return;const b=$(id);if(b)b.hi
 /* ============================ SVG CHARTS ============================ */
 const NS='http://www.w3.org/2000/svg';
 function el(tag,attrs,txt){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
-function showTip(svg,e,html){const tip=$('tip'),box=svg.closest('.chart').getBoundingClientRect();tip.innerHTML=html;tip.classList.add('show');let x=e.clientX-box.left+12,y=e.clientY-box.top+12;if(x>box.width-160)x=box.width-160;tip.style.left=Math.max(6,x)+'px';tip.style.top=Math.max(6,y)+'px';}
+function showTip(svg,e,html){const tip=$('tip'),ch=svg.closest('.chart'),box=ch.getBoundingClientRect();try{if(tip.parentNode!==ch)ch.appendChild(tip);}catch(err){}tip.innerHTML=html;tip.classList.add('show');let x=e.clientX-box.left+12,y=e.clientY-box.top+12;if(x>box.width-160)x=box.width-160;tip.style.left=Math.max(6,x)+'px';tip.style.top=Math.max(6,y)+'px';}
 function kbd(elm,label,fn){try{elm.setAttribute('tabindex','0');elm.setAttribute('role','button');if(label)elm.setAttribute('aria-label',label);elm.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();fn(fakePt(elm));}});}catch(err){}}
 function fakePt(elm){try{const r=elm.getBoundingClientRect();return{clientX:r.left+r.width/2,clientY:r.top+r.height/2,target:elm,stopPropagation(){}};}catch(e){return{clientX:0,clientY:0,target:elm,stopPropagation(){}};}}
 function placeCallout(box,e){try{const wide=(typeof innerWidth==='number')&&innerWidth>=980;if(!wide||!e||!e.target||!e.target.getBoundingClientRect){box.classList.remove('float');box.style.left='';box.style.top='';if(box.scrollIntoView)box.scrollIntoView({behavior:'smooth',block:'nearest'});return;}const ch=box.closest('.chart');if(!ch)return;const cr=ch.getBoundingClientRect(),tr=e.target.getBoundingClientRect();box.classList.add('float');const bw=340;let left=tr.left-cr.left+tr.width+12;if(left+bw>cr.width-8)left=Math.max(8,tr.left-cr.left-bw-12);let top=Math.max(8,tr.top-cr.top-8);box.style.left=left+'px';box.style.top=top+'px';}catch(err){}}
 /* touch-first activation: iPadOS/Android fire hover emulation before click and can
    withhold the click entirely when hover handlers mutate the DOM, so open on
    pointerup for touch/pen and de-duplicate the synthetic click that may follow. */
-function tapOpen(elm,fn){
-  elm.addEventListener('pointerup',e=>{if(e.pointerType&&e.pointerType!=='mouse'){e.stopPropagation();elm._tat=Date.now();fn(e);}});
+function tapOpen(elm,fn,dblFn){
+  elm.addEventListener('pointerup',e=>{if(e.pointerType&&e.pointerType!=='mouse'){e.stopPropagation();const now=Date.now();if(dblFn&&elm._lt&&now-elm._lt<380){elm._lt=0;dblFn(e);return;}elm._lt=now;elm._tat=now;fn(e);}});
   elm.addEventListener('click',e=>{e.stopPropagation();if(elm._tat&&Date.now()-elm._tat<800)return;fn(e);});
+  if(dblFn)elm.addEventListener('dblclick',e=>{e.stopPropagation();dblFn(e);});
+}
+function focusThreatCard(kind,key){
+  if(kind==='v'){const v=vulns.find(x=>x.cve===key);if(v&&catOff[v.cat])toggleCat(v.cat);}
+  else if(attacksOff)toggleCat('attacks');
+  const list=$(kind==='v'?'vulnList':'attackList');if(!list)return;
+  const card=[...list.children].find(c=>c.dataset&&c.dataset.k===key);if(!card)return;
+  card.setAttribute('aria-expanded','true');
+  if(card.scrollIntoView)card.scrollIntoView({behavior:'smooth',block:'center'});
+  card.classList.remove('flash');void card.offsetWidth;card.classList.add('flash');
+}
+function backToGraph(e){if(e)e.stopPropagation();const c=$('chartVuln');if(c&&c.closest('.chart').scrollIntoView)c.closest('.chart').scrollIntoView({behavior:'smooth',block:'start'});}
+function toggleFS(btn){
+  const ch=btn.closest('.chart');if(!ch)return;
+  if(ch.classList.contains('fs')){exitFS();return;}
+  exitFS();
+  try{
+    ch._ph=document.createElement('div');ch._ph.className='fsph';ch._ph.hidden=true;
+    ch.parentNode.insertBefore(ch._ph,ch);
+    document.body.appendChild(ch);          /* escape all ancestor stacking contexts */
+  }catch(e){}
+  ch.classList.add('fs');
+  const d=$('fsdim');if(d)d.hidden=false;
+  if(document.body.classList)document.body.classList.add('noscroll');
+  btn.setAttribute('aria-label','Shrink chart');btn.title='Shrink';
+}
+function exitFS(){
+  document.querySelectorAll('.chart.fs').forEach(ch=>{
+    ch.classList.remove('fs');
+    const b=ch.querySelector('.fsbtn');if(b){b.setAttribute('aria-label','Expand chart');b.title='Expand';}
+    try{if(ch._ph&&ch._ph.parentNode){ch._ph.parentNode.replaceChild(ch,ch._ph);ch._ph=null;}}catch(e){}
+  });
+  const d=$('fsdim');if(d)d.hidden=true;
+  if(document.body.classList)document.body.classList.remove('noscroll');
 }
 function hideTip(){$('tip').classList.remove('show');}
 function addPt(svg,cx,cy,r,color,tip){const c=el('circle',{cx,cy,r,fill:cssvar('--bg'),stroke:color,'stroke-width':2,class:'pt',style:'cursor:pointer;pointer-events:all'});c.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});c.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});c.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')hideTip();});tapOpen(c,e=>showTip(svg,e,tip));kbd(c,tip.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(),e=>showTip(svg,e,tip));c.addEventListener('blur',hideTip);svg.appendChild(c);}
@@ -1450,7 +1510,7 @@ function toggleHmenu(e){if(e){e.stopPropagation();}const m=$('hmenu'),b=$('menuB
 function hmenuAct(a){const m=$('hmenu'),b=$('menuBtn');m.hidden=true;b.setAttribute('aria-expanded','false');if(a==='share')shareCard();else if(a==='copy')copyLink();else if(a==='gloss')open_('glossary');else if(a==='ref')open_('menu');}
 document.addEventListener('click',e=>{const m=$('hmenu');if(!m||m.hidden)return;if(!e.target.closest('#hmenu')&&!e.target.closest('#menuBtn')){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}});
 document.addEventListener('click',e=>{if(Date.now()-_coAt<450)return;['ganttInfo','sizeInfo'].forEach(id=>{const b=$(id);if(b&&!b.hidden&&!e.target.closest('#'+id))b.hidden=true;});});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=$('hmenu');if(m&&!m.hidden){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}const w=$('welcome');if(w&&w.classList.contains('open'))closeWelcome();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=$('hmenu');if(m&&!m.hidden){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}const w=$('welcome');if(w&&w.classList.contains('open'))closeWelcome();exitFS();}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){close_();}});
 document.addEventListener('pointerdown',e=>{if(!(e.target.classList&&e.target.classList.contains('pt')))hideTip();});
 addEventListener('scroll',hideTip,true);
