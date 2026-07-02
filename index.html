@@ -280,6 +280,7 @@ body.noscroll{overflow:hidden}
 .vsbar i{display:block;height:100%;border-radius:5px;transition:width .4s ease}
 .vsval{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--ink);text-align:right}
 .vevd{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.vfoot{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-height:1.5;letter-spacing:.02em;margin-top:13px;padding-top:8px;border-top:1px solid var(--line)}
 #chartVendors circle{touch-action:manipulation}
 :root[data-theme=dark] .vnode{filter:drop-shadow(0 0 7px rgba(70,212,196,.25))}
 @media(max-width:460px){.tab{min-width:0;padding-left:7px;padding-right:7px}.tab .lbl2{font-size:8.5px;letter-spacing:0}}
@@ -1304,7 +1305,11 @@ function drawVendors(){
   const colW=(W-L-R)/Math.max(1,secs.length);
   secs.forEach((k,i)=>{
     const cx=L+colW*i+colW/2;
-    svg.appendChild(el('text',{x:cx,y:H-B+16,fill:vendSectors[k].color,'font-family':'monospace','font-size':7.5,'text-anchor':'middle',style:'pointer-events:none;letter-spacing:.06em'},vendSectors[k].label.toUpperCase()));
+    const lb=vendSectors[k].label.toUpperCase();let l1=lb,l2='';
+    if(lb.indexOf(' & ')>=0){const p=lb.split(' & ');l1=p[0];l2='& '+p.slice(1).join(' & ');}
+    else if(lb.indexOf(' ')>=0){const sp=lb.split(' ');const mid=Math.ceil(sp.length/2);l1=sp.slice(0,mid).join(' ');l2=sp.slice(mid).join(' ');}
+    svg.appendChild(el('text',{x:cx,y:H-B+14,fill:vendSectors[k].color,'font-family':'monospace','font-size':6.6,'text-anchor':'middle',style:'pointer-events:none;letter-spacing:.04em'},l1));
+    if(l2)svg.appendChild(el('text',{x:cx,y:H-B+23,fill:vendSectors[k].color,'font-family':'monospace','font-size':6.6,'text-anchor':'middle',style:'pointer-events:none;letter-spacing:.04em'},l2));
     if(i>0)svg.appendChild(el('line',{x1:L+colW*i,y1:T,x2:L+colW*i,y2:H-B,stroke:line,'stroke-width':.6,style:'pointer-events:none'}));
     const vs=vendors.filter(v=>v.sec===k).sort((a,b)=>b.score-a.score);
     vs.forEach((v,j)=>{
@@ -1343,7 +1348,7 @@ function showVendInfo(name){
   <div class="silbl">Products in scope</div><div class="sitext">${v.prod}</div>
   <div class="silbl">Cryptographic situation</div><div class="sitext">${v.crypto}</div>
   <div class="silbl">Evidence \u00b7 confidence: ${v.conf}</div><div class="vevd">${evd}</div>
-  <div class="vhint" style="margin-top:9px">AI-scored from the linked public sources, Jul 2026. Not independently verified; not procurement advice. Methodology under \u24D8.</div>`;
+  <div class="vfoot">AI-scored from the linked public sources, Jul 2026 \u00b7 not independently verified \u00b7 not procurement advice \u00b7 methodology under \u24D8</div>`;
   box.hidden=false;try{box.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}
 }
 function vendorCSV(){
@@ -1538,7 +1543,7 @@ function closeWelcome(){$('welcome').classList.remove('open');}
 
 /* ============================ DRAWER ============================ */
 /* ---------- VENDOR CRYPTO CAPABILITY (AI analysis - unverified) ---------- */
-const vendSectors={cloud:{label:'Cloud & Internet',color:'#46d4c4'},ent:{label:'Enterprise & Silicon',color:'#b48cff'},net:{label:'Network Security',color:'#ff9e3d'},hsm:{label:'HSM, PKI & Certs',color:'#ff7ab8'},oss:{label:'Open Source & Messaging',color:'#7ee081'},ot:{label:'OT & Industrial',color:'#6aa9ff'}};
+const vendSectors={cloud:{label:'Cloud & Internet',color:'#46d4c4'},ent:{label:'Enterprise & Silicon',color:'#b48cff'},net:{label:'Network Security',color:'#ff9e3d'},hsm:{label:'HSM, PKI & Certs',color:'#ff7ab8'},oss:{label:'Open Source & Msg',color:'#7ee081'},ot:{label:'OT & Automation',color:'#6aa9ff'},egy:{label:'Energy & Grid OEM',color:'#f4d35e'}};
 const vendOff={};
 const vendors=[
 {n:'Cloudflare',sec:'cloud',s:[30,18,16,15,15],conf:'High',
@@ -1671,21 +1676,66 @@ const vendors=[
  crypto:'No shipped or announced post-quantum cryptography found in this analysis. Transport security is classical TLS; infrastructure increasingly runs on public cloud (Hyperforce), which may eventually inherit provider-side PQC at the network edge.',
  why:'Scored on absence of public evidence — no PQC roadmap, guidance or research surfaced in this analysis, which is itself notable for a custodian of long-lived CRM data. The hygiene score reflects a generally modern TLS posture. Low confidence: this may understate private work.',
  ev:[['OT/enterprise PQC migration context','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
-{n:'ABB',sec:'ot',s:[4,8,9,4,4],conf:'Low',
+{n:'ABB',sec:'egy',s:[4,8,9,4,4],conf:'Low',
  prod:'Distributed control systems (System 800xA), drives, robotics, grid automation',
  crypto:'No shipped post-quantum cryptography found in this analysis; security posture centres on IEC 62443 practice. Industry press places ABB among industrial OEMs beginning to address quantum-safe requirements in control systems.',
  why:'Same structural position as its OT peers: very long-lived installed bases on classical (or no) cryptography, with no verifiable PQC delivery signal. Absence-of-evidence caveat applies; Low confidence.',
  ev:[['OT vendors beginning quantum-safe work','https://thequantuminsider.com/2026/03/25/25-companies-building-the-quantum-cryptography-communications-markets/'],['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
-{n:'Hitachi Energy',sec:'ot',s:[4,9,9,5,4],conf:'Low',
+{n:'Hitachi Energy',sec:'egy',s:[4,9,9,5,4],conf:'Low',
  prod:'Grid automation and protection (MicroSCADA, Relion), HVDC, transformers — core UK/EU grid supply chain',
  crypto:'No shipped post-quantum cryptography found in this analysis for its grid product lines; parent Hitachi maintains corporate security research. Security posture is IEC 62443/62351-oriented.',
  why:'Grid protection and HVDC control equipment is precisely the long-lived, hard-to-patch estate the NCSC 2035 deadline is aimed at, and no public PQC delivery signal was found. Slightly ahead of pure absence on guidance thanks to strong grid-security standards engagement. Low confidence.',
  ev:[['OT vendors beginning quantum-safe work','https://thequantuminsider.com/2026/03/25/25-companies-building-the-quantum-cryptography-communications-markets/'],['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
-{n:'GE Vernova',sec:'ot',s:[3,8,8,3,4],conf:'Low',
+{n:'GE Vernova',sec:'egy',s:[3,8,8,3,4],conf:'Low',
  prod:'Gas/steam turbines and controls (Mark VIe), grid solutions, wind; major generation control supplier',
  crypto:'No post-quantum cryptography found in this analysis. Product security materials centre on classical hardening and IEC 62443; generation control estates commonly rely on legacy protocols and very long refresh cycles.',
  why:'Lowest-scored of the new entries: no PQC signal, minimal published crypto research, and an installed base whose lifetimes extend well past every expert Q-Day window. Scored on absence of evidence; Low confidence — treat as a prompt for supplier engagement rather than a verdict.',
- ev:[['OT vendors beginning quantum-safe work','https://thequantuminsider.com/2026/03/25/25-companies-building-the-quantum-cryptography-communications-markets/'],['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]}
+ ev:[['OT vendors beginning quantum-safe work','https://thequantuminsider.com/2026/03/25/25-companies-building-the-quantum-cryptography-communications-markets/'],['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
+{n:'Keyfactor',sec:'hsm',s:[24,16,14,8,10],conf:'High',
+ prod:'EJBCA (CA/PKI), SignServer, Keyfactor Command; steward of the Bouncy Castle crypto libraries',
+ crypto:'EJBCA issues ML-DSA, SLH-DSA and composite/hybrid certificates in production, with PQC keys held in Thales, Utimaco, Entrust and other FIPS HSMs (EJBCA 9.4); SignServer 7.1 signs with ML-DSA/SLH-DSA; Command inventories PQC certificates; Bouncy Castle carries the standardised algorithms across the Java/C# ecosystem.',
+ why:'A genuinely full PQC PKI stack — issuance, signing, inventory and the underlying open-source crypto library — plus a free PQC Lab and IETF interoperability work, and honest documentation of what is not ready (OCSP, CRL-size pitfalls). Deduction: primary cryptographic research is limited; strength is engineering and stewardship.',
+ ev:[['EJBCA PQC keys & signatures (docs)','https://docs.keyfactor.com/ejbca/latest/post-quantum-cryptography-keys-and-signatures'],['Keyfactor PQC portfolio expansion','https://www.keyfactor.com/press-releases/keyfactor-expands-post-quantum-security-capabilities-across-its-leading-cryptographic-solutions-portfolio/'],['EJBCA 9.4 quantum-safe HSM support','https://www.keyfactor.com/blog/whats-new-in-keyfactor-ejbca-9-4-quantum-safe-planet-scale-appliance-ready/']]},
+{n:'Utimaco',sec:'hsm',s:[24,12,14,6,10],conf:'Medium',
+ prod:'u.trust General Purpose HSMs, SecurityServer firmware, payment HSMs',
+ crypto:'u.trust GP HSMs are in-field upgradable to ML-KEM and ML-DSA, hold CAVP algorithm certification for ML-KEM/ML-DSA/SLH-DSA, and back PQC certificate issuance in EJBCA hardware appliances — hardware root-of-trust delivery comparable to Thales.',
+ why:'Strong, shipping PQC in validated hardware with a crypto-agility (field-upgrade) design well suited to long-lived deployments. Confidence Medium: evidence in this analysis comes mainly through partner announcements and industry validation trackers rather than Utimaco primary pages.',
+ ev:[['Keyfactor–Utimaco PQC HSM integration','https://www.keyfactor.com/press-releases/keyfactor-strengthens-partnership-with-utimaco-to-redefine-pki-deployment/'],['HSM PQC validation status (industry)','https://www.encryptionconsulting.com/pqc-cert-with-quantum-safe-hsm/']]},
+{n:'Check Point',sec:'net',s:[20,14,12,6,8],conf:'High',
+ prod:'Quantum-series firewalls (R8x), CloudGuard, Harmony',
+ crypto:'R82 shipped hybrid post-quantum IKEv2 key exchange (classical DH blended with ML-KEM-768 via RFC 9242/9370) on-prem and cloud; R82.10 adds HTTPS inspection of quantum-safe TLS (X25519MLKEM768) so PQC sessions can be inspected rather than dropped; QKD integration planned for high-assurance niches.',
+ why:'Concrete GA delivery in the VPN plane plus a thought-through answer to the awkward middlebox question — how to inspect PQC TLS — which most peers have not yet addressed publicly. Deductions: PQC currently confined to VPN/inspection contexts (portals and other surfaces still classical), and limited primary research.',
+ ev:[['Check Point: quantum-safe cybersecurity (blog)','https://blog.checkpoint.com/innovation/quantum-safe-cyber-security-current-capabilities-and-the-road-ahead/'],['Community detail on R82 ML-KEM scope','https://community.checkpoint.com/t5/General-Topics/Post-Quantum-Cryptography-PQC/td-p/262581']]},
+{n:'Zscaler',sec:'net',s:[18,14,12,4,8],conf:'High',
+ prod:'Zero Trust Exchange (ZIA/ZPA), Client Connector, cloud security proxy',
+ crypto:'ZIA performs inline inspection of hybrid ML-KEM TLS with policy enforcement and re-encryption, and ships a PQC Visibility Report classifying every session as PQC/hybrid/classical — turning its proxy position into a customer crypto-inventory tool; platform-wide PQC-readiness programme published.',
+ why:'The visibility angle is genuinely useful for migration programmes (it operationalises the CBOM problem for traffic), and inline PQC inspection is shipping. Deductions: post-quantum signatures across the platform are a later phase, and research contribution is thin.',
+ ev:[['Zscaler PQC inline inspection (brochure)','https://www.zscaler.com/resources/brochures/post-quantum-cryptography-inspection.pdf'],['PQC visibility report (docs)','https://help.zscaler.com/zia/understanding-post-quantum-cryptography-visibility-report'],['Zscaler PQC programme','https://www.zscaler.com/blogs/product-insights/preparing-to-meet-challenges-post-quantum-cryptography-pqc-era']]},
+{n:'Mitsubishi Electric',sec:'ot',s:[5,8,9,8,5],conf:'Low',
+ prod:'Factory automation (MELSEC PLCs, e-F@ctory), power systems, building and transport systems',
+ crypto:'No shipped post-quantum cryptography found for its automation lines in this analysis. The company has a documented cryptographic research heritage — including early quantum-cryptography network experiments (2006, with NEC and the University of Tokyo) and widely used cipher designs (MISTY1, co-designed Camellia; the latter widely documented, not re-verified here).',
+ why:'The research pedigree is real and earns credit, but there is no public evidence it has reached the installed OT base, which shares the sector’s long-lifecycle classical-crypto profile. Low confidence; absence-of-evidence caveat applies.',
+ ev:[['Mitsubishi/NEC quantum crypto interconnect (2006)','https://phys.org/news/2006-05-mitsubishi-nec-tokyo-university-successful.html'],['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
+{n:'Yokogawa',sec:'ot',s:[4,8,9,3,4],conf:'Low',
+ prod:'CENTUM VP DCS, OpreX portfolio, process instrumentation — core process-industry supplier',
+ crypto:'No post-quantum cryptography found in this analysis. Security posture centres on IEC 62443 practice and plant-security services; DCS estates typically run very long lifecycles on classical or unauthenticated protocols.',
+ why:'Scored on absence of public PQC evidence, consistent with its process-automation peers. Low confidence — treat as a supplier-engagement prompt rather than a verdict.',
+ ev:[['OT vendors beginning quantum-safe work','https://thequantuminsider.com/2026/03/25/25-companies-building-the-quantum-cryptography-communications-markets/'],['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
+{n:'Emerson',sec:'ot',s:[4,8,9,3,4],conf:'Low',
+ prod:'DeltaV and Ovation control systems, AspenTech software, instrumentation',
+ crypto:'No post-quantum cryptography found in this analysis. Ovation and DeltaV security materials centre on classical hardening, IEC 62443 alignment and lifecycle services.',
+ why:'Same absence-of-evidence position as its DCS peers, notable given Ovation’s footprint in power generation — precisely the long-lived estate the 2035 deadline targets. Low confidence.',
+ ev:[['OT vendors beginning quantum-safe work','https://thequantuminsider.com/2026/03/25/25-companies-building-the-quantum-cryptography-communications-markets/'],['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
+{n:'Baker Hughes',sec:'egy',s:[3,8,8,3,4],conf:'Low',
+ prod:'Bently Nevada machinery protection, turbomachinery controls, oilfield digital (Cordant)',
+ crypto:'No post-quantum cryptography found in this analysis; product cybersecurity materials centre on classical controls and monitoring-system hardening.',
+ why:'Machinery-protection and turbomachinery control systems live for decades in energy infrastructure with no public PQC signal found. Scored on absence of evidence; Low confidence.',
+ ev:[['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
+{n:'Vestas',sec:'egy',s:[3,7,8,2,3],conf:'Low',
+ prod:'Wind turbines, SCADA (VestasOnline), fleet monitoring — largest wind OEM',
+ crypto:'No post-quantum cryptography found in this analysis. Turbine SCADA and remote-access security is classical; the company’s 2023 ransomware experience underlined enterprise-IT exposure rather than crypto capability.',
+ why:'Lowest score in the set: no PQC signal, minimal published cryptographic work, and grid-connected assets with 25–30-year lifetimes. Scored on absence of evidence; Low confidence — and, as with all OEM entries here, best read as a question to put to the supplier.',
+ ev:[['OT PQC migration challenges (context)','https://postquantum.com/post-quantum/ot-pqc-challenges/']]}
 ];
 vendors.forEach(v=>{v.score=v.s.reduce((a,b)=>a+b,0);v.tier=v.score>=75?'Leading':v.score>=50?'Advancing':v.score>=30?'Emerging':'Lagging';});
 const glossaryTerms=[
