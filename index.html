@@ -1297,7 +1297,8 @@ function drawVendors(){
     const top=y(i===0?100:tiers[i-1][0]),bot=y(v);
     svg.appendChild(el('rect',{x:L,y:top,width:W-L-R,height:bot-top,fill:i===0?'rgba(70,212,196,.05)':i===3?'rgba(255,90,95,.05)':'transparent',style:'pointer-events:none'}));
     svg.appendChild(el('line',{x1:L,y1:bot,x2:W-R,y2:bot,stroke:line,'stroke-width':1,'stroke-dasharray':i<3?'4 4':'none',style:'pointer-events:none'}));
-    svg.appendChild(el('text',{x:L+4,y:top+11,fill:mut,'font-family':'monospace','font-size':8,'text-anchor':'start',style:'pointer-events:none;letter-spacing:.12em'},l.toUpperCase()));
+    const my=(top+bot)/2;
+    svg.appendChild(el('text',{x:29,y:my,fill:mut,'font-family':'monospace','font-size':6.8,'text-anchor':'middle',transform:'rotate(-90 29 '+my+')',style:'pointer-events:none;letter-spacing:.14em'},l.toUpperCase()));
   });
   for(let s=0;s<=100;s+=25){svg.appendChild(el('text',{x:L-6,y:y(s)+3,fill:mut,'font-family':'monospace','font-size':8,'text-anchor':'end'},s));}
   const secAvg=k=>{const vs=vendors.filter(v=>v.sec===k);return vs.length?vs.reduce((a,v)=>a+v.score,0)/vs.length:0;};
@@ -1332,7 +1333,7 @@ function drawVendors(){
       svg.appendChild(el('text',{x:px,y:py-r-5,fill:ink,'font-family':'monospace','font-size':7.5,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},v.n.length>14?v.n.split(' ')[0]:v.n));
     });
   });
-  svg.appendChild(el('text',{x:14,y:(T+H-B)/2,fill:mut,'font-family':'monospace','font-size':8,'text-anchor':'middle',transform:'rotate(-90 14 '+((T+H-B)/2)+')',style:'pointer-events:none;letter-spacing:.14em'},'CAPABILITY SCORE'));
+  svg.appendChild(el('text',{x:11,y:(T+H-B)/2,fill:mut,'font-family':'monospace','font-size':7.5,'text-anchor':'middle',transform:'rotate(-90 11 '+((T+H-B)/2)+')',style:'pointer-events:none;letter-spacing:.14em'},'CAPABILITY SCORE'));
 }
 const sublabels=['PQC adoption /30','Migration guidance /20','Deprecated-crypto hygiene /20','Research /15','Ecosystem /15'];
 const submax=[30,20,20,15,15];
@@ -1671,11 +1672,6 @@ const vendors=[
  crypto:'SAP Cryptographic Library 8.6 (late 2025) introduces quantum-safe cryptography and a FIPS 140-3 mode to the library that underpins TLS, SNC and SSF across the SAP estate — the key verified signal. Third-party assessments still class the deployed SAP landscape as not yet quantum-safe.',
  why:'The CommonCryptoLib move is exactly the right lever — one library feeding the whole product line — but public detail on rollout, defaults and product uptake is thin, and enterprise SAP estates carry decades-long data shelf-lives (severe HNDL exposure). Confidence Medium: one strong primary source.',
  ev:[['SAP CommonCryptoLib 8.6 quantum-safe + FIPS 140-3 (SAP blog)','https://community.sap.com/t5/technology-blog-posts-by-sap/new-version-8-6-of-the-sap-cryptographic-library-with-quantum-safe/ba-p/14280039'],['Third-party SAP quantum-readiness view','https://qtonicquantum.com/quantum-safe/sap']]},
-{n:'Salesforce',sec:'cloud',s:[4,8,12,3,4],conf:'Low',
- prod:'Salesforce CRM platform, Hyperforce infrastructure, MuleSoft, Slack',
- crypto:'No shipped or announced post-quantum cryptography found in this analysis. Transport security is classical TLS; infrastructure increasingly runs on public cloud (Hyperforce), which may eventually inherit provider-side PQC at the network edge.',
- why:'Scored on absence of public evidence — no PQC roadmap, guidance or research surfaced in this analysis, which is itself notable for a custodian of long-lived CRM data. The hygiene score reflects a generally modern TLS posture. Low confidence: this may understate private work.',
- ev:[['OT/enterprise PQC migration context','https://postquantum.com/post-quantum/ot-pqc-challenges/']]},
 {n:'ABB',sec:'egy',s:[4,8,9,4,4],conf:'Low',
  prod:'Distributed control systems (System 800xA), drives, robotics, grid automation',
  crypto:'No shipped post-quantum cryptography found in this analysis; security posture centres on IEC 62443 practice. Industry press places ABB among industrial OEMs beginning to address quantum-safe requirements in control systems.',
