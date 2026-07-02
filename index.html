@@ -244,6 +244,12 @@ h1 em{font-style:normal;color:var(--threat)}
 .sheet th{color:var(--threat-2);font-weight:600}
 .sheet .warn{border-left:2px solid var(--threat);background:rgba(255,158,61,.06);padding:11px 13px;border-radius:0 8px 8px 0;color:var(--threat-2)}
 .sheet .menu a{display:block;border:1px solid var(--line2);border-radius:11px;padding:13px 15px;margin:9px 0;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:13px;font-weight:600;transition:.16s}
+.gloss{margin-top:14px}
+.gloss .gl{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.gloss .gl:last-child{border-bottom:0}
+.gloss b{font-family:var(--mono);font-size:11px;color:var(--defence);letter-spacing:.03em;word-break:break-word}
+.gloss span{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.55}
+@media(max-width:420px){.gloss .gl{grid-template-columns:82px 1fr}}
 .sheet .menu a:hover{border-color:var(--defence);background:rgba(70,212,196,.05)}
 .xbtn{position:absolute;right:16px;top:16px;font-family:var(--mono);font-size:12px;color:var(--ink);border:1px solid var(--line2);background:var(--card);border-radius:9px;padding:7px 11px;cursor:pointer}
 .xbtn:hover{border-color:var(--alert)}
@@ -370,6 +376,29 @@ h1 em{font-style:normal;color:var(--threat)}
 .sechead:active{transform:scale(.99)}
 .secbody{animation:fade .25s ease}
 .secbody[hidden]{display:none}
+/* floating callout on wide screens */
+@media(min-width:980px){.callout.float{position:absolute;z-index:6;max-width:340px;box-shadow:0 18px 44px rgba(0,0,0,.5);border-color:var(--line2)}}
+/* plan expand/collapse all */
+.planall{display:flex;justify-content:flex-end;margin:14px 0 -8px}
+.planall .disc{font-size:10.5px;padding:7px 12px}
+/* scenario consequence chip */
+.zchip{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin:9px 2px 0;letter-spacing:.02em}
+.zchip b{color:var(--defence);font-weight:700}
+/* mosca applied confirmation */
+.applied-note{font-family:var(--mono);font-size:11px;color:var(--defence-2);line-height:1.55;margin:0 0 12px;padding:10px 12px;background:rgba(70,212,196,.1);border:1px solid rgba(70,212,196,.35);border-radius:10px;animation:fade .3s ease}
+.applied-note b{color:var(--defence)}
+.applied-note[hidden]{display:none}
+.mosca.applied{animation:appliedPulse 1.4s ease}
+@keyframes appliedPulse{0%{box-shadow:0 0 0 0 rgba(70,212,196,.5)}100%{box-shadow:0 0 0 16px rgba(70,212,196,0)}}
+/* threats filter affordance */
+.cathint{font-family:var(--mono);font-size:9.5px;color:var(--faint);margin:7px 2px 0;letter-spacing:.02em}
+.catchip{border-style:dashed}
+.catchip[aria-pressed=true]{border-style:solid}
+@media(hover:hover){.catchip:hover{border-color:var(--defence);color:var(--defence)}}
+.catchip.off{opacity:.38;text-decoration:line-through}
+/* keyboard focus on interactive svg + controls */
+svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px;border-radius:3px}
+.sechead:focus-visible,.disc:focus-visible,.catchip:focus-visible,.tab:focus-visible,.ibtn:focus-visible{outline:2px solid var(--defence);outline-offset:2px}
 /* callout close button */
 .callout{position:relative}
 .cox{position:absolute;top:7px;right:8px;width:26px;height:26px;display:grid;place-items:center;border:0;border-radius:7px;background:var(--card);color:var(--muted);font-size:18px;line-height:1;cursor:pointer;transition:.14s}
@@ -441,6 +470,7 @@ h1 em{font-style:normal;color:var(--threat)}
 <div class="hmenu" id="hmenu" hidden role="menu" aria-label="More">
   <button role="menuitem" onclick="hmenuAct('share')"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7"/><path d="M12 3v13M8 7l4-4 4 4"/></svg>Share snapshot</button>
   <button role="menuitem" onclick="hmenuAct('copy')"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg><span id="copyLbl">Copy link</span></button>
+  <button role="menuitem" onclick="hmenuAct('gloss')"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Glossary</button>
   <button role="menuitem" onclick="hmenuAct('ref')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg>Reference &amp; sources</button>
 </div>
 
@@ -490,6 +520,7 @@ h1 em{font-style:normal;color:var(--threat)}
 
     <div class="controls">
       <div class="scenario" id="scenario"></div>
+      <div class="zchip" id="zChip" aria-live="polite"></div>
       <button class="disc" aria-expanded="false" data-target="scenWrap" onclick="toggle(this)">Why this date?<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     </div>
     <div class="disc-body" id="scenWrap" hidden>
@@ -522,6 +553,7 @@ h1 em{font-style:normal;color:var(--threat)}
           </div>
           <div class="apick" id="aPick"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5c0 3.5-5 9-5 9s-5-5.5-5-9a5 5 0 015-5z"/><circle cx="12" cy="7" r="1.7" fill="currentColor" stroke="none"/></svg><span>Select a persona above to begin — the questions and scoring adapt to your role. Nothing appears until you choose one.</span></div>
           <p class="anote" id="aNote"></p>
+          <span class="picklab" id="aStep2" style="margin:6px 0 4px" hidden><span class="picknum">2</span> Answer the questions — tap one option per row</span>
           <div id="assessQs"></div>
           <div class="aresult" id="assessResult" hidden>
             <div class="lvlbar" id="lvlbar" aria-hidden="true"></div>
@@ -533,8 +565,9 @@ h1 em{font-style:normal;color:var(--threat)}
           </div>
         </div>
       </div>
-      <div class="mosca">
+      <div class="mosca" id="moscaForm">
         <h3>Your exposure — the Mosca test</h3>
+        <div class="applied-note" id="appliedBanner" hidden></div>
         <p class="msub">If your data's shelf-life (X) plus your migration time (Y) is greater than the time until the quantum threat (Z), you're already exposed: <b>X + Y &gt; Z → act now</b>. Z follows the <b>scenario buttons above</b>.</p>
         <div class="mgrid">
           <div class="mfield">
@@ -549,13 +582,14 @@ h1 em{font-style:normal;color:var(--threat)}
         <div class="mbar" aria-hidden="true"><i class="x" id="barX"></i><i class="y" id="barY"></i></div>
         <div class="mscale" aria-hidden="true"><span>now</span><span id="zScale"></span></div>
         <div class="mresult ok" id="mResult"><div class="verdict" id="mVerdict"></div><div class="detail" id="mDetail"></div></div>
+        <div class="controls" style="margin-top:10px"><button class="disc" onclick="copyMosca(this)"><svg class="ic" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg><span>Copy result as text</span></button></div>
         <button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>If X + Y &gt; Z, what should you do? — NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
         <div class="recbody" hidden><p>Being exposed on this test is common, and the response is the same one every major authority now gives: start now. Prioritise long-lived data (harvest-now-decrypt-later makes its deadline effectively today), build a cryptographic inventory, choose crypto-agile solutions, and migrate to the NIST standards (ML-KEM / ML-DSA / SLH-DSA) against the NCSC 2028 / 2031 / 2035 milestones.</p><div class="reclinks"><a class="srclink" href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NCSC timelines ↗</a><a class="srclink" href="https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>CISA/NSA/NIST factsheet ↗</a></div></div>
         <p class="minifoot" style="margin-top:12px;text-align:left">Mosca inequality (M. Mosca / GRI). Illustrative — Z uses the selected scenario, not a forecast.</p>
       </div>
     </div>
 
-    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked <span data-checked>30 Jun 2026</span></p>
   </section>
 
   <section class="view" id="view-trends">
@@ -593,7 +627,7 @@ h1 em{font-style:normal;color:var(--threat)}
     </div>
     <div class="vhead" style="margin-top:22px"><span class="lab">What's changed</span></div>
     <div class="grid-auto log" id="changelog"></div>
-    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked <span data-checked>30 Jun 2026</span></p>
   </section>
 
   <section class="view" id="view-stack">
@@ -606,7 +640,7 @@ h1 em{font-style:normal;color:var(--threat)}
       <div class="txt"><h3>Indicative readiness</h3><p>Hardware quality is advancing fast; raw scale and sustained fault-tolerant execution remain the long poles. ECC-256 is the nearer target — fewer resources than RSA-2048.</p><button class="disc calc-btn" aria-expanded="false" data-target="scoreCalc" onclick="toggle(this)"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg>How it's calculated<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="disc-body" id="scoreCalc" hidden></div></div>
     </div>
     <div class="grid-auto stack" id="stack"></div>
-    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked <span data-checked>30 Jun 2026</span></p>
   </section>
 
   <section class="view" id="view-plan">
@@ -614,6 +648,8 @@ h1 em{font-style:normal;color:var(--threat)}
       <button class="ibtn" aria-expanded="false" data-target="dPlan" onclick="toggle(this)" aria-label="About"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg></button>
     </div>
     <p class="vdesc" id="dPlan" hidden>Every regulator's milestones against the expert Q-Day window, how global deadlines compare, the UK NCSC plan, and the size cost of the new algorithms. Counters are live; tap any heading to minimise a section.</p>
+
+    <div class="planall"><button class="disc" id="planAllBtn" onclick="planAll()"><svg class="ic" viewBox="0 0 24 24"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg><span>Collapse all</span></button></div>
 
     <button class="sechead" aria-expanded="true" data-target="secGantt" onclick="toggle(this)"><span class="lab">All Milestones vs Q-Day</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     <div id="secGantt" class="secbody">
@@ -669,7 +705,7 @@ h1 em{font-style:normal;color:var(--threat)}
       </div>
     </div>
 
-    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked <span data-checked>30 Jun 2026</span></p>
   </section>
 
   <section class="view" id="view-threats">
@@ -682,6 +718,7 @@ h1 em{font-style:normal;color:var(--threat)}
       <p class="csub">Year × severity · ● vulnerability (size ∝ CVSS) · ◆ attack (size ∝ impact) · tap a marker</p>
       <svg id="chartVuln" viewBox="0 0 540 340" role="img" aria-label="Scatter plot of major cryptographic, certificate and component vulnerabilities plotted by year and CVSS severity, coloured and clustered by category."></svg>
       <div class="catfilter" id="catFilter"></div>
+      <p class="cathint">Tap a category to show or hide it — dimmed chips are hidden from the chart and cards.</p>
     </div>
     <div class="vhead" style="margin-top:22px"><span class="lab">Critical vulnerabilities</span></div>
     <div class="grid-auto vulns" id="vulnList"></div>
@@ -689,7 +726,7 @@ h1 em{font-style:normal;color:var(--threat)}
     <p class="thead-lead">Documented, attributed incidents where cryptographic keys, certificates or trust were the pivot. Dollar losses are frequently undisclosed, so impact is shown by verified scale — victims, records and scope — not invented figures.</p>
     <div class="grid-auto attacks" id="attackList"></div>
     <p class="minifoot" style="text-align:left">CVSS are NVD base scores where available; PKfail is vendor-rated. Attack diamonds are placed and sized by an editorial impact rating (0–10) reflecting verified scale, not CVSS. A curated, verified selection — not exhaustive.</p>
-    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked 30 Jun 2026</p>
+    <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked <span data-checked>30 Jun 2026</span></p>
   </section>
 
 </main>
@@ -811,7 +848,7 @@ const vulns=[
   {name:'Citrix Bleed',cve:'CVE-2023-4966',year:2023,cvss:9.4,cat:'session',affects:'Citrix NetScaler ADC & Gateway',desc:'A memory over-read leaked valid session tokens from NetScaler appliances, letting attackers hijack authenticated sessions and bypass MFA entirely. Weaponised at scale by ransomware crews.',fix:'Patch NetScaler to the October 2023 build AND terminate all active sessions — patching alone leaves already-stolen session tokens valid.',url:'https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a',src:'CISA'},
   {name:'KeyTrap',cve:'CVE-2023-50387',year:2024,cvss:7.5,cat:'proto',affects:'DNSSEC validating resolvers (BIND, Unbound, PowerDNS\u2026)',desc:'A single crafted DNSSEC response could force a validating resolver into extreme CPU exhaustion, stalling it for minutes \u2014 a design-level flaw the researchers described as one of the worst ever found in DNS.',fix:'Update DNSSEC-validating resolver software (BIND 9, Unbound, PowerDNS and Knot released fixes in February 2024).',url:'https://nvd.nist.gov/vuln/detail/CVE-2023-50387',src:'NVD'},
   {name:'regreSSHion',cve:'CVE-2024-6387',year:2024,cvss:8.1,cat:'os',affects:'OpenSSH server on glibc-based Linux',desc:'A signal-handler race condition reintroduced an old bug, allowing unauthenticated remote code execution as root on glibc Linux \u2014 a rare, serious pre-auth hole in the most-deployed remote-access service.',fix:'Update OpenSSH to 9.8p1 or later; if you cannot, setting LoginGraceTime to 0 blocks the race (at the cost of a possible connection-exhaustion DoS).',url:'https://nvd.nist.gov/vuln/detail/CVE-2024-6387',src:'NVD'},
-  {name:'PKfail',cve:'BRLY-2024-005',year:2024,cvss:8.2,cvssNote:'Binarly-rated (no NVD CVSS assigned)',cat:'pki',affects:'UEFI Secure Boot Platform Key (hundreds of device models)',desc:'Hundreds of device models shipped with an AMI test Platform Key \u2014 the root of trust for Secure Boot \u2014 whose private key had leaked. Anyone holding it can sign boot code and defeat Secure Boot, enabling bootkits such as BlackLotus.',fix:'Apply vendor firmware updates and re-key the UEFI Platform Key with a unique, trusted key; treat affected devices as compromised and refresh KEK/db/dbx.',url:'https://www.binarly.io/advisories/brly-2024-005',src:'Binarly'}
+  {name:'PKfail',cve:'CVE-2024-8105',year:2024,cvss:8.2,cvssNote:'CVSS 8.2 is Binarly\u2019s vendor rating (also tracked as BRLY-2024-005)',cat:'pki',affects:'UEFI Secure Boot Platform Key (hundreds of device models)',desc:'Hundreds of device models shipped with an AMI test Platform Key \u2014 the root of trust for Secure Boot \u2014 whose private key had leaked. Anyone holding it can sign boot code and defeat Secure Boot, enabling bootkits such as BlackLotus.',fix:'Apply vendor firmware updates and re-key the UEFI Platform Key with a unique, trusted key; treat affected devices as compromised and refresh KEK/db/dbx.',url:'https://www.binarly.io/advisories/brly-2024-005',src:'Binarly'}
 ];
 const attacks=[
   {name:'Storm-0558 \u2014 forged Microsoft tokens',year:2023,impactScore:9.0,type:'Nation-state espionage',brand:'Microsoft / US government',attribution:'China (Storm-0558)',method:'Stole a 2016 Microsoft consumer (MSA) token-signing key and exploited a token-validation flaw to forge authentication tokens, reading Exchange Online mail.',impact:'~22\u201325 organisations and 500+ individuals; roughly 60,000 US State Department emails; mailboxes of Commerce Secretary Raimondo and the US Ambassador to China. The CSRB judged it \u201cpreventable\u201d.',prevented:'Automated rotation of signing keys, HSM-backed key storage, scrubbing crash dumps of key material, correct consumer-vs-enterprise token-scope validation, and default enhanced M365 audit logging — all CSRB recommendations.',url:'https://www.bleepingcomputer.com/news/security/microsoft-still-unsure-how-hackers-stole-msa-key-in-2023-exchange-attack/',src:'CSRB / BleepingComputer'},
@@ -898,25 +935,39 @@ const cssvar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).t
 const nowYear=()=>new Date().getFullYear();
 let scen='weighted',tgt='rsa',qTarget=new Date(model.scenarios.weighted.date);
 const nTarget=new Date(NCSC_DEADLINE);
-function toggle(btn){const open=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!open));const t=$(btn.dataset.target);if(t)t.hidden=open;}
+function toggle(btn){const open=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!open));const t=$(btn.dataset.target);if(t)t.hidden=open;if(btn.classList.contains('sechead'))updatePlanAll();}
+function planAll(){
+  const heads=document.querySelectorAll('#view-plan .sechead');
+  const anyClosed=[...heads].some(h=>h.getAttribute('aria-expanded')!=='true');
+  heads.forEach(h=>{h.setAttribute('aria-expanded',String(anyClosed));const t=$(h.dataset.target);if(t)t.hidden=!anyClosed;});
+  updatePlanAll();
+}
+function updatePlanAll(){
+  const b=$('planAllBtn');if(!b)return;const s=b.querySelector('span');if(!s)return;
+  const anyClosed=[...document.querySelectorAll('#view-plan .sechead')].some(h=>h.getAttribute('aria-expanded')!=='true');
+  s.textContent=anyClosed?'Expand all':'Collapse all';
+}
 function toggleCard(c){const next=c.getAttribute('aria-expanded')==='true'?'false':'true';const top=c.offsetTop;[...document.querySelectorAll('#view-stack .comp')].filter(k=>Math.abs(k.offsetTop-top)<2).forEach(k=>k.setAttribute('aria-expanded',next));}
 function fitDigits(){document.querySelectorAll('.counter .unit b').forEach(b=>{b.style.fontSize='';let fs=parseFloat(getComputedStyle(b).fontSize),g=0;while(b.scrollWidth>b.clientWidth+0.5&&fs>9&&g<40){fs-=1;b.style.fontSize=fs+'px';g++;}});}
 function crossover(floor){const road=collapse.builtRoadmap,log=Math.log10;const a=road[road.length-2],b=road[road.length-1];const m=(log(b.y)-log(a.y))/(b.x-a.x);return b.x+(log(floor)-log(b.y))/m;}
 const linkIcon='<svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>';
+const CHECKED='30 Jun 2026';
 
 /* ============================ NAV + URL STATE ============================ */
 let charted=false;
-function showView(v){
+function showView(v,fromPop){
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.id==='view-'+v));
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
   if(v==='trends'&&!charted){drawCollapse();drawOutlook();charted=true;}
   if(v==='threats'&&!threatsCharted){drawVulnCluster();threatsCharted=true;}
   if(v==='plan'&&!planCharted){drawSizes();drawGantt();planCharted=true;}
   if(v==='clocks')requestAnimationFrame(fitDigits);
-  syncURL(v);window.scrollTo({top:0,behavior:'auto'});
+  syncURL(v,!fromPop);window.scrollTo({top:0,behavior:'auto'});
 }
+addEventListener('popstate',e=>{try{const p=new URLSearchParams(location.search);const t=p.get('tab')||'clocks';if(document.getElementById('view-'+t))showView(t,true);}catch(err){}});
 function curView(){const a=document.querySelector('.view.active');return a?a.id.replace('view-',''):'clocks';}
-function syncURL(v){try{const p=new URLSearchParams();p.set('tab',v||curView());p.set('scenario',scen);p.set('target',tgt);if(document.documentElement.dataset.theme==='light')p.set('theme','light');history.replaceState(null,'','?'+p.toString());}catch(e){}}
+let _navReady=false;
+function syncURL(v,push){try{const p=new URLSearchParams();p.set('tab',v||curView());p.set('scenario',scen);p.set('target',tgt);if(document.documentElement.dataset.theme==='light')p.set('theme','light');const u='?'+p.toString();if(push&&_navReady)history.pushState({tab:v},'',u);else history.replaceState({tab:v||curView()},'',u);}catch(e){}}
 function readURL(){try{const p=new URLSearchParams(location.search);if(p.get('theme')==='light')document.documentElement.dataset.theme='light';const s=p.get('scenario');if(s&&model.scenarios[s])scen=s;const t=p.get('target');if(t==='ecc'||t==='rsa')tgt=t;return p.get('tab');}catch(e){return null;}}
 
 /* ============================ THEME ============================ */
@@ -948,6 +999,7 @@ function setScenario(k){
   document.querySelectorAll('.sbtn').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
   $('qScenarioLabel').textContent=model.scenarios[k].label;
   $('qDate').textContent=fmt(qTarget);$('scenText').textContent=model.scenarios[k].text;
+  const zc=$('zChip');if(zc){const Z=model.scenarios[k].year-nowYear();zc.innerHTML='Z &#8776; <b>'+Z+' years</b> &#8212; this scenario puts Q-Day at <b>'+model.scenarios[k].year+'</b>';}
   setBuffer();tick();mosca();syncURL();
 }
 function mosca(){
@@ -1000,7 +1052,7 @@ const aNotes={
 function saveAns(){try{sessionStorage.setItem('qday_assess',JSON.stringify(aAns));}catch(e){}}
 function loadAns(){try{const s=sessionStorage.getItem('qday_assess');if(s){const o=JSON.parse(s);['exec','tech','auditor'].forEach(k=>{if(o&&o[k])aAns[k]=o[k];});}}catch(e){}}
 function segId(k){return 'seg'+k[0].toUpperCase()+k.slice(1);}
-function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];const pk=$('aPick');if(pk)pk.hidden=true;buildAssess();scoreAssess();}
+function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];const pk=$('aPick');if(pk)pk.hidden=true;const s2=$('aStep2');if(s2)s2.hidden=false;buildAssess();scoreAssess();}
 function buildAssess(){
   $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div>${recHtml}</div>`;}).join('');
   $('aresetBtn').hidden=Object.keys(aAns[aMode]).length===0;
@@ -1036,12 +1088,33 @@ function scoreAssess(){
     ?('All '+total+' answered — apply your results below.')
     :(done+' of '+total+' answered'+((aX==null||aY==null)?' \u2014 answer the data-risk question for X'+(agN?'':' and an agility question for Y'):' \u2014 finish for a full picture, or apply now'));
 }
+function copyMosca(btn){
+  const X=+$('mX').value,Y=+$('mY').value,Z=model.scenarios[scen].year-nowYear();
+  let t='Q-Day Observatory — Mosca test result\n'
+    +'Scenario: '+model.scenarios[scen].label+' (Q-Day '+model.scenarios[scen].year+', Z ≈ '+Z+'y)\n'
+    +'X (data shelf-life): '+X+'y · Y (migration time): '+Y+'y\n'
+    +'Verdict: '+$('mVerdict').textContent+'\n'+$('mDetail').textContent;
+  const lvl=$('lvlName').textContent;
+  if(lvl&&!$('assessResult').hidden)t+='\n\nReadiness level: '+lvl+' — '+$('lvlDesc').textContent;
+  if(aMode&&Object.keys(aAns[aMode]).length){
+    t+='\n\nReadiness assessment — '+(personaLbl[aMode]||aMode)+' persona:';
+    assess[aMode].forEach((q,i)=>{const a=aAns[aMode][i];t+='\nQ'+(i+1)+'. '+q.q+'\n    → '+(a?q.o[a.j][0]:'(not answered)');});
+  }
+  t+='\n\nSource: Q-Day Observatory · illustrative planning anchors, not forecasts · '+location.href;
+  const done=()=>{const s=btn.querySelector('span');if(s){const o=s.textContent;s.textContent='Copied ✓';setTimeout(()=>{s.textContent=o;},1600);}};
+  try{navigator.clipboard.writeText(t).then(done).catch(()=>{fallbackCopy(t);done();});}catch(e){fallbackCopy(t);done();}
+}
+function fallbackCopy(t){try{const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}catch(e){}}
+const personaLbl={exec:'Executive',tech:'Technical',auditor:'Auditor'};
 function applyAssess(){
   if(aX!=null){$('mX').value=Math.min(50,Math.max(1,aX));}
   if(aY!=null){$('mY').value=Math.min(15,Math.max(1,aY));}
   const box=$('moscaBox');if(box.hidden){$('moscaToggle').setAttribute('aria-expanded','true');box.hidden=false;}
   mosca();
-  box.scrollIntoView({behavior:'smooth',block:'start'});
+  const f=$('moscaForm'),ab=$('appliedBanner');
+  if(ab){ab.innerHTML='&#10003; Applied from your '+(personaLbl[aMode]||'')+' assessment &#8212; X set to <b>'+$('mX').value+'y</b>, Y set to <b>'+$('mY').value+'y</b>. The verdict below now uses these values.';ab.hidden=false;}
+  if(f){f.classList.remove('applied');void f.offsetWidth;f.classList.add('applied');f.scrollIntoView({behavior:'smooth',block:'start'});}
+  try{$('mX').focus({preventScroll:true});}catch(e){}
 }
 
 function buildStack(){
@@ -1058,8 +1131,8 @@ function buildChangelog(){$('changelog').innerHTML=model.changelog.map(c=>`<div 
 function sevClass(c){return c>=9?'sevpill-crit':c>=7?'sevpill-high':'sevpill-med';}
 function cardTog(el){const next=el.getAttribute('aria-expanded')==='true'?'false':'true';const top=el.offsetTop,par=el.parentElement;[...par.children].filter(k=>k.hasAttribute('aria-expanded')&&Math.abs(k.offsetTop-top)<2).forEach(k=>k.setAttribute('aria-expanded',next));}
 function cardKey(e,el){if(e.key==='Enter'||e.key===' '){e.preventDefault();cardTog(el);}}
-function buildCatFilter(){$('catFilter').innerHTML=Object.entries(catMeta).map(([k,m])=>`<button class="catchip" data-c="${k}" onclick="toggleCat('${k}')"><span class="dot" style="background:${m.color}"></span>${m.label}</button>`).join('')+`<button class="catchip" data-c="attacks" onclick="toggleCat('attacks')"><span class="dot dia" style="background:var(--alert)"></span>Attacks</button>`;}
-function toggleCat(k){if(k==='attacks'){attacksOff=!attacksOff;}else{catOff[k]=!catOff[k];}const b=document.querySelector('.catchip[data-c="'+k+'"]');if(b)b.classList.toggle('off',k==='attacks'?attacksOff:catOff[k]);drawVulnCluster();buildVulns();}
+function buildCatFilter(){$('catFilter').innerHTML=Object.entries(catMeta).map(([k,m])=>`<button class="catchip" data-c="${k}" aria-pressed="true" title="Tap to show/hide" onclick="toggleCat('${k}')"><span class="dot" style="background:${m.color}"></span>${m.label}</button>`).join('')+`<button class="catchip" data-c="attacks" aria-pressed="true" title="Tap to show/hide" onclick="toggleCat('attacks')"><span class="dot dia" style="background:var(--alert)"></span>Attacks</button>`;}
+function toggleCat(k){if(k==='attacks'){attacksOff=!attacksOff;}else{catOff[k]=!catOff[k];}const off=(k==='attacks'?attacksOff:catOff[k]);const b=document.querySelector('.catchip[data-c="'+k+'"]');if(b){b.classList.toggle('off',off);b.setAttribute('aria-pressed',String(!off));}drawVulnCluster();buildVulns();}
 function drawVulnCluster(){
   const svg=$('chartVuln');if(!svg)return;svg.innerHTML='';
   const W=540,H=340,L=42,R=18,T=18,B=52,x0=2013,x1=2025,y0=4,y1=10.6;
@@ -1078,6 +1151,7 @@ function drawVulnCluster(){
     const c=el('circle',{cx,cy,r,fill:col,stroke:bg,'stroke-width':1.5,style:'cursor:pointer;pointer-events:all'});
     const tip='<b>'+v.name+'</b><br>'+v.cve+' \u00b7 '+v.year+'<br>CVSS '+v.cvss+(v.cvssNote?'*':'')+' \u00b7 '+catMeta[v.cat].label;
     c.addEventListener('pointerenter',e=>showTip(svg,e,tip));c.addEventListener('pointermove',e=>showTip(svg,e,tip));c.addEventListener('pointerleave',hideTip);c.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});
+    kbd(c,v.name+', '+v.cve+', CVSS '+v.cvss,e=>showTip(svg,e,tip));c.addEventListener('blur',hideTip);
     svg.appendChild(c);
   });
   // attacks: diamonds sized by impact
@@ -1091,6 +1165,7 @@ function drawVulnCluster(){
       const d=el('polygon',{points:dia(s),fill:alert,stroke:bg,'stroke-width':1.5,style:'cursor:pointer;pointer-events:all'});
       const tip='<b>'+a.name+'</b><br>'+a.year+' \u00b7 '+a.attribution+'<br>impact '+a.impactScore.toFixed(1)+'/10 (editorial)';
       d.addEventListener('pointerenter',e=>showTip(svg,e,tip));d.addEventListener('pointermove',e=>showTip(svg,e,tip));d.addEventListener('pointerleave',hideTip);d.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});
+      kbd(d,a.name+', '+a.year+', impact '+a.impactScore.toFixed(1),e=>showTip(svg,e,tip));d.addEventListener('blur',hideTip);
       svg.appendChild(d);
     });
   }
@@ -1116,14 +1191,15 @@ function drawSizes(){
     g.appendChild(el('text',{x:L,y:yLab,fill:cInk,'font-family':'monospace','font-size':10,'font-weight':600},d.name+'  ·  '+d.std));
     g.appendChild(el('rect',{x:L,y:yBar-7,width:bw,height:14,rx:3,fill:col,opacity:d.pqc?.92:.85}));
     g.appendChild(el('text',{x:L+bw+6,y:yBar+3.5,fill:col,'font-family':'monospace','font-size':9.5,'font-weight':700},(d.approx?'~':'')+d.bytes.toLocaleString('en-GB')+' B'));
-    g.addEventListener('click',e=>{e.stopPropagation();showSizeInfo(d.name);});
+    g.addEventListener('click',e=>{e.stopPropagation();showSizeInfo(d.name,e);});
+    kbd(g,d.name+' — open detail',e=>showSizeInfo(d.name,e));
     svg.appendChild(g);
   });
 }
-function showSizeInfo(name){
+function showSizeInfo(name,e){
   const d=sizes.find(s=>s.name===name);if(!d)return;const box=$('sizeInfo');
   box.innerHTML=`<button class="cox" onclick="closeCallout('sizeInfo')" aria-label="Close">×</button><div class="siname">${d.name} <span class="sistd ${d.pqc?'pq':'cl'}">${d.std}</span> <span class="sibytes">${(d.approx?'~':'')+d.bytes.toLocaleString('en-GB')} bytes</span></div><div class="silbl">What it is</div><div class="sitext">${d.what}</div><div class="silbl">In plain terms</div><div class="sitext">${d.lay}</div><a class="srclink" href="${d.url}" target="_blank" rel="noopener" style="margin-top:10px">${linkIcon}NIST PQC (FIPS 203/204/205) ↗</a>`;
-  box.hidden=false;
+  box.hidden=false;placeCallout(box,e);
 }
 function drawGantt(){
   const svg=$('chartGantt');if(!svg)return;svg.innerHTML='';
@@ -1148,17 +1224,18 @@ function drawGantt(){
       const dot=el('circle',{cx,cy:y,r:5,fill:cT,stroke:bg,'stroke-width':1.4,style:'cursor:pointer;pointer-events:all'});
       const tip='<b>'+g.region+' · '+m.y+'</b><br>'+m.l+'<br><span style="opacity:.7">tap for detail</span>';
       dot.addEventListener('pointerenter',e=>showTip(svg,e,tip));dot.addEventListener('pointermove',e=>showTip(svg,e,tip));dot.addEventListener('pointerleave',hideTip);
-      dot.addEventListener('click',e=>{e.stopPropagation();hideTip();showGanttInfo(g,m);});
+      dot.addEventListener('click',e=>{e.stopPropagation();hideTip();showGanttInfo(g,m,e);});
+      kbd(dot,g.region+' '+m.y+': '+m.l+' — open detail',e=>{hideTip();showGanttInfo(g,m,e);});
       svg.appendChild(dot);
     });
     svg.appendChild(el('text',{x:px(g.end)+7,y:y+3,fill:cT2,'font-family':'monospace','font-size':8.5,'font-weight':700},g.marks[g.marks.length-1].y));
   });
 }
-function showGanttInfo(g,m){
+function showGanttInfo(g,m,e){
   const box=$('ganttInfo');if(!box)return;
   const link=g.url?`<a class="srclink" href="${g.url}" target="_blank" rel="noopener" style="margin-top:9px">${linkIcon}${g.region} source ↗</a>`:'<div class="vhint" style="margin-top:8px">No public link for this row — see Methodology &amp; sources.</div>';
   box.innerHTML=`<button class="cox" onclick="closeCallout('ganttInfo')" aria-label="Close">×</button><div class="siname">${g.region} · ${m.y} <span class="sistd pq">${g.body}</span></div><div class="silbl">${m.l}</div><div class="sitext">${m.d}</div>${link}`;
-  box.hidden=false;
+  box.hidden=false;placeCallout(box,e);
 }
 function closeCallout(id){const b=$(id);if(b)b.hidden=true;}
 
@@ -1166,8 +1243,11 @@ function closeCallout(id){const b=$(id);if(b)b.hidden=true;}
 const NS='http://www.w3.org/2000/svg';
 function el(tag,attrs,txt){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
 function showTip(svg,e,html){const tip=$('tip'),box=svg.closest('.chart').getBoundingClientRect();tip.innerHTML=html;tip.classList.add('show');let x=e.clientX-box.left+12,y=e.clientY-box.top+12;if(x>box.width-160)x=box.width-160;tip.style.left=Math.max(6,x)+'px';tip.style.top=Math.max(6,y)+'px';}
+function kbd(elm,label,fn){try{elm.setAttribute('tabindex','0');elm.setAttribute('role','button');if(label)elm.setAttribute('aria-label',label);elm.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();fn(fakePt(elm));}});}catch(err){}}
+function fakePt(elm){try{const r=elm.getBoundingClientRect();return{clientX:r.left+r.width/2,clientY:r.top+r.height/2,target:elm,stopPropagation(){}};}catch(e){return{clientX:0,clientY:0,target:elm,stopPropagation(){}};}}
+function placeCallout(box,e){try{const wide=(typeof innerWidth==='number')&&innerWidth>=980;if(!wide||!e||!e.target||!e.target.getBoundingClientRect){box.classList.remove('float');box.style.left='';box.style.top='';return;}const ch=box.closest('.chart');if(!ch)return;const cr=ch.getBoundingClientRect(),tr=e.target.getBoundingClientRect();box.classList.add('float');const bw=340;let left=tr.left-cr.left+tr.width+12;if(left+bw>cr.width-8)left=Math.max(8,tr.left-cr.left-bw-12);let top=Math.max(8,tr.top-cr.top-8);box.style.left=left+'px';box.style.top=top+'px';}catch(err){}}
 function hideTip(){$('tip').classList.remove('show');}
-function addPt(svg,cx,cy,r,color,tip){const c=el('circle',{cx,cy,r,fill:cssvar('--bg'),stroke:color,'stroke-width':2,class:'pt',style:'cursor:pointer;pointer-events:all'});c.addEventListener('pointerenter',e=>showTip(svg,e,tip));c.addEventListener('pointermove',e=>showTip(svg,e,tip));c.addEventListener('pointerleave',hideTip);c.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});svg.appendChild(c);}
+function addPt(svg,cx,cy,r,color,tip){const c=el('circle',{cx,cy,r,fill:cssvar('--bg'),stroke:color,'stroke-width':2,class:'pt',style:'cursor:pointer;pointer-events:all'});c.addEventListener('pointerenter',e=>showTip(svg,e,tip));c.addEventListener('pointermove',e=>showTip(svg,e,tip));c.addEventListener('pointerleave',hideTip);c.addEventListener('click',e=>{e.stopPropagation();showTip(svg,e,tip);});kbd(c,tip.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(),e=>showTip(svg,e,tip));c.addEventListener('blur',hideTip);svg.appendChild(c);}
 
 function drawCollapse(){
   const svg=$('chartCollapse');svg.innerHTML='';
@@ -1258,8 +1338,73 @@ function showWelcome(){$('welcome').classList.add('open');}
 function closeWelcome(){$('welcome').classList.remove('open');try{localStorage.setItem('qday_seen','1');}catch(e){}}
 
 /* ============================ DRAWER ============================ */
+const glossaryTerms=[
+['ACME','Automatic Certificate Management Environment — a protocol for automating certificate issuance and renewal, useful for crypto-agility.'],
+['ADFS','Active Directory Federation Services — Microsoft\u2019s federated sign-on service; its token-signing key was abused in the SolarWinds campaign.'],
+['AES-CFB8','AES in 8-bit cipher feedback mode — the flawed Netlogon use of this mode (with an all-zero IV) enabled Zerologon.'],
+['AMI','American Megatrends International — a major UEFI firmware vendor; its leaked test Platform Key caused PKfail.'],
+['APT29','\u201CAdvanced Persistent Threat 29\u201D — a Russian SVR-linked espionage group, attributed to the SolarWinds campaign.'],
+['ASD','Australian Signals Directorate — Australia\u2019s signals-intelligence and cyber-security agency.'],
+['CBOM','Cryptographic Bill of Materials — an inventory of the cryptographic assets in your systems; the foundation of PQC migration.'],
+['CIO / CISO','Chief Information Officer / Chief Information Security Officer.'],
+['CISA','Cybersecurity and Infrastructure Security Agency — the US civilian cyber-defence agency.'],
+['CNSA 2.0','Commercial National Security Algorithm Suite 2.0 — the NSA\u2019s required algorithms and timeline for US National Security Systems.'],
+['CRQC','Cryptographically Relevant Quantum Computer — one capable of breaking RSA/ECC; its arrival is \u201CQ-Day\u201D.'],
+['CSRB','Cyber Safety Review Board — the US board that investigated the Storm-0558 intrusion.'],
+['CVE','Common Vulnerabilities and Exposures — the standard identifier scheme for public vulnerabilities (e.g. CVE-2020-1472).'],
+['CVSS','Common Vulnerability Scoring System — a 0\u201310 severity score for vulnerabilities.'],
+['DH','Diffie\u2013Hellman — a classical key-exchange method; quantum-vulnerable.'],
+['DNSSEC','DNS Security Extensions — cryptographic signing of DNS records; target of the KeyTrap flaw.'],
+['ECC','Elliptic-Curve Cryptography — compact classical public-key cryptography; expected to fall to a quantum computer before RSA-2048.'],
+['ECDH','Elliptic-Curve Diffie\u2013Hellman — key exchange over elliptic curves; replaced by ML-KEM.'],
+['ECDSA','Elliptic-Curve Digital Signature Algorithm — replaced by ML-DSA and SLH-DSA.'],
+['ENISA','European Union Agency for Cybersecurity.'],
+['FIPS','Federal Information Processing Standard — US standards; FIPS 203/204/205 are the finalised PQC algorithms.'],
+['FN-DSA','FFT-over-NTRU-lattice Digital Signature Algorithm (Falcon) — a compact PQC signature, in draft as FIPS 206.'],
+['GRI','Global Risk Institute — publisher of the annual expert Quantum Threat Timeline survey.'],
+['HNDL','Harvest Now, Decrypt Later — recording encrypted traffic today to decrypt it once a CRQC exists.'],
+['HQC','Hamming Quasi-Cyclic — the code-based backup encryption algorithm NIST selected in March 2025.'],
+['HSM','Hardware Security Module — tamper-resistant hardware for holding cryptographic keys; keeps signing keys exfiltration-resistant.'],
+['IV','Initialisation Vector — a per-message random value; reusing or zeroing it (Zerologon) breaks security.'],
+['JNDI','Java Naming and Directory Interface — the lookup mechanism abused by Log4Shell.'],
+['KEK','Key Exchange Key — a UEFI Secure Boot database key, subordinate to the Platform Key.'],
+['KEM','Key Encapsulation Mechanism — the modern construction for establishing shared keys; ML-KEM is the PQC standard.'],
+['KMS','Key Management Service — a managed service for creating and controlling encryption keys.'],
+['LDAP','Lightweight Directory Access Protocol — directory look-ups; an outbound channel abused via Log4Shell.'],
+['MFA','Multi-factor authentication.'],
+['ML-DSA','Module-Lattice Digital Signature Algorithm (Dilithium) — the primary PQC signature, FIPS 204.'],
+['ML-KEM','Module-Lattice Key-Encapsulation Mechanism (Kyber) — the primary PQC encryption/key-exchange standard, FIPS 203.'],
+['MS-NRPC','Microsoft Netlogon Remote Protocol — the domain-controller protocol exploited by Zerologon.'],
+['MSA','Microsoft account — the consumer identity system whose signing key was stolen in Storm-0558.'],
+['NCSC','National Cyber Security Centre — the UK\u2019s technical authority for cyber security, part of GCHQ.'],
+['NIS','Network and Information Systems — the EU/UK security regulations and the EU cooperation group behind the PQC roadmap.'],
+['NIST','National Institute of Standards and Technology — the US body that standardised the PQC algorithms.'],
+['NIST IR','NIST Interagency Report — e.g. IR 8547, which schedules the deprecation of RSA/ECC.'],
+['NSA','National Security Agency — the US signals-intelligence agency; author of CNSA 2.0.'],
+['NSM-10','National Security Memorandum 10 — the 2022 US directive on quantum computing risk and PQC migration.'],
+['NSS','National Security Systems — US government systems handling classified or military information.'],
+['NVD','National Vulnerability Database — the US database of CVEs and their CVSS scores.'],
+['OT','Operational Technology — hardware and software controlling physical processes (e.g. energy infrastructure).'],
+['PK','Platform Key — the root-of-trust key for UEFI Secure Boot; the leaked test PK is the heart of PKfail.'],
+['PKI','Public Key Infrastructure — the system of certificates and authorities that binds keys to identities.'],
+['PQC','Post-Quantum Cryptography — algorithms believed secure against both classical and quantum computers.'],
+['Q-Day','Not an acronym, but the app\u2019s core term: the day a quantum computer can break current public-key cryptography.'],
+['QEC','Quantum Error Correction — combining many noisy physical qubits into reliable logical qubits.'],
+['RCE','Remote Code Execution — an attacker running arbitrary code on a target system.'],
+['RMI','(Java) Remote Method Invocation — an outbound channel abused via Log4Shell.'],
+['RSA','Rivest\u2013Shamir\u2013Adleman — the classical public-key workhorse; RSA-2048 is the usual quantum-threat benchmark.'],
+['SAML','Security Assertion Markup Language — single-sign-on tokens; forged in the SolarWinds \u201CGolden SAML\u201D technique.'],
+['SLH-DSA','Stateless Hash-based Digital Signature Algorithm (SPHINCS+) — the hash-based backup signature, FIPS 205.'],
+['SSH','Secure Shell — encrypted remote administration; target of the Terrapin and regreSSHion flaws.'],
+['SVR','Russia\u2019s Foreign Intelligence Service — the agency to which APT29 is attributed.'],
+['TLS','Transport Layer Security — the encryption behind HTTPS; PQC key exchange is already deploying here.'],
+['UEFI','Unified Extensible Firmware Interface — modern PC firmware; home of Secure Boot.'],
+['VPN','Virtual Private Network.'],
+['WDAC','Windows Defender Application Control — Windows allow-listing that limits abuse of stolen code-signing certificates.']
+];
 const panes={
-  menu:()=>`<h2>Reference & sources</h2><p>Background, evidence, methodology and links — kept off the main screens to stay compact.</p><div class="menu"><a href="#" onclick="open_('methodology');return false;">Methodology & assumptions ↗</a><a href="#" onclick="open_('estimate');return false;">Estimate basis ↗</a><a href="#" onclick="open_('evidence');return false;">Verified evidence ↗</a><a href="#" onclick="open_('hndl');return false;">Why this matters now ↗</a><a href="#" onclick="open_('sources');return false;">All sources ↗</a><a href="#" onclick="close_();window.print();return false;">Save as PDF / print ↗</a><a href="#" onclick="close_();showWelcome();return false;">Take the tour ↗</a></div><p style="margin-top:18px;color:var(--faint)">Planning anchors, not forecasts. No trackers or analytics. No policy position is expressed or implied. UK English · last checked 30 Jun 2026 · views are the author's own.</p>`,
+  menu:()=>`<h2>Reference & sources</h2><p>Background, evidence, methodology and links — kept off the main screens to stay compact.</p><div class="menu"><a href="#" onclick="open_('methodology');return false;">Methodology & assumptions ↗</a><a href="#" onclick="open_('estimate');return false;">Estimate basis ↗</a><a href="#" onclick="open_('evidence');return false;">Verified evidence ↗</a><a href="#" onclick="open_('hndl');return false;">Why this matters now ↗</a><a href="#" onclick="open_('glossary');return false;">Glossary of acronyms ↗</a><a href="#" onclick="open_('sources');return false;">All sources ↗</a><a href="#" onclick="close_();window.print();return false;">Save as PDF / print ↗</a><a href="#" onclick="close_();showWelcome();return false;">Take the tour ↗</a></div><p style="margin-top:18px;color:var(--faint)">Planning anchors, not forecasts. No trackers or analytics. No policy position is expressed or implied. UK English · last checked ${CHECKED} · views are the author's own.</p>`,
+  glossary:()=>`<h2>Glossary</h2><p>Every acronym used in this app, in plain terms. UK English throughout.</p><div class="gloss">${glossaryTerms.map(t=>`<div class="gl"><b>${t[0]}</b><span>${t[1]}</span></div>`).join('')}</div>`,
   methodology:()=>`<h2>Methodology & assumptions</h2><h3>The clocks</h3><p>Q-Day scenarios are anchored to the GRI 2025 expert window (10–15 years): Aggressive 2036, Source-weighted 2038, Cautious 2041. The defence clock is the NCSC 2035 deadline. Headroom = Q-Day − 2035.</p><h3>The crossover chart</h3><p>Required qubits are held at the best published floor — Gidney 2025 (~1M for RSA-2048) and Google 2026 (~500k for ECC-256); no source projects lower, so holding flat is conservative. Built follows IBM's published roadmap (Starling ~10k / 2029; Blue Jay ~100k / 2033), extrapolated on its own 2029→2033 slope to the floor. Crossover ≈ 2037 (RSA) / ~2036 (ECC). The vendor range marks when PsiQuantum, Google, IonQ and IBM project reaching ~1M physical qubits (2028–2037); these are aspirational and historically slip.</p><h3>Readiness score</h3><p>Unweighted mean of six component percentages — an orientation aid, not a measurement.</p><h3>Mosca test</h3><p>X (data shelf-life) + Y (migration time) vs Z (years to the selected scenario's Q-Day). If X+Y &gt; Z you are already exposed. Illustrative.</p><h3>Limits</h3><p>Raw qubit counts are not a running attack; roadmaps slip; expert surveys carry wide uncertainty. Everything here is a planning aid, not a forecast, and the views are the author's own.</p>`,
   estimate:()=>`<h2>How the Q-Day clock is set</h2><p class="warn">A planning estimate for a CRQC able to threaten RSA/ECC at scale — not a claim that a named machine breaks encryption on that exact date.</p><table><tr><th>Scenario</th><th>Date</th><th>Basis</th></tr>${Object.values(model.scenarios).map(s=>`<tr><td><b>${s.label}</b></td><td>${fmt(s.date)}</td><td>${s.text}</td></tr>`).join('')}</table>`,
   evidence:()=>`<h2>Verified evidence</h2><p>Each datapoint links to its primary or peer-reviewed source.</p><table><tr><th>Area</th><th>Datapoint & source</th><th>Reading</th></tr><tr><td><b>Error correction</b></td><td>Willow: below-threshold; d=7; 0.143%/cycle; \u039b=2.14; 2.4\u00d7 break-even.<br><a href="https://www.nature.com/articles/s41586-024-08449-y" target="_blank" rel="noopener">Nature 2024 \u2197</a></td><td>Improves with code distance — not yet CRQC scale.</td></tr><tr><td><b>Gate fidelity</b></td><td>Helios: 99.9975% single, 99.921% two-qubit; Nature + Sandia.<br><a href="https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html" target="_blank" rel="noopener">Nature / Sandia \u2197</a></td><td>Best-in-class gates — one layer of the stack.</td></tr><tr><td><b>Logical qubits</b></td><td>Quantinuum: 48 (Nov 2025), 94 (Mar 2026).<br><a href="https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world" target="_blank" rel="noopener">Quantinuum \u2197</a></td><td>Far below the thousands cited for RSA-2048.</td></tr><tr><td><b>RSA estimate</b></td><td>Gidney 2025: <1M physical (was 20M in 2019).<br><a href="https://arxiv.org/abs/2505.15917" target="_blank" rel="noopener">Gidney 2025 \u2197</a></td><td>~3 orders above today's hardware.</td></tr><tr><td><b>ECC estimate</b></td><td>Google 2026: ECC-256 ~500k physical (~half of RSA).<br><a href="https://physicsworld.com/a/new-findings-shorten-the-road-to-cryptographically-relevant-quantum-computers/" target="_blank" rel="noopener">Physics World \u2197</a></td><td>The nearer target — underpins most TLS/SSH.</td></tr><tr><td><b>Roadmap</b></td><td>IBM Starling ~10k (2029); Blue Jay ~100k (2033).<br><a href="https://www.ibm.com/quantum/blog/large-scale-ftqc" target="_blank" rel="noopener">IBM roadmap \u2197</a></td><td>Scaling toward the ~1M requirement mid-2030s.</td></tr><tr><td><b>Standards</b></td><td>NIST FIPS 203/204/205 (Aug 2024); HQC (Mar 2025).<br><a href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" rel="noopener">NIST PQC \u2197</a></td><td>The algorithms to migrate to already exist.</td></tr></table>`,
@@ -1269,7 +1414,7 @@ const panes={
 function open_(k){$('paneBody').innerHTML=(panes[k]||panes.sources)();$('drawer').classList.add('open');document.body.style.overflow='hidden';}
 function close_(){$('drawer').classList.remove('open');document.body.style.overflow='';}
 function toggleHmenu(e){if(e){e.stopPropagation();}const m=$('hmenu'),b=$('menuBtn');const willOpen=m.hidden;m.hidden=!willOpen;b.setAttribute('aria-expanded',willOpen?'true':'false');}
-function hmenuAct(a){const m=$('hmenu'),b=$('menuBtn');m.hidden=true;b.setAttribute('aria-expanded','false');if(a==='share')shareCard();else if(a==='copy')copyLink();else if(a==='ref')open_('menu');}
+function hmenuAct(a){const m=$('hmenu'),b=$('menuBtn');m.hidden=true;b.setAttribute('aria-expanded','false');if(a==='share')shareCard();else if(a==='copy')copyLink();else if(a==='gloss')open_('glossary');else if(a==='ref')open_('menu');}
 document.addEventListener('click',e=>{const m=$('hmenu');if(!m||m.hidden)return;if(!e.target.closest('#hmenu')&&!e.target.closest('#menuBtn')){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}});
 document.addEventListener('click',e=>{['ganttInfo','sizeInfo'].forEach(id=>{const b=$(id);if(b&&!b.hidden&&!e.target.closest('#'+id))b.hidden=true;});});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=$('hmenu');if(m&&!m.hidden){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}}});
@@ -1280,11 +1425,13 @@ addEventListener('scroll',hideTip,true);
 /* ============================ INIT ============================ */
 const _tab=readURL();paintTheme();
 buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();buildCatFilter();buildVulns();buildAttacks();loadAns();
+document.querySelectorAll('[data-checked]').forEach(x=>x.textContent=CHECKED);
 applyTargetText();setScenario(scen);mosca();
 tick();setInterval(tick,1000);
 requestAnimationFrame(fitDigits);addEventListener('resize',fitDigits);addEventListener('orientationchange',()=>setTimeout(fitDigits,80));
 setInterval(()=>document.querySelectorAll('.node .days').forEach(x=>{const i=+x.dataset.i;x.textContent=daysTo(model.ncsc[i].date).toLocaleString('en-GB')+' days left';}),6e4);
 if(_tab&&document.getElementById('view-'+_tab))showView(_tab);
+_navReady=true;
 let _seen=false;try{_seen=localStorage.getItem('qday_seen')==='1';}catch(e){}
 if(!_tab&&!_seen)showWelcome();
 </script>
