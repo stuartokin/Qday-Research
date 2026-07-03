@@ -270,8 +270,11 @@ body.noscroll{overflow:hidden}
 .tabbar{z-index:75}
 .drawer{z-index:78}
 /* threat card focus flash + back-to-graph */
-.vuln.flash,.atk.flash{animation:cardFlash 1.4s ease}
-@keyframes cardFlash{0%{box-shadow:0 0 0 0 rgba(70,212,196,.6)}100%{box-shadow:0 0 0 14px rgba(70,212,196,0)}}
+.vuln.flash,.atk.flash{animation:cardFlash 2.4s ease}
+@keyframes cardFlash{
+0%{box-shadow:0 0 0 3px var(--defence),0 0 34px rgba(70,212,196,.55);background:rgba(70,212,196,.16);transform:scale(1.02)}
+55%{box-shadow:0 0 0 3px var(--defence),0 0 22px rgba(70,212,196,.35);background:rgba(70,212,196,.10);transform:scale(1)}
+100%{box-shadow:0 0 0 0 rgba(70,212,196,0);background:transparent}}
 .backg{display:inline-flex;align-items:center;gap:6px;margin-top:11px;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--defence);background:rgba(70,212,196,.09);border:1px solid rgba(70,212,196,.3);border-radius:9px;padding:8px 12px;cursor:pointer;transition:.14s}
 .backg:hover{background:rgba(70,212,196,.16)}
 /* why size matters */
@@ -877,6 +880,7 @@ const model={
     {name:'Algorithm & stack',pct:15,conf:'reported',metric:'Gidney 2025: 20\u00d7 fewer qubits than 2019',novice:'In plain terms: the software and methods to actually run the attack. These are improving fast \u2014 the qubit bill fell ~20\u00d7 since 2019.',detail:'Gidney (2025) cut the qubit requirement ~20\u00d7 vs 2019 and the Toffoli count >100\u00d7 vs Chevignard 2024. Full-stack cryptanalytic demonstrations remain far off.',href:'https://arxiv.org/abs/2505.15917',srcLabel:'Gidney 2025'}
   ],
   regulations:[
+    {region:'US',body:'Executive Order 14412 (Jun 2026)',milestones:[['2030','Federal high-value systems: PQC key establishment; contractors PQC-FIPS via FAR'],['2031','Federal high-value systems: PQC digital signatures'],['2027','CBOM guidance & CISA-supported CNI migration plans under way']],href:'https://www.whitehouse.gov/presidential-actions/2026/06/securing-the-nation-against-advanced-cryptographic-attacks/',srcLabel:'White House EO 14412'},
     {region:'UK',body:'NCSC PQC migration',milestones:[['2028','Discover & plan'],['2031','Priority migration'],['2035','Complete']],href:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',srcLabel:'NCSC'},
     {region:'US',body:'NSA CNSA 2.0 / NSM-10',milestones:[['2027','New acquisitions support PQC'],['2030','Firmware & networking exclusive'],['2033','OS, apps & cloud exclusive'],['2035','All NSS quantum-resistant']],href:'https://csrc.nist.gov/projects/post-quantum-cryptography',srcLabel:'NIST / NSA'},
     {region:'EU',body:'Coordinated PQC roadmap (Jun 2025)',milestones:[['2026','National transition roadmaps'],['2030','High-risk use cases migrated'],['2035','Full transition']],href:'https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography',srcLabel:'EU NIS Cooperation Group'},
@@ -1293,10 +1297,10 @@ function drawVulnCluster(){
     Object.entries(ransomVolume).forEach(([yr,count])=>{
       const n=Math.round(count/VOL_PER_DOT),xc=px(+yr);
       for(let i=0;i<n;i++){
-        const dx=(rr(+yr*97+i)-0.5)*14, dy=T+12+rr(+yr*13+i*7)*(H-T-B-18);
+        const dx=(rr(+yr*97+i)-0.5)*14, dy=T+6+rr(+yr*13+i*7)*(H-T-B-12);
         svg.appendChild(el('circle',{cx:xc+dx,cy:dy,r:1.1,fill:'#ff8a3d',opacity:.45,style:'pointer-events:none'}));
       }
-      svg.appendChild(el('text',{x:xc,y:T+7,fill:'#ff8a3d','font-family':'monospace','font-size':6.5,'font-weight':700,'text-anchor':'middle',opacity:.9,style:'pointer-events:none'},count.toLocaleString('en-GB')));
+      svg.appendChild(el('text',{x:xc,y:T-5,fill:'#ff8a3d','font-family':'monospace','font-size':6.5,'font-weight':700,'text-anchor':'middle',opacity:.95,style:'pointer-events:none'},count.toLocaleString('en-GB')));
     });
   }
   {
