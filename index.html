@@ -277,6 +277,46 @@ body.noscroll{overflow:hidden}
 100%{box-shadow:0 0 0 0 rgba(70,212,196,0);background:transparent}}
 .backg{display:inline-flex;align-items:center;gap:6px;margin-top:11px;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--defence);background:rgba(70,212,196,.09);border:1px solid rgba(70,212,196,.3);border-radius:9px;padding:8px 12px;cursor:pointer;transition:.14s}
 .backg:hover{background:rgba(70,212,196,.16)}
+.qwrow{display:flex;align-items:center;gap:8px;margin:7px 0 2px;opacity:.75}
+.qwrow:hover,.qwrow:focus-within{opacity:1}
+.qwlab{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);flex:none}
+.qwrow input{flex:1;max-width:170px;height:14px}
+.qwrow output{font-family:var(--mono);font-size:10px;color:var(--muted);width:42px;flex:none}
+
+/* learn tab */
+.jstep{width:100%;margin:10px 0 0}
+.jnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(70,212,196,.14);color:var(--defence);font-family:var(--mono);font-size:11.5px;font-weight:700;flex:none;margin-right:9px}
+.jstep[aria-expanded=true] .jnum{background:var(--defence);color:#062824}
+.jbody{margin-top:8px}
+.jnext{margin-top:14px}
+
+.lsec{background:var(--solid);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;margin:14px 0}
+.lsec h3{font-family:var(--disp);font-size:15px;margin:0 0 10px;display:flex;align-items:center;gap:9px}
+.lnum{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(70,212,196,.14);color:var(--defence);font-family:var(--mono);font-size:11px;flex:none}
+.lplain{font-size:13px;line-height:1.65;color:var(--ink);margin:8px 0}
+.ltech{font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--muted);margin:10px 0 2px;padding:10px 12px;border-left:2px solid var(--defence);background:rgba(70,212,196,.05);border-radius:0 8px 8px 0}
+.ldemo{margin:10px 0}
+.ldrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.lout{font-family:var(--mono);font-size:11.5px;color:var(--ink);line-height:1.6;padding:9px 11px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;min-height:20px}
+:root[data-theme=light] .lout{background:rgba(0,0,0,.03)}
+.lchart{padding:8px;margin:6px 0}
+.fipsgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:10px 0}
+.fipscard{border:1px solid var(--line);border-radius:11px;padding:12px;background:rgba(255,255,255,.02)}
+:root[data-theme=light] .fipscard{background:rgba(0,0,0,.02)}
+.fipscard b{font-family:var(--mono);font-size:12px;color:var(--defence)}
+.fipscard .ftag{display:inline-block;margin-left:7px;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--threat);border:1px solid rgba(255,158,61,.4);border-radius:99px;padding:1.5px 7px}
+.fipscard p{font-size:11.5px;line-height:1.6;color:var(--muted);margin:7px 0 0}
+.sizebars{margin:8px 0}
+.sbrow{display:flex;align-items:center;gap:9px;margin:5px 0}
+.sblab{font-family:var(--mono);font-size:10px;color:var(--muted);width:168px;flex:none;text-align:right}
+.sbtrack{flex:1;height:11px;background:rgba(255,255,255,.05);border-radius:6px;overflow:hidden}
+:root[data-theme=light] .sbtrack{background:rgba(0,0,0,.06)}
+.sbtrack i{display:block;height:100%;border-radius:6px}
+.sbval{font-family:var(--mono);font-size:10px;color:var(--ink);width:66px;flex:none}
+@media(max-width:560px){.sblab{width:118px;font-size:8.5px}.sbval{width:56px;font-size:8.5px}}
+@media(max-width:520px){.tabbar .lbl2{font-size:8.5px}.tabbar .tab{padding:7px 4px 6px;gap:2px}}
+@media(max-width:400px){.tabbar .lbl2{font-size:7.5px;letter-spacing:0}}
+@media(min-width:1200px){.lsec{padding:22px}.lplain{font-size:14px}.ltech{font-size:12px}}
 /* why size matters */
 .why{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.6;margin:10px 0 2px;padding:10px 12px;border-left:2px solid var(--threat);background:rgba(255,158,61,.06);border-radius:0 8px 8px 0}
 .why b{color:var(--threat-2)}
@@ -627,6 +667,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
             <div class="lvlname" id="lvlName"></div>
             <div class="lvldesc" id="lvlDesc"></div>
             <div class="asugg" id="asugg"></div>
+          <button class="catchip" id="qwReset" hidden onclick="resetQW()" style="margin-top:6px">Reset question weights to default</button>
             <button class="applybtn" id="applyBtn" onclick="applyAssess()" disabled>Apply X &amp; Y to the Mosca test</button>
             <div class="aprog" id="aprog"></div>
           </div>
@@ -649,6 +690,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
         <div class="mbar" aria-hidden="true"><i class="x" id="barX"></i><i class="y" id="barY"></i></div>
         <div class="mscale" aria-hidden="true"><span>now</span><span id="zScale"></span></div>
         <div class="mresult ok" id="mResult"><div class="verdict" id="mVerdict"></div><div class="detail" id="mDetail"></div></div>
+        <p class="minifoot" style="text-align:left;margin-top:10px">The inequality comes from Michele Mosca’s 2015 note (which also carries his famous estimate of a 1-in-2 chance of RSA-2048 breaking by 2031): <a class="srclink" href="https://eprint.iacr.org/2015/1075" target="_blank" rel="noopener">the paper (IACR ePrint 2015/1075) ↗</a> <a class="srclink" href="https://archives.sector.ca/presentations16/Mosca%20SecTor2016.pdf" target="_blank" rel="noopener">Mosca’s SecTor 2016 talk (slides) ↗</a> <a class="srclink" href="https://csrc.nist.gov/csrc/media/events/workshop-on-cybersecurity-in-a-post-quantum-world/documents/presentations/session8-mosca-michele.pdf" target="_blank" rel="noopener">his NIST workshop deck ↗</a></p>
         <div class="controls" style="margin-top:10px"><button class="disc" onclick="copyMosca(this)"><svg class="ic" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg><span>Copy result as text</span></button></div>
         <button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>If X + Y &gt; Z, what should you do? — NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
         <div class="recbody" hidden><p>Being exposed on this test is common, and the response is the same one every major authority now gives: start now. Prioritise long-lived data (harvest-now-decrypt-later makes its deadline effectively today), build a cryptographic inventory, choose crypto-agile solutions, and migrate to the NIST standards (ML-KEM / ML-DSA / SLH-DSA) against the NCSC 2028 / 2031 / 2035 milestones.</p><div class="reclinks"><a class="srclink" href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>NCSC timelines ↗</a><a class="srclink" href="https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>CISA/NSA/NIST factsheet ↗</a></div></div>
@@ -817,6 +859,102 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
     <p class="minifoot">AI built from public primary sources · no trackers or analytics · last checked <span data-checked>30 Jun 2026</span></p>
   </section>
 
+  <section class="view" id="view-learn">
+    <div class="vhead"><span class="lab">How the Cryptography Works — and What Replaces It</span></div>
+    <p class="vdesc">A journey in eight steps — open each in turn (or jump around): why it matters, how today’s locks work, how they’re managed, why quantum changes everything, and what comes next. Two ideas protect almost everything online — RSA and elliptic curves. Both rest on maths that is easy in one direction and (classically) hopeless in reverse. Shor’s algorithm reverses both. Here’s how they work, in plain English and in the maths, and what the new NIST FIPS standards replace them with.</p>
+
+    
+    <button class="sechead jstep" aria-expanded="true" data-target="ls1" onclick="toggle(this)"><span class="jnum">1</span><span class="lab">Why should you care?</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls1" class="secbody"><div class="lsec jbody">
+      <p class="lplain">You have probably used both a dozen times before breakfast — this is why Q-Day is an everyone problem, not a cryptographer problem:</p>
+      <div class="fipsgrid">
+        <div class="fipscard"><b>&#128274; The browser padlock</b><span class="ftag">TLS</span><p>Every HTTPS page starts with an elliptic-curve key exchange, inside a certificate chain signed with RSA or ECDSA. Billions of handshakes a day.</p></div>
+        <div class="fipscard"><b>&#128172; Messaging</b><span class="ftag">E2E</span><p>WhatsApp, Signal and iMessage agree keys with elliptic curves — Signal and iMessage now layer post-quantum on top (SPQR and PQ3).</p></div>
+        <div class="fipscard"><b>&#128179; Cards &amp; banking</b><span class="ftag">EMV</span><p>The chip in your bank card authenticates itself to the terminal with RSA; online banking rides the same TLS as the padlock.</p></div>
+        <div class="fipscard"><b>&#128242; Software updates</b><span class="ftag">code signing</span><p>Your phone and laptop only install updates whose signatures verify — today mostly RSA/ECDSA. Forge those and you own the device fleet.</p></div>
+        <div class="fipscard"><b>&#128706; Passports &amp; ID</b><span class="ftag">eMRTD</span><p>The chip in a biometric passport proves it’s genuine with digital signatures — documents that must stay valid for a decade.</p></div>
+        <div class="fipscard"><b>&#9889; Energy &amp; OT</b><span class="ftag">CNI</span><p>Smart meters, substation gateways and SCADA links authenticate with device certificates — on hardware that lives 15–30 years. The shelf-life problem in physical form.</p></div>
+      </div>
+      <button class="applybtn jnext" onclick="jNext(2)">Continue → step 2: how RSA works</button>
+    </div></div>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls2" onclick="toggle(this)"><span class="jnum">2</span><span class="lab">Today’s lock #1 — RSA, the multiplication trapdoor</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls2" class="secbody" hidden><div class="lsec jbody">
+      <p class="lplain"><b>In plain English:</b> pick two large secret prime numbers and multiply them. Anyone can see the result; nobody can feasibly split it back into the two primes. Multiplying is seconds; un-multiplying a 2,048-bit number would take classical computers longer than the age of the universe. Your secret is the ingredients — the world only ever sees the cake.</p>
+      <div class="ldemo">
+        <div class="ldrow" id="rsaChips">
+          <button class="catchip" onclick="rsaSet(15)">N = 15</button>
+          <button class="catchip" onclick="rsaSet(3233)">N = 3,233</button>
+          <button class="catchip" onclick="rsaSet(0)">N = RSA-2048</button>
+        </div>
+        <div class="lout" id="rsaOut">Tap a number and try to factor it.</div>
+        <button class="applybtn" id="rsaBtn" onclick="rsaFactor()" hidden>Factor it</button>
+      </div>
+      <p class="ltech"><b>The maths:</b> the public key is N = p×q (plus an exponent e); the private key d satisfies e·d ≡ 1 mod φ(N). Encryption is c = m<sup>e</sup> mod N; only knowing p and q lets you compute d and reverse it. Security = the difficulty of factoring N. The largest number ever factored by open classical effort is RSA-250 (829 bits, months of supercomputer time) — RSA-2048 is astronomically beyond that. <b>Shor’s algorithm factors N in polynomial time</b>, collapsing the entire construction once a large fault-tolerant quantum computer exists.</p>
+      <button class="applybtn jnext" onclick="jNext(3)">Continue → step 3: elliptic curves</button>
+    </div></div>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls3" onclick="toggle(this)"><span class="jnum">3</span><span class="lab">Today’s lock #2 — ECC, billiards on a curve</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls3" class="secbody" hidden><div class="lsec jbody">
+      <p class="lplain"><b>In plain English:</b> imagine bouncing a billiard ball on a strangely curved table using one fixed rule. Everyone knows the starting spot and the rule. Your secret is simply <i>how many times</i> you bounced. Given the final position, working out the number of bounces is (classically) as hopeless as factoring — but the keys are far smaller, which is why your phone, bank and TLS use elliptic curves.</p>
+      <div class="ldemo">
+        <div class="chart lchart"><svg id="eccSvg" viewBox="0 0 540 300" role="img" aria-label="Elliptic curve point addition demo"></svg></div>
+        <div class="ldrow">
+          <button class="applybtn" onclick="eccStep()">Bounce (add P)</button>
+          <button class="catchip" onclick="eccReset()">Reset</button>
+          <span class="lout" id="eccOut" style="flex:1">k = 1 · public point P</span>
+        </div>
+      </div>
+      <p class="ltech"><b>The maths:</b> points on y² = x³ + ax + b (over a finite field) form a group: a chord through two points, reflected, gives their “sum”. The private key is a number k; the public key is Q = kP. Recovering k from Q is the elliptic-curve discrete logarithm problem — 256-bit ECC gives security comparable to 3,072-bit RSA. <b>Shor’s discrete-log variant breaks this too</b>: Google’s 2026 estimates put 256-bit ECC within reach of ~500,000 physical superconducting qubits, and a March 2026 Oratomic/Caltech paper argues P-256 discrete logs could take days on ~26,000 neutral-atom qubits. <a class="srclink" href="https://arxiv.org/abs/2603.28627v1" target="_blank" rel="noopener">Cain et al., arXiv ↗</a> <a class="srclink" href="https://postquantum.com/security-pqc/10000-qubits-shors/" target="_blank" rel="noopener">analysis ↗</a></p>
+      <button class="applybtn jnext" onclick="jNext(4)">Continue → step 4: managing today’s keys</button>
+    </div></div>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls4" onclick="toggle(this)"><span class="jnum">4</span><span class="lab">Managing today’s keys — one doctrine, many documents</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls4" class="secbody" hidden><div class="lsec jbody">
+      <p class="lplain">Long before quantum, every serious framework converged on the same handful of disciplines for managing keys — different documents, one doctrine. The ribbons below show five frameworks and the practices they demand; <b>the bigger a practice’s node, the more frameworks insist on it</b>. Tap anything.</p>
+      <div class="chart lchart"><svg id="mgmtSvg" viewBox="0 0 540 380" role="img" aria-label="Frameworks and the key-management practices they share"></svg></div>
+      <div class="lout" id="mgmtOut">Tap a framework (left) or a practice (right).</div>
+      <p class="ltech">The neat twist: NIST’s key-management bible is being rewritten right now — the draft SP 800-57 Rev 6 (Dec 2025) folds the post-quantum algorithms of FIPS 203/204/205 into the same lifecycle rules. Good classical key management and PQC migration are becoming one discipline. <a class="srclink" href="https://csrc.nist.gov/pubs/sp/800/57/pt1/r6/ipd" target="_blank" rel="noopener">SP 800-57 Rev 6 draft ↗</a></p>
+      <button class="applybtn jnext" onclick="jNext(5)">Continue → step 5: the quantum problem</button>
+    </div></div>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls5" onclick="toggle(this)"><span class="jnum">5</span><span class="lab">The quantum problem — and why the deadline is now</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls5" class="secbody" hidden><div class="lsec jbody">
+      <p class="lplain">Both locks share one weakness: they’re only hard <i>classically</i>. In 1994 Peter Shor showed a quantum computer runs both trapdoors backwards — factoring and curve-unwinding — in polynomial time. No key length saves them; only different mathematics does.</p>
+      <p class="lplain">And you don’t get to wait for the machine: traffic and data <b>recorded today</b> can be decrypted the day it arrives — harvest now, decrypt later. That’s why every deadline in this app is dated years before anyone expects the computer itself.</p>
+      <p class="ltech">Requirements keep falling: Gidney (2025) cut RSA-2048 to under a million noisy qubits; Google’s 2026 estimates put 256-bit ECC near ~500k; and the March 2026 Oratomic/Caltech paper argues ~10,000 reconfigurable neutral-atom qubits could suffice — with P-256 discrete logs in days at ~26,000. Track it live on the <b>Trends</b> tab. <a class="srclink" href="https://arxiv.org/abs/2603.28627v1" target="_blank" rel="noopener">Cain et al. ↗</a> <a class="srclink" href="https://arxiv.org/abs/2505.15917" target="_blank" rel="noopener">Gidney ↗</a></p>
+      <button class="applybtn jnext" onclick="jNext(6)">Continue → step 6: the replacements</button>
+    </div></div>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls6" onclick="toggle(this)"><span class="jnum">6</span><span class="lab">The replacements — FIPS 203, 204 &amp; 205</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls6" class="secbody" hidden><div class="lsec jbody">
+      <p class="lplain"><b>In plain English:</b> in August 2024, after an eight-year global competition, NIST published the replacement locks. Instead of factoring or curve-bouncing, they hide secrets inside noisy high-dimensional lattices (imagine finding one specific point in a 500-dimensional haystack) or inside chains of hash functions. No known quantum shortcut exists for either.</p>
+      <div class="fipsgrid">
+        <div class="fipscard"><b>FIPS 203 · ML-KEM</b><span class="ftag">key exchange</span>
+          <p>The workhorse (from CRYSTALS-Kyber). Replaces RSA and elliptic-curve key exchange — already shipping in hybrid TLS at Cloudflare, AWS, Apple and Signal. Public keys 800–1,568 bytes.</p></div>
+        <div class="fipscard"><b>FIPS 204 · ML-DSA</b><span class="ftag">signatures</span>
+          <p>The default signature (from CRYSTALS-Dilithium). Replaces ECDSA/RSA signatures for certificates and code signing. Signatures 2,420–4,595 bytes.</p></div>
+        <div class="fipscard"><b>FIPS 205 · SLH-DSA</b><span class="ftag">backup signatures</span>
+          <p>The conservative fallback (from SPHINCS+): security rests only on hash functions — older, battle-tested assumptions — at the price of 7.8–49.9 KB signatures. For firmware and long-lived roots of trust.</p></div>
+      </div>
+      <p class="lplain" style="margin-top:10px"><b>Why sizes bite:</b></p>
+      <div class="sizebars" id="sizeBars"></div>
+      <p class="ltech">A fourth standard (FN-DSA, from Falcon) is in draft, and NIST selected <b>HQC</b> (code-based) in March 2025 as a backup KEM on different maths — deliberate diversity in case lattices ever fall. Sources: <a class="srclink" href="https://www.federalregister.gov/documents/2024/08/14/2024-17956/announcing-issuance-of-federal-information-processing-standards-fips-fips-203-module-lattice-based" target="_blank" rel="noopener">Federal Register (official issuance) ↗</a> <a class="srclink" href="https://www.wolfssl.com/what-are-fips-203-204-and-205/" target="_blank" rel="noopener">wolfSSL explainer ↗</a> <a class="srclink" href="https://quantumsecuritydefence.com/insights/nist-fips-standards/" target="_blank" rel="noopener">size &amp; parameter guide ↗</a> <a class="srclink" href="https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption" target="_blank" rel="noopener">NIST on HQC ↗</a></p>
+      <button class="applybtn jnext" onclick="jNext(7)">Continue → step 7: who’s steering</button>
+    </div></div>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls7" onclick="toggle(this)"><span class="jnum">7</span><span class="lab">Who’s steering — the guidance constellation</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls7" class="secbody" hidden><div class="lsec jbody">
+      <p class="lplain">The standards and guidance for managing cryptography well, arranged as a night sky: <b>standards</b> (teal) define the algorithms, <b>national guidance</b> (amber) sets deadlines and direction — and everything orbits one job: managed cryptography. Tap any star.</p>
+      <div class="chart lchart"><svg id="constSvg" viewBox="0 0 540 360" role="img" aria-label="Constellation of cryptographic standards and guidance"></svg></div>
+      <div class="lout" id="constOut">Tap a star to see what it is and open the source.</div>
+      <button class="applybtn jnext" onclick="jNext(8)">Continue → step 8: the practice cycle</button>
+    </div></div>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls8" onclick="toggle(this)"><span class="jnum">8</span><span class="lab">The loop that never ends — the practice cycle</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls8" class="secbody" hidden><div class="lsec jbody">
+      <p class="lplain">Every national playbook converges on the same loop. It never finishes — crypto-agility means being able to go round again when an algorithm falls. Tap a stage.</p>
+      <div class="chart lchart"><svg id="cycleSvg" viewBox="0 0 540 340" role="img" aria-label="Cryptographic management practice cycle"></svg></div>
+      <div class="lout" id="cycleOut">Tap a stage for what it means and the guidance behind it.</div>
+      <p class="lplain" style="margin-top:12px">✦ Journey complete. Now put it to work: the <b>Plan</b> tab has the deadlines, and the <b>Mosca test</b> on Clocks tells you how exposed <i>you</i> are.</p>
+    </div></div>
+
+    <p class="minifoot" style="text-align:left">Toy demonstrations for intuition — real deployments use 2048+ bit moduli, standardised curves over finite fields, and the exact FIPS parameter sets. Classical/quantum time comparisons are illustrative orders of magnitude, not benchmarks.</p>
+  </section>
+
 
 </main>
 
@@ -827,6 +965,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
   <button class="tab" data-v="plan" onclick="showView('plan')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg><span class="lbl2">Plan</span></button>
   <button class="tab" data-v="threats" onclick="showView('threats')"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><line x1="12" y1="9" x2="12" y2="12.5"/><circle cx="12" cy="15.4" r=".5" fill="currentColor" stroke="none"/></svg><span class="lbl2">Threats</span></button>
   <button class="tab" data-v="vendors" onclick="showView('vendors')"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/><circle cx="12" cy="12" r="2.4"/></svg><span class="lbl2">Vendors</span></button>
+  <button class="tab" data-v="learn" onclick="showView('learn')"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span class="lbl2">Learn</span></button>
 </div></nav>
 
 <div class="drawer" id="drawer"><div class="shade" onclick="close_()"></div>
@@ -843,6 +982,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
     <li><b>Stack</b> — the readiness of each engineering layer between today's machines and a cryptographically relevant one.</li>
     <li><b>Plan</b> — every regulator's milestones against the Q-Day window (tap a milestone), global deadlines, the NCSC migration plan, and how much bigger the new keys are (tap a bar). Sections collapse; use Expand/Collapse all.</li>
     <li><b>Threats</b> — cryptographic attacks &amp; vulnerabilities: circles sized by CVSS, real attacks as red diamonds. Tap for a summary, <b>double-tap to open the full card</b> (fix, or what would have prevented it), then "Back to graph". Filter by category.</li>
+    <li><b>Learn</b> — an eight-step interactive journey: why it matters, how RSA and ECC actually work (in plain English and in the maths), why quantum breaks them, and what the new FIPS 203/204/205 standards replace them with — with source links throughout.</li>
     <li><b>Vendors</b> — 37 major IT and OT vendors scored 0–100 on cryptographic capability, from PQC adoption to research. Tap a node for the rationale and evidence; ⓘ has the methodology and a CSV export. Unverified AI analysis — every claim is linked.</li>
     <li><b>⋮ menu</b> — share a snapshot, copy a link that preserves your view, the <b>glossary of acronyms</b>, and all references &amp; sources. The sun/moon toggles light or dark.</li>
   </ul>
@@ -887,6 +1027,7 @@ const model={
     {region:'AU',body:'ASD Information Security Manual',milestones:[['2026','Refined transition plan'],['2030','Cease traditional asymmetric']],href:'',srcLabel:'Australian Signals Directorate'}
   ],
   changelog:[
+    {d:'Mar 2026',t:'Oratomic/Caltech (Cain, Preskill, Bluvstein et al.): Shor\u2019s algorithm at cryptographically relevant scale with as few as 10,000 reconfigurable neutral-atom qubits \u2014 P-256 discrete logs in days at ~26,000 physical qubits. Another order-of-magnitude fall in requirements.',u:'https://arxiv.org/abs/2603.28627v1',s:'arXiv'},
     {d:'Jun 2026',t:'Helios two-qubit fidelity (99.921%) peer-reviewed in Nature, validated by Sandia.',u:'https://phys.org/news/2026-06-helios-quantum-tops-fidelity-qubit.html',s:'phys.org'},
     {d:'Mar 2026',t:'GRI 2025: 10-year CRQC likelihood jumps to 28\u201349% \u2014 highest in the report\u2019s seven-year history.',u:'https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/',s:'GRI'},
     {d:'2026',t:'Google whitepaper: ECC-256 breakable with ~500k physical qubits \u2014 about half of RSA-2048.',u:'https://physicsworld.com/a/new-findings-shorten-the-road-to-cryptographically-relevant-quantum-computers/',s:'Physics World'},
@@ -1080,7 +1221,7 @@ function toggleCard(c){const next=c.getAttribute('aria-expanded')==='true'?'fals
 function fitDigits(){document.querySelectorAll('.counter .unit b').forEach(b=>{b.style.fontSize='';let fs=parseFloat(getComputedStyle(b).fontSize),g=0;while(b.scrollWidth>b.clientWidth+0.5&&fs>9&&g<40){fs-=1;b.style.fontSize=fs+'px';g++;}});}
 function crossover(floor){const road=collapse.builtRoadmap,log=Math.log10;const a=road[road.length-2],b=road[road.length-1];const m=(log(b.y)-log(a.y))/(b.x-a.x);return b.x+(log(floor)-log(b.y))/m;}
 const linkIcon='<svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg>';
-const CHECKED='30 Jun 2026';
+const CHECKED='4 Jul 2026';
 
 /* ============================ NAV + URL STATE ============================ */
 let charted=false;let vendCharted=false;let _wideT=null;
@@ -1091,6 +1232,7 @@ function showView(v,fromPop){
   if(v==='threats'&&!threatsCharted){drawVulnCluster();threatsCharted=true;}
   if(v==='plan'&&!planCharted){drawSizes();drawGantt();planCharted=true;}
   if(v==='vendors'&&!vendCharted){drawVendors();vendCharted=true;}
+  if(v==='learn'&&!learnCharted){drawEcc();buildSizeBars();drawConst();drawCycle();drawMgmt();learnCharted=true;}
   if(v==='clocks')requestAnimationFrame(fitDigits);
   syncURL(v,!fromPop);window.scrollTo({top:0,behavior:'auto'});
 }
@@ -1104,7 +1246,7 @@ function readURL(){try{const p=new URLSearchParams(location.search);if(p.get('th
 const sunI='<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
 const moonI='<svg class="ic" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>';
 function paintTheme(){const light=document.documentElement.dataset.theme==='light';$('themeBtn').innerHTML=light?sunI:moonI;$('themeBtn').title=light?'Switch to dark':'Switch to light';}
-function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==='light'?'dark':'light';paintTheme();if(charted){drawCollapse();drawOutlook();}if(threatsCharted){drawVulnCluster();}if(planCharted){drawSizes();drawGantt();}if(vendCharted)drawVendors();syncURL();}
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==='light'?'dark':'light';paintTheme();if(charted){drawCollapse();drawOutlook();}if(threatsCharted){drawVulnCluster();}if(planCharted){drawSizes();drawGantt();}if(vendCharted)drawVendors();if(learnCharted){drawEcc();drawConst();drawCycle();_mgSel=null;drawMgmt();}syncURL();}
 
 /* ============================ COUNTDOWN ============================ */
 function parts(ms){ms=Math.max(0,ms);return{d:Math.floor(ms/864e5),h:Math.floor(ms%864e5/36e5),m:Math.floor(ms%36e5/6e4),s:Math.floor(ms%6e4/1e3)};}
@@ -1173,7 +1315,10 @@ const recMap={
   auditor:['inventory','criticality','agility','agility','migrate','evidence','data']
 };
 function toggleRec(b){const x=b.nextElementSibling;const open=!x.hidden;x.hidden=open;b.setAttribute('aria-expanded',String(!open));}
-let aMode=null;const aAns={exec:{},tech:{},auditor:{}};let aX=null,aY=null;
+let aMode=null;const aAns={exec:{},tech:{},auditor:{}};const aW={exec:{},tech:{},auditor:{}};let aX=null,aY=null;
+function qw(i){const w=aW[aMode][i];return (w===undefined)?1:w;}
+function setQW(i,v){aW[aMode][i]=(+v)/100;const o=$('qwOut_'+i);if(o)o.textContent='\u00d7'+qw(i).toFixed(2).replace(/0$/,'');const r=$('qwReset');if(r)r.hidden=!Object.keys(aW[aMode]).length;scoreAssess();}
+function resetQW(){aW[aMode]={};document.querySelectorAll('#assessQs .qwrow input').forEach(inp=>{inp.value=100;});document.querySelectorAll('#assessQs .qwrow output').forEach(o=>{o.textContent='\u00d71.0';});const r=$('qwReset');if(r)r.hidden=true;scoreAssess();}
 const aNotes={
   exec:'The three questions a CIO or CISO should be able to answer instantly — plus your data-confidentiality horizon.',
   tech:'A deeper self-check across discovery, criticality, key management, agility, suppliers, technology and governance.',
@@ -1184,7 +1329,7 @@ function loadAns(){try{const s=sessionStorage.getItem('qday_assess');if(s){const
 function segId(k){return 'seg'+k[0].toUpperCase()+k.slice(1);}
 function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];const pk=$('aPick');if(pk)pk.hidden=true;const s2=$('aStep2');if(s2)s2.hidden=false;buildAssess();scoreAssess();}
 function buildAssess(){
-  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div>${recHtml}</div>`;}).join('');
+  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div><div class="qwrow"><span class="qwlab">influence on X/Y</span><input type="range" min="0" max="200" value="${Math.round(qw(i)*100)}" oninput="setQW(${i},this.value)" aria-label="Weight of this question in the suggested X and Y"><output id="qwOut_${i}">\u00d7${qw(i).toFixed(2).replace(/0$/,'')}</output></div>${recHtml}</div>`;}).join('');
   $('aresetBtn').hidden=Object.keys(aAns[aMode]).length===0;
 }
 function pickAns(i,j,val){
@@ -1193,21 +1338,24 @@ function pickAns(i,j,val){
   $('aresetBtn').hidden=false;
   scoreAssess();
 }
-function resetAssess(){aAns[aMode]={};saveAns();aX=null;aY=null;$('applyBtn').classList.remove('ready');buildAssess();$('assessResult').hidden=true;}
+function resetAssess(){aAns[aMode]={};aW[aMode]={};saveAns();aX=null;aY=null;$('applyBtn').classList.remove('ready');buildAssess();$('assessResult').hidden=true;}
 function scoreAssess(){
   const set=assess[aMode],ans=aAns[aMode],done=Object.keys(ans).length;
   const res=$('assessResult');
   if(!done){res.hidden=true;return;}
   res.hidden=false;
-  let agSum=0,agN=0,matSum=0,matN=0,shelf=null;
-  set.forEach((q,i)=>{const a=ans[i];if(!a)return;if(q.dim==='shelf')shelf=a.val;else if(q.dim==='ag'){agSum+=a.val;agN++;}else{matSum+=a.val;matN++;}});
+  let agSum=0,agN=0,matSum=0,matN=0,shelf=null,shelfW=1;
+  set.forEach((q,i)=>{const a=ans[i];if(!a)return;const w=qw(i);if(!w)return;
+    if(q.dim==='shelf'){shelf=a.val;shelfW=w;}
+    else if(q.dim==='ag'){agSum+=a.val*w;agN+=w;}
+    else{matSum+=a.val*w;matN+=w;}});
   const scoreVals=[];if(agN)scoreVals.push(agSum/agN);if(matN)scoreVals.push(matSum/matN);
   const mean=scoreVals.length?scoreVals.reduce((a,b)=>a+b,0)/scoreVals.length:0;
   const lvl=Math.min(5,Math.max(1,Math.round(mean||1)));
   $('lvlbar').innerHTML=[1,2,3,4,5].map(n=>`<i class="${n<=lvl?'on':''}"></i>`).join('');
   $('lvlName').textContent=levels[lvl].n;$('lvlDesc').textContent=levels[lvl].d;
   aY=agN?Math.min(15,Math.max(1,Math.round(15-(agSum/agN)*2.6))):null;
-  aX=shelf;
+  aX=shelf!=null?Math.min(50,Math.max(1,Math.round(shelf*shelfW))):null;
   $('asugg').innerHTML=`<span class="chip">Suggested <b>Y \u2248 ${aY!=null?aY+'y':'\u2014'}</b> migration</span><span class="chip">Suggested <b>X \u2248 ${aX!=null?aX+'y':'\u2014'}</b> shelf-life</span>`;
   const b=$('applyBtn');b.disabled=(aX==null&&aY==null);
   const total=set.length,complete=done===total;
@@ -1300,7 +1448,10 @@ function drawVulnCluster(){
         const dx=(rr(+yr*97+i)-0.5)*14, dy=T+6+rr(+yr*13+i*7)*(H-T-B-12);
         svg.appendChild(el('circle',{cx:xc+dx,cy:dy,r:1.1,fill:'#ff8a3d',opacity:.45,style:'pointer-events:none'}));
       }
-      svg.appendChild(el('text',{x:xc,y:T-5,fill:'#ff8a3d','font-family':'monospace','font-size':6.5,'font-weight':700,'text-anchor':'middle',opacity:.95,style:'pointer-events:none'},count.toLocaleString('en-GB')));
+      const lab=count>=1000?(count/1000).toFixed(1).replace(/\.0$/,'')+'k':''+count;
+      const lw=lab.length*4.2+6;
+      svg.appendChild(el('rect',{x:xc-lw/2,y:T-11.5,width:lw,height:9,rx:4.5,fill:cssvar('--solid')||'#0d1417',opacity:.92,style:'pointer-events:none'}));
+      svg.appendChild(el('text',{x:xc,y:T-4.5,fill:'#ff8a3d','font-family':'monospace','font-size':6.4,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},lab));
     });
   }
   {
@@ -1317,7 +1468,7 @@ function drawVulnCluster(){
       d.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});d.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});d.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')hideTip();});tapOpen(d,e=>showTip(svg,e,tip),e=>{hideTip();focusThreatCard('a',a.name);});
       kbd(d,a.name+', '+a.year+', impact '+a.impactScore.toFixed(1),e=>showTip(svg,e,tip));d.addEventListener('blur',hideTip);
       svg.appendChild(d);
-      if(wide)svg.appendChild(el('text',{x:cx,y:cy-s-6,fill:akc,'font-family':'monospace','font-size':6.8,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},a.name.length>15?a.name.slice(0,14)+'\u2026':a.name));
+      if(wide)svg.appendChild(el('text',{x:cx,y:(ai%2?cy+s+11:cy-s-6),fill:akc,'font-family':'monospace','font-size':6.8,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},a.name.length>15?a.name.slice(0,14)+'\u2026':a.name));
     });
   }
 }
@@ -1896,6 +2047,174 @@ addEventListener('scroll',hideTip,true);
 
 /* ============================ INIT ============================ */
 const _tab=readURL();paintTheme();
+
+/* ---- Learn tab ---- */
+let learnCharted=false,_rsaN=null,_eccPts=null,_eccK=1;
+function rsaSet(n){_rsaN=n;const o=$('rsaOut'),b=$('rsaBtn');b.hidden=false;b.disabled=false;
+  if(n===0)o.innerHTML='N = a 617-digit number (2,048 bits) \u2014 the real thing.';
+  else o.innerHTML='N = '+n.toLocaleString('en-GB')+'. Two secret primes multiply to make it \u2014 which two?';}
+function rsaFactor(){const o=$('rsaOut');if(_rsaN===null)return;
+  if(_rsaN===15)o.innerHTML='<b>15 = 3 \u00d7 5</b> \u2014 instant. Small numbers give the game away, which is why real keys are enormous.';
+  else if(_rsaN===3233)o.innerHTML='<b>3,233 = 53 \u00d7 61</b> \u2014 a computer finds this in microseconds; you\u2019d take a while with paper. Every extra digit multiplies the effort.';
+  else o.innerHTML='<b>Classical:</b> longer than the age of the universe (the open record is RSA-250, 829 bits, after months of supercomputing).<br><b>Quantum (Shor):</b> polynomial time \u2014 hours-to-days on a future fault-tolerant machine. <span style="opacity:.75">That asymmetry is the entire Q-Day problem.</span>';}
+function eccCurveY(x){const v=x*x*x-3*x+3;return v>=0?Math.sqrt(v):null;}
+function eccAdd(P,Q){const a=-3;let l;
+  if(P[0]===Q[0]&&P[1]===Q[1])l=(3*P[0]*P[0]+a)/(2*P[1]);else l=(Q[1]-P[1])/(Q[0]-P[0]);
+  const x3=l*l-P[0]-Q[0];return [x3,l*(P[0]-x3)-P[1]];}
+function eccProject(p){const X0=-3,X1=4,Y0=-6,Y1=6,W=540,H=300,L=20,R=20,T=16,B=24;
+  return [L+(p[0]-X0)/(X1-X0)*(W-L-R), T+(Y1-p[1])/(Y1-Y0)*(H-T-B)];}
+function drawEcc(){const svg=$('eccSvg');if(!svg)return;svg.innerHTML='';
+  const ink=cssvar('--ink')||'#e8f1ef',mut=cssvar('--muted')||'#8fa8a3';
+  const W=540,H=300;
+  svg.appendChild(el('rect',{x:0,y:0,width:W,height:H,fill:'none'}));
+  ['pos','neg'].forEach(sgn=>{let d='';for(let x=-2.104;x<=4;x+=0.02){const y=eccCurveY(x);if(y===null){d='';continue;}
+    const p=eccProject([x,sgn==='pos'?y:-y]);d+=(d?' L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1);}
+    svg.appendChild(el('path',{d:d,fill:'none',stroke:'#46d4c4',opacity:.85,'stroke-width':1.6}));});
+  svg.appendChild(el('text',{x:26,y:26,fill:mut,'font-family':'monospace','font-size':9},'y\u00b2 = x\u00b3 \u2212 3x + 3'));
+  if(!_eccPts){const x0=-0.5,y0=eccCurveY(x0);_eccPts=[[x0,y0]];_eccK=1;}
+  const base=_eccPts[0];
+  _eccPts.forEach((pt,i)=>{const pp=eccProject(pt);
+    if(i>0){const prev=eccProject(_eccPts[i-1]);
+      svg.appendChild(el('line',{x1:prev[0],y1:prev[1],x2:pp[0],y2:pp[1],stroke:'#ff9e3d',opacity:.45,'stroke-width':1,'stroke-dasharray':'3 3'}));}
+    svg.appendChild(el('circle',{cx:pp[0],cy:pp[1],r:i===_eccPts.length-1?6:4,fill:i===0?'#46d4c4':(i===_eccPts.length-1?'#ff9e3d':'#8fa8a3')}));
+    svg.appendChild(el('text',{x:pp[0],y:pp[1]-9,fill:i===0?'#46d4c4':'#ff9e3d','font-family':'monospace','font-size':8.5,'font-weight':700,'text-anchor':'middle'},i===0?'P':(i+1)+'P'));});
+}
+function eccStep(){if(!_eccPts)drawEcc();
+  const last=_eccPts[_eccPts.length-1],base=_eccPts[0];
+  let nxt;try{nxt=(_eccPts.length===1)?eccAdd(base,base):eccAdd(last,base);}catch(e){nxt=null;}
+  if(!nxt||!isFinite(nxt[0])||Math.abs(nxt[0])>4||Math.abs(nxt[1])>6){
+    $('eccOut').innerHTML='\u2026 the point leaves the picture and keeps hopping. After k hops it looks <b>random</b> \u2014 recovering k is the hard problem. Reset to replay.';return;}
+  _eccPts.push(nxt);_eccK++;drawEcc();
+  $('eccOut').innerHTML='k = '+_eccK+' \u00b7 public point '+_eccK+'P \u2014 could you tell k just from where it landed?';}
+function eccReset(){_eccPts=null;_eccK=1;drawEcc();$('eccOut').textContent='k = 1 \u00b7 public point P';}
+function buildSizeBars(){const el2=$('sizeBars');if(!el2)return;
+  const rows=[['ECDSA P-256 signature',64,'#46d4c4'],['RSA-2048 signature',256,'#46d4c4'],['ML-KEM-768 public key',1184,'#ff9e3d'],['ML-DSA-65 signature',3309,'#ff9e3d'],['SLH-DSA-128s signature',7856,'#ff5a5f']];
+  const max=Math.log10(7856);
+  el2.innerHTML=rows.map(r=>{const w=Math.max(6,Math.log10(r[1])/max*100);
+    return `<div class="sbrow"><span class="sblab">${r[0]}</span><span class="sbtrack"><i style="width:${w.toFixed(1)}%;background:${r[2]}"></i></span><span class="sbval">${r[1].toLocaleString('en-GB')} B</span></div>`;}).join('')
+    +'<div class="minifoot" style="text-align:left;margin-top:4px">Log scale. Same job, 10\u2013120\u00d7 the bytes \u2014 the practical heart of migration pain.</div>';}
+
+/* ---- key-management commonality (bipartite) ---- */
+const mgFw=[
+ {n:'NIST SP 800-57 Pt 1',c:'#46d4c4',d:'The key-management \u201Cbible\u201D: cryptoperiods, key states, algorithm strengths, protection requirements.',u:'https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt1r5.pdf',s:'NIST (PDF)'},
+ {n:'SP 800-57 Pt 2',c:'#7ee081',d:'Best practices for key-management organisations: policy, practice statements, planning, roles.',u:'https://csrc.nist.gov/pubs/sp/800/57/pt2/r1/final',s:'NIST'},
+ {n:'FIPS 140-3 / CMVP',c:'#ff9e3d',d:'Validated cryptographic modules \u2014 the assurance regime behind HSMs and approved algorithm implementations.',u:'https://csrc.nist.gov/projects/cmvp/',s:'NIST CMVP'},
+ {n:'NCSC guidance',c:'#c274ff',d:'UK direction: know your estate, plan the transition, use validated implementations and hybrids on the way.',u:'https://www.ncsc.gov.uk/whitepaper/next-steps-preparing-for-post-quantum-cryptography',s:'NCSC'},
+ {n:'EO 14412',c:'#ff7ab8',d:'US executive order: cryptographic bills of materials, migration plans and accountability \u2014 inventory and audit as law.',u:'https://www.whitehouse.gov/presidential-actions/2026/06/securing-the-nation-against-advanced-cryptographic-attacks/',s:'White House'}];
+const mgPr=[
+ {n:'Key rotation & cryptoperiods',f:[0,1,3]},
+ {n:'HSMs & validated modules',f:[0,2,3]},
+ {n:'Full key lifecycle & destruction',f:[0,1,2]},
+ {n:'Separation of duties / dual control',f:[1,2]},
+ {n:'Inventory, policy & CBOM',f:[1,3,4]},
+ {n:'Approved algorithms & deprecation',f:[0,2,3,4]},
+ {n:'Audit & accountability',f:[0,1,4]}];
+let _mgSel=null;
+function drawMgmt(){const svg=$('mgmtSvg');if(!svg)return;svg.innerHTML='';
+  const W=540,H=380,LX=118,RX=402,T=34,B=16;
+  const ink=cssvar('--ink')||'#e8f1ef',mut=cssvar('--muted')||'#8fa8a3';
+  svg.appendChild(el('text',{x:LX,y:16,fill:mut,'font-family':'monospace','font-size':7.5,'text-anchor':'middle',style:'letter-spacing:.14em;pointer-events:none'},'FRAMEWORKS'));
+  svg.appendChild(el('text',{x:RX,y:16,fill:mut,'font-family':'monospace','font-size':7.5,'text-anchor':'middle',style:'letter-spacing:.14em;pointer-events:none'},'SHARED PRACTICES'));
+  const fy=i=>T+24+i*(H-T-B-48)/(mgFw.length-1);
+  const py2=i=>T+10+i*(H-T-B-20)/(mgPr.length-1);
+  // ribbons
+  mgPr.forEach((p,pi)=>p.f.forEach(fi=>{
+    const y1=fy(fi),y2=py2(pi);
+    const dim=_mgSel&&!((_mgSel.t==='p'&&_mgSel.i===pi)||(_mgSel.t==='f'&&_mgSel.i===fi));
+    svg.appendChild(el('path',{d:'M'+(LX+52)+' '+y1+' C 270 '+y1+', 270 '+y2+', '+(RX-58)+' '+y2,fill:'none',stroke:mgFw[fi].c,'stroke-width':dim?1:2.2,opacity:dim?0.08:0.5,style:'pointer-events:none'}));}));
+  // framework nodes
+  mgFw.forEach((f,i)=>{const y=fy(i);
+    const dim=_mgSel&&_mgSel.t==='f'&&_mgSel.i!==i;
+    const g=el('rect',{x:LX-96,y:y-11,width:148,height:22,rx:11,fill:cssvar('--solid')||'#0d1417',stroke:f.c,'stroke-width':1.4,opacity:dim?.35:1});
+    g.style.cursor='pointer';g.setAttribute('tabindex','0');
+    const show=()=>{_mgSel={t:'f',i:i};drawMgmt();
+      const pr=mgPr.filter(p=>p.f.includes(i)).map(p=>p.n).join(' \u00b7 ');
+      $('mgmtOut').innerHTML='<b style="color:'+f.c+'">'+f.n+'</b> \u2014 '+f.d+'<br><span style="opacity:.8">Demands: '+pr+'.</span> <a class="srclink" href="'+f.u+'" target="_blank" rel="noopener">'+f.s+' \u2197</a>';};
+    tapOpen(g,show);g.addEventListener('mouseenter',show);kbd(g,f.n,show);
+    svg.appendChild(g);
+    svg.appendChild(el('text',{x:LX-22,y:y+2.8,fill:dim?mut:f.c,'font-family':'monospace','font-size':7.4,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},f.n));});
+  // practice nodes sized by commonality
+  mgPr.forEach((p,pi)=>{const y=py2(pi),k=p.f.length,r=6+k*2.4;
+    const dim=_mgSel&&_mgSel.t==='p'&&_mgSel.i!==pi;
+    svg.appendChild(el('circle',{cx:RX-40,cy:y,r:r+3,fill:'#46d4c4',opacity:dim?.03:.09,style:'pointer-events:none'}));
+    const c=el('circle',{cx:RX-40,cy:y,r:r,fill:cssvar('--solid')||'#0d1417',stroke:'#46d4c4','stroke-width':1.5,opacity:dim?.35:1});
+    c.style.cursor='pointer';c.setAttribute('tabindex','0');
+    const show=()=>{_mgSel={t:'p',i:pi};drawMgmt();
+      const fws=p.f.map(fi=>'<a class="srclink" href="'+mgFw[fi].u+'" target="_blank" rel="noopener" style="color:'+mgFw[fi].c+'">'+mgFw[fi].n+' \u2197</a>').join(' ');
+      $('mgmtOut').innerHTML='<b>'+p.n+'</b> \u2014 required by <b>'+p.f.length+' of '+mgFw.length+'</b> frameworks here: '+fws;};
+    tapOpen(c,show);c.addEventListener('mouseenter',show);kbd(c,p.n,show);
+    svg.appendChild(c);
+    svg.appendChild(el('text',{x:RX-40,y:y+2.6,fill:dim?mut:'#46d4c4','font-family':'monospace','font-size':7.2,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},k));
+    svg.appendChild(el('text',{x:RX-22,y:y+2.6,fill:dim?mut:ink,'font-family':'monospace','font-size':7,'text-anchor':'start',style:'pointer-events:none'},p.n.length>24?p.n.slice(0,23)+'\u2026':p.n));});
+}
+function jNext(n){const b=document.querySelector('.jstep[data-target="ls'+n+'"]');if(!b)return;
+  if(b.getAttribute('aria-expanded')!=='true')toggle(b);
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),60);}
+
+/* ---- guidance constellation + practice cycle ---- */
+const constData=[
+ {g:'std',n:'FIPS 203 \u00b7 ML-KEM',d:'The standardised post-quantum key-exchange (Kyber) \u2014 the workhorse replacement for RSA/ECDH.',u:'https://www.federalregister.gov/documents/2024/08/14/2024-17956/announcing-issuance-of-federal-information-processing-standards-fips-fips-203-module-lattice-based',s:'Federal Register'},
+ {g:'std',n:'FIPS 204 \u00b7 ML-DSA',d:'The default post-quantum signature (Dilithium) for certificates and code signing.',u:'https://www.federalregister.gov/documents/2024/08/14/2024-17956/announcing-issuance-of-federal-information-processing-standards-fips-fips-203-module-lattice-based',s:'Federal Register'},
+ {g:'std',n:'FIPS 205 \u00b7 SLH-DSA',d:'The conservative hash-based signature (SPHINCS+) for firmware and long-lived roots of trust.',u:'https://www.federalregister.gov/documents/2024/08/14/2024-17956/announcing-issuance-of-federal-information-processing-standards-fips-fips-203-module-lattice-based',s:'Federal Register'},
+ {g:'std',n:'HQC (5th algorithm)',d:'Code-based backup KEM selected March 2025 \u2014 deliberate mathematical diversity if lattices ever fall.',u:'https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption',s:'NIST'},
+ {g:'std',n:'NIST IR 8547',d:'The US transition schedule: classical public-key crypto deprecated after 2030, disallowed after 2035.',u:'https://nvlpubs.nist.gov/nistpubs/ir/2024/NIST.IR.8547.ipd.pdf',s:'NIST'},
+ {g:'gov',n:'NCSC migration timelines',d:'The UK plan: discovery by 2028, priority migration by 2031, complete by 2035.',u:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',s:'NCSC'},
+ {g:'gov',n:'NCSC \u201Cnext steps\u201D',d:'UK whitepaper on preparing: inventory, prioritise, plan \u2014 and use hybrid schemes on the way.',u:'https://www.ncsc.gov.uk/whitepaper/next-steps-preparing-for-post-quantum-cryptography',s:'NCSC'},
+ {g:'gov',n:'NSA CNSA 2.0',d:'US national-security suite: exclusively quantum-resistant algorithms across NSS by 2035, earlier for firmware.',u:'https://csrc.nist.gov/projects/post-quantum-cryptography',s:'NSA/NIST'},
+ {g:'gov',n:'EO 14412 (Jun 2026)',d:'US executive order: federal high-value systems on PQC key establishment by 2030, signatures by 2031; contractors follow via the FAR.',u:'https://www.whitehouse.gov/presidential-actions/2026/06/securing-the-nation-against-advanced-cryptographic-attacks/',s:'White House'},
+ {g:'gov',n:'EU coordinated roadmap',d:'EU member states: national transition roadmaps by 2026, high-risk use cases migrated by 2030, full transition by 2035.',u:'https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography',s:'European Commission'}];
+const cycleData=[
+ {n:'Discover',d:'Build a cryptographic inventory (CBOM): every algorithm, key, certificate and protocol \u2014 you cannot migrate what you cannot see. EO 14412 makes CBOMs formal US policy; NCSC discovery phase runs to 2028.',u:'https://www.whitehouse.gov/presidential-actions/2026/06/securing-the-nation-against-advanced-cryptographic-attacks/',s:'EO 14412'},
+ {n:'Assess',d:'Score exposure: data shelf-life vs migration time vs threat timeline \u2014 the Mosca test on the Clocks tab is exactly this stage.',u:'https://eprint.iacr.org/2015/1075',s:'Mosca 2015'},
+ {n:'Plan',d:'Prioritise long-lived and high-value systems, budget, and sequence suppliers \u2014 the core of the NCSC\u2019s \u201Cnext steps\u201D guidance.',u:'https://www.ncsc.gov.uk/whitepaper/next-steps-preparing-for-post-quantum-cryptography',s:'NCSC'},
+ {n:'Migrate',d:'Deploy hybrid schemes (classical + ML-KEM) first, then pure PQC \u2014 matching the deprecation clock in NIST IR 8547.',u:'https://nvlpubs.nist.gov/nistpubs/ir/2024/NIST.IR.8547.ipd.pdf',s:'NIST IR 8547'},
+ {n:'Validate',d:'Test interoperability and performance \u2014 bigger keys break fixed buffers \u2014 and use validated (FIPS/CAVP) implementations.',u:'https://www.federalregister.gov/documents/2024/08/14/2024-17956/announcing-issuance-of-federal-information-processing-standards-fips-fips-203-module-lattice-based',s:'FIPS issuance'},
+ {n:'Monitor',d:'Watch certificate estates, algorithm deprecations and cryptanalysis \u2014 and stay agile enough to swap algorithms again. This cycle is a loop, not a project.',u:'https://www.ncsc.gov.uk/guidance/pqc-migration-timelines',s:'NCSC timelines'}];
+function _star(svg,x,y,r,fill){svg.appendChild(el('circle',{cx:x,cy:y,r:r+3.5,fill:fill,opacity:.13,style:'pointer-events:none'}));svg.appendChild(el('circle',{cx:x,cy:y,r:r+1.5,fill:fill,opacity:.2,style:'pointer-events:none'}));const c=el('circle',{cx:x,cy:y,r:r,fill:fill});return c;}
+function drawConst(){const svg=$('constSvg');if(!svg)return;svg.innerHTML='';
+  const W=540,H=360,cx=270,cy=182;
+  const mut=cssvar('--muted')||'#8fa8a3',ink=cssvar('--ink')||'#e8f1ef';
+  const rr=n=>{const x=Math.sin(n*91.7+47.3)*24634.62;return x-Math.floor(x);};
+  for(let i=0;i<90;i++){svg.appendChild(el('circle',{cx:rr(i)*W,cy:rr(i+900)*H,r:rr(i+300)*0.9+0.25,fill:ink,opacity:0.10+rr(i+600)*0.16,style:'pointer-events:none'}));}
+  [78,132].forEach(R=>svg.appendChild(el('circle',{cx:cx,cy:cy,r:R,fill:'none',stroke:mut,opacity:.16,'stroke-dasharray':'2 5'})));
+  const std=constData.filter(d=>d.g==='std'),gov=constData.filter(d=>d.g==='gov');
+  const place=(arr,R,a0)=>arr.map((d,i)=>{const a=a0+i*(Math.PI*2/arr.length);return{d:d,x:cx+R*Math.cos(a),y:cy+R*Math.sin(a)};});
+  const nodes=place(std,78,-Math.PI/2).concat(place(gov,132,-Math.PI/2+0.31));
+  nodes.forEach(nd=>svg.appendChild(el('line',{x1:cx,y1:cy,x2:nd.x,y2:nd.y,stroke:nd.d.g==='std'?'#46d4c4':'#ff9e3d',opacity:.13,style:'pointer-events:none'})));
+  const core=_star(svg,cx,cy,7,'#46d4c4');svg.appendChild(core);
+  svg.appendChild(el('text',{x:cx,y:cy+21,fill:ink,'font-family':'monospace','font-size':7.5,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},'MANAGED CRYPTOGRAPHY'));
+  nodes.forEach((nd,i)=>{const col=nd.d.g==='std'?'#46d4c4':'#ff9e3d';
+    const c=_star(svg,nd.x,nd.y,4.6,col);c.style.cursor='pointer';c.setAttribute('tabindex','0');
+    const show=()=>{$('constOut').innerHTML='<b style="color:'+col+'">'+nd.d.n+'</b> \u2014 '+nd.d.d+' <a class="srclink" href="'+nd.d.u+'" target="_blank" rel="noopener">'+nd.d.s+' \u2197</a>';};
+    tapOpen(c,show);c.addEventListener('mouseenter',show);kbd(c,nd.d.n,show);
+    svg.appendChild(c);
+    const above=nd.y<cy;
+    svg.appendChild(el('text',{x:nd.x,y:above?nd.y-9:nd.y+14,fill:col,'font-family':'monospace','font-size':6.4,'text-anchor':'middle',style:'pointer-events:none'},nd.d.n.length>20?nd.d.n.slice(0,19)+'\u2026':nd.d.n));});
+}
+function drawCycle(){const svg=$('cycleSvg');if(!svg)return;svg.innerHTML='';
+  const W=540,H=340,cx=270,cy=168,R=104;
+  const mut=cssvar('--muted')||'#8fa8a3',ink=cssvar('--ink')||'#e8f1ef';
+  const cols=['#46d4c4','#7ee081','#ff9e3d','#ff8a3d','#c274ff','#ff7ab8'];
+  svg.appendChild(el('circle',{cx:cx,cy:cy,r:R,fill:'none',stroke:mut,opacity:.22}));
+  const N=cycleData.length;
+  cycleData.forEach((st,i)=>{const a=-Math.PI/2+i*(Math.PI*2/N),a2=-Math.PI/2+(i+0.68)*(Math.PI*2/N);
+    const x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+    const ax=cx+R*Math.cos(a2),ay=cy+R*Math.sin(a2);
+    const t=a2+Math.PI/2;
+    svg.appendChild(el('path',{d:'M'+(ax-4*Math.cos(t)).toFixed(1)+' '+(ay-4*Math.sin(t)).toFixed(1)+' L'+(ax+4*Math.cos(t)).toFixed(1)+' '+(ay+4*Math.sin(t)).toFixed(1)+' L'+(ax+7*Math.cos(a2+Math.PI/2+0.35)).toFixed(1)+' '+(ay+7*Math.sin(a2+Math.PI/2+0.35)).toFixed(1)+' Z',fill:mut,opacity:.5,style:'pointer-events:none'}));
+    const g=el('circle',{cx:x,cy:y,r:17,fill:cssvar('--solid')||'#0d1417',stroke:cols[i],'stroke-width':1.6});
+    g.style.cursor='pointer';g.setAttribute('tabindex','0');
+    const show=()=>{$('cycleOut').innerHTML='<b style="color:'+cols[i]+'">'+(i+1)+' \u00b7 '+st.n+'</b> \u2014 '+st.d+' <a class="srclink" href="'+st.u+'" target="_blank" rel="noopener">'+st.s+' \u2197</a>';};
+    tapOpen(g,show);g.addEventListener('mouseenter',show);kbd(g,st.n,show);
+    svg.appendChild(el('circle',{cx:x,cy:y,r:21,fill:cols[i],opacity:.10,style:'pointer-events:none'}));
+    svg.appendChild(g);
+    svg.appendChild(el('text',{x:x,y:y+2.6,fill:cols[i],'font-family':'monospace','font-size':8,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},i+1));
+    const lx=cx+(R+34)*Math.cos(a),ly=cy+(R+34)*Math.sin(a);
+    svg.appendChild(el('text',{x:lx,y:ly+2.5,fill:ink,'font-family':'monospace','font-size':8.2,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},st.n.toUpperCase()));});
+  svg.appendChild(el('text',{x:cx,y:cy-3,fill:mut,'font-family':'monospace','font-size':7.2,'text-anchor':'middle',style:'pointer-events:none'},'CRYPTO-AGILITY'));
+  svg.appendChild(el('text',{x:cx,y:cy+8,fill:mut,'font-family':'monospace','font-size':7.2,'text-anchor':'middle',style:'pointer-events:none'},'= go round again'));
+}
+
 buildScenario();buildStack();buildNodes();buildRegs();buildChangelog();buildCatFilter();buildVulns();buildAttacks();buildVendFilter();loadAns();
 document.querySelectorAll('[data-checked]').forEach(x=>x.textContent=CHECKED);
 applyTargetText();setScenario(scen);mosca();
