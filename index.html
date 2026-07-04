@@ -286,6 +286,9 @@ body.noscroll{overflow:hidden}
 .qwi:hover,.qwi:focus-visible{color:var(--defence)}
 .qwexp{font-family:var(--mono);font-size:9.5px;line-height:1.6;color:var(--muted);margin:2px 0 6px;padding:7px 10px;border-left:2px solid rgba(70,212,196,.4);background:rgba(70,212,196,.05);border-radius:0 7px 7px 0}
 
+/* tour demo video */
+.wvid{margin:12px 0 4px}
+.wvid video{width:100%;max-height:52vh;border-radius:12px;border:1px solid var(--line);background:#000;display:block}
 /* learn tab */
 .jstep{width:100%;margin:10px 0 0}
 .jnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(70,212,196,.14);color:var(--defence);font-family:var(--mono);font-size:11.5px;font-weight:700;flex:none;margin-right:9px}
@@ -997,6 +1000,16 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
     <li><b>Readiness</b> — two AI-scored views, every claim linked: 37 IT/OT vendors ranked on cryptographic capability, and end-user organisations (banks, telcos, defence, healthcare, energy) ranked on their public quantum-readiness signal — including the honest gaps. ⓘ has methodology and CSV.</li>
     <li><b>⋮ menu</b> — share a snapshot, copy a link that preserves your view, the <b>glossary of acronyms</b>, and all references &amp; sources. The sun/moon toggles light or dark.</li>
   </ul>
+  <div class="wvid">
+    <button class="applybtn" id="wvidBtn" onclick="showDemo()">▶ Watch the demo (9½ min)</button>
+    <div id="wvidWrap" hidden>
+      <video id="wvid" controls playsinline preload="none">
+        <source id="wvidSrc" src="QDayDemo.mp4" type="video/mp4">
+        Your browser doesn’t support embedded video.
+      </video>
+      <p class="minifoot" id="wvidErr" hidden style="text-align:left;color:var(--alert)">Couldn’t load <b>QDayDemo.mp4</b> — the video must sit in the same folder as this page (exact name, case-sensitive).</p>
+    </div>
+  </div>
   <p style="color:var(--faint)">Planning anchors, not forecasts. No trackers. Views are the author's own.</p>
   <button class="go" onclick="closeWelcome()">Explore →</button>
 </div></div>
@@ -1780,7 +1793,11 @@ function copyLink(){syncURL();try{navigator.clipboard.writeText(location.href).t
 
 /* ============================ WELCOME ============================ */
 function showWelcome(){$('welcome').classList.add('open');}
-function closeWelcome(){$('welcome').classList.remove('open');}
+function showDemo(){$('wvidBtn').hidden=true;$('wvidWrap').hidden=false;const v=$('wvid');
+  const err=()=>{$('wvidErr').hidden=false;};
+  v.addEventListener('error',err);const s=$('wvidSrc');if(s)s.addEventListener('error',err);
+  try{v.load();const p=v.play();if(p&&p.catch)p.catch(()=>{});}catch(e){err();}}
+function closeWelcome(){$('welcome').classList.remove('open');const v=$('wvid');if(v&&!v.paused){try{v.pause();}catch(e){}}}
 
 /* ============================ DRAWER ============================ */
 /* ---------- VENDOR CRYPTO CAPABILITY (AI analysis - unverified) ---------- */
