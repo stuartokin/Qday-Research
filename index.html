@@ -282,6 +282,9 @@ body.noscroll{overflow:hidden}
 .qwlab{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);flex:none}
 .qwrow input{flex:1;max-width:170px;height:14px}
 .qwrow output{font-family:var(--mono);font-size:10px;color:var(--muted);width:42px;flex:none}
+.qwi{background:none;border:none;color:var(--faint);font-size:12px;cursor:pointer;padding:2px 3px;line-height:1;flex:none}
+.qwi:hover,.qwi:focus-visible{color:var(--defence)}
+.qwexp{font-family:var(--mono);font-size:9.5px;line-height:1.6;color:var(--muted);margin:2px 0 6px;padding:7px 10px;border-left:2px solid rgba(70,212,196,.4);background:rgba(70,212,196,.05);border-radius:0 7px 7px 0}
 
 /* learn tab */
 .jstep{width:100%;margin:10px 0 0}
@@ -667,7 +670,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
             <div class="lvlname" id="lvlName"></div>
             <div class="lvldesc" id="lvlDesc"></div>
             <div class="asugg" id="asugg"></div>
-          <button class="catchip" id="qwReset" hidden onclick="resetQW()" style="margin-top:6px">Reset question weights to default</button>
+          <button class="catchip" id="qwReset" hidden onclick="resetQW()" style="margin-top:6px">Reset all weights to defaults</button>
             <button class="applybtn" id="applyBtn" onclick="applyAssess()" disabled>Apply X &amp; Y to the Mosca test</button>
             <div class="aprog" id="aprog"></div>
           </div>
@@ -1162,31 +1165,31 @@ const sizes=[
 let planCharted=false;
 const assess={
   exec:[
-    {q:'Can you say, today, everywhere RSA and ECC are used across your organisation?',dim:'ag',o:[['No central inventory',1],['Partially — some systems known',2],['Mostly — a maintained inventory',3],['Yes — complete, automated discovery',5]]},
-    {q:'If a critical crypto flaw were announced tomorrow, how long to replace every affected certificate, key and signature?',dim:'ag',o:[['Months, or unknown',1],['Weeks',2],['A few days',4],['Hours — largely automated',5]]},
-    {q:'Can you prove critical systems can move to post-quantum crypto without major redesign or prolonged outages?',dim:'ag',o:[['No — not assessed',1],['Some analysis done',2],['Plan exists, partly tested',3],['Yes — tested and hybrid-ready',5]]},
-    {q:'How long must your most sensitive data stay confidential?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years (health, legal, state)',30]]}
+    {dw:1.4,wr:'Discovery is the single strongest predictor of migration time — every national playbook starts here, so it carries the heaviest default influence on Y.',q:'Can you say, today, everywhere RSA and ECC are used across your organisation?',dim:'ag',o:[['No central inventory',1],['Partially — some systems known',2],['Mostly — a maintained inventory',3],['Yes — complete, automated discovery',5]]},
+    {dw:1.5,wr:'The most direct empirical measure of Y there is: replacing every key and certificate under pressure is a rehearsal of the migration itself.',q:'If a critical crypto flaw were announced tomorrow, how long to replace every affected certificate, key and signature?',dim:'ag',o:[['Months, or unknown',1],['Weeks',2],['A few days',4],['Hours — largely automated',5]]},
+    {dw:1.0,wr:'A strong signal, but partly forward-looking assertion rather than demonstrated speed — so it takes standard weight on Y.',q:'Can you prove critical systems can move to post-quantum crypto without major redesign or prolonged outages?',dim:'ag',o:[['No — not assessed',1],['Some analysis done',2],['Plan exists, partly tested',3],['Yes — tested and hybrid-ready',5]]},
+    {dw:1.0,wr:'This question alone sets X (data shelf-life). Its weight scales X directly — raise it if your stated retention understates reality (e.g. implicit legal duties).',q:'How long must your most sensitive data stay confidential?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years (health, legal, state)',30]]}
   ],
   tech:[
-    {q:'1 · Discovery — do you hold a complete cryptographic inventory (every key, cert and trust store)?',dim:'ag',o:[['No inventory',1],['Partial / manual',2],['Centrally maintained',3],['Automated, continuous',5]]},
-    {q:'2 · Business criticality — do you know which services fail if public-key crypto breaks?',dim:'mat',o:[['Not mapped',1],['Some known',2],['Documented for key services',3],['Fully mapped & maintained',4]]},
-    {q:'3 · Key management — where do keys live and is the lifecycle defined?',dim:'mat',o:[['Mostly software, ad hoc',1],['Mixed, partly documented',2],['HSM/KMS with lifecycles',4],['HSM/KMS, owned, fully governed',5]]},
-    {q:'4 · Agility — how long to rotate the TLS certificate estate?',dim:'ag',o:[['Weeks / manual',1],['Days',2],['Hours',4],['Minutes — automated (ACME)',5]]},
-    {q:'5 · Agility — could you rotate all internet-facing certificates within 24 hours?',dim:'ag',o:[['No',1],['With major effort',2],['Yes, most',4],['Yes, automated',5]]},
-    {q:'6 · Algorithms — are deprecated algorithms (e.g. RSA-1024) still in production?',dim:'ag',o:[['Unknown',1],['Likely, some',2],['No, but unverified',3],['No — verified; PQC/hybrid piloted',5]]},
-    {q:'7 · Suppliers — do you track your PKI / SaaS providers\u2019 post-quantum roadmaps?',dim:'mat',o:[['Not checked',1],['Aware of a few',2],['Tracked for key suppliers',3],['Contractual PQC readiness',5]]},
-    {q:'8 · Data risk — what is your longest data-confidentiality requirement?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years',30]]},
-    {q:'9 · Technology — are HSMs, VPNs, load-balancers and identity platforms hybrid/PQC-capable?',dim:'ag',o:[['Unknown',1],['Mostly not',2],['Some, upgrade path exists',3],['Yes — interoperability tested',5]]},
-    {q:'10 · Governance — named accountable exec, PQC programme and board oversight?',dim:'mat',o:[['None',1],['Informal ownership',2],['Programme exists',3],['Board-reported programme',5]]}
+    {dw:1.4,wr:'Discovery is the strongest predictor of migration time; you cannot migrate what you cannot see. Heaviest default influence on Y.',q:'1 · Discovery — do you hold a complete cryptographic inventory (every key, cert and trust store)?',dim:'ag',o:[['No inventory',1],['Partial / manual',2],['Centrally maintained',3],['Automated, continuous',5]]},
+    {dw:1.0,wr:'Shapes the maturity level read-out only — it has no effect on X or Y, whatever the weight. Weight it to change how much it drives your maturity score.',q:'2 · Business criticality — do you know which services fail if public-key crypto breaks?',dim:'mat',o:[['Not mapped',1],['Some known',2],['Documented for key services',3],['Fully mapped & maintained',4]]},
+    {dw:1.2,wr:'Maturity-only (no X/Y effect), but weighted above standard because governed HSM/KMS estates are the backbone of every other capability here.',q:'3 · Key management — where do keys live and is the lifecycle defined?',dim:'mat',o:[['Mostly software, ad hoc',1],['Mixed, partly documented',2],['HSM/KMS with lifecycles',4],['HSM/KMS, owned, fully governed',5]]},
+    {dw:1.2,wr:'A concrete, measurable agility fact — harder evidence than self-assessment, so slightly above standard influence on Y.',q:'4 · Agility — how long to rotate the TLS certificate estate?',dim:'ag',o:[['Weeks / manual',1],['Days',2],['Hours',4],['Minutes — automated (ACME)',5]]},
+    {dw:1.1,wr:'Strong Y signal, but overlaps the rotation-time question — kept slightly lower to avoid double-counting the same capability.',q:'5 · Agility — could you rotate all internet-facing certificates within 24 hours?',dim:'ag',o:[['No',1],['With major effort',2],['Yes, most',4],['Yes, automated',5]]},
+    {dw:0.9,wr:'Deprecated-algorithm hygiene correlates with agility but is an indirect proxy — slightly below standard influence on Y.',q:'6 · Algorithms — are deprecated algorithms (e.g. RSA-1024) still in production?',dim:'ag',o:[['Unknown',1],['Likely, some',2],['No, but unverified',3],['No — verified; PQC/hybrid piloted',5]]},
+    {dw:1.0,wr:'Maturity-only (no X/Y effect): supplier tracking shapes readiness posture rather than your own migration speed.',q:'7 · Suppliers — do you track your PKI / SaaS providers\u2019 post-quantum roadmaps?',dim:'mat',o:[['Not checked',1],['Aware of a few',2],['Tracked for key suppliers',3],['Contractual PQC readiness',5]]},
+    {dw:1.0,wr:'This question alone sets X. Its weight scales X directly — raise it if retention obligations are understated.',q:'8 · Data risk — what is your longest data-confidentiality requirement?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years',30]]},
+    {dw:1.3,wr:'A hard gate on Y: if HSMs, VPNs and load-balancers cannot do PQC, no amount of process shortens the timeline — weighted up accordingly.',q:'9 · Technology — are HSMs, VPNs, load-balancers and identity platforms hybrid/PQC-capable?',dim:'ag',o:[['Unknown',1],['Mostly not',2],['Some, upgrade path exists',3],['Yes — interoperability tested',5]]},
+    {dw:1.1,wr:'Maturity-only (no X/Y effect), weighted slightly up: accountable ownership is what converts intent into a funded programme.',q:'10 · Governance — named accountable exec, PQC programme and board oversight?',dim:'mat',o:[['None',1],['Informal ownership',2],['Programme exists',3],['Board-reported programme',5]]}
   ],
   auditor:[
-    {q:'Can you discover every cryptographic key across the estate?',dim:'ag',o:[['No reliable way',1],['Partial / manual',2],['Central inventory, periodic',3],['Automated, continuous discovery',5]]},
-    {q:'Do you know where every certificate is used and what depends on it?',dim:'mat',o:[['Largely unknown',1],['Some mappings',2],['Documented for critical systems',3],['Full dependency mapping',5]]},
-    {q:'Can you rotate keys and certificates automatically?',dim:'ag',o:[['No — manual',1],['Some automation',2],['Most, automated',4],['Fully automated (e.g. ACME)',5]]},
-    {q:'Could you replace compromised keys within hours?',dim:'ag',o:[['No — days or weeks',1],['With major effort',2],['Yes, for critical systems',4],['Yes, enterprise-wide',5]]},
-    {q:'Can you migrate rapidly to post-quantum cryptography if required?',dim:'ag',o:[['Not assessed',1],['Analysis started',2],['Plan in place',3],['Tested & hybrid-ready',5]]},
-    {q:'Can you demonstrate cryptographic agility with evidence, not assertion?',dim:'mat',o:[['No evidence',1],['Informal',2],['Documented',3],['Auditable, board-reported',5]]},
-    {q:'What is your longest data-confidentiality requirement (harvest-now-decrypt-later exposure)?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years',30]]}
+    {dw:1.4,wr:'Discovery first: the strongest predictor of migration time, so the heaviest default influence on Y.',q:'Can you discover every cryptographic key across the estate?',dim:'ag',o:[['No reliable way',1],['Partial / manual',2],['Central inventory, periodic',3],['Automated, continuous discovery',5]]},
+    {dw:1.1,wr:'Maturity-only (no X/Y effect); dependency mapping weighted slightly up because it is what auditors find missing most often.',q:'Do you know where every certificate is used and what depends on it?',dim:'mat',o:[['Largely unknown',1],['Some mappings',2],['Documented for critical systems',3],['Full dependency mapping',5]]},
+    {dw:1.2,wr:'Automation is demonstrated agility — above-standard influence on Y.',q:'Can you rotate keys and certificates automatically?',dim:'ag',o:[['No — manual',1],['Some automation',2],['Most, automated',4],['Fully automated (e.g. ACME)',5]]},
+    {dw:1.3,wr:'Incident-tested replacement speed is the closest real-world proxy for Y available to an auditor.',q:'Could you replace compromised keys within hours?',dim:'ag',o:[['No — days or weeks',1],['With major effort',2],['Yes, for critical systems',4],['Yes, enterprise-wide',5]]},
+    {dw:1.2,wr:'Direct migration readiness — above standard, though partly plan rather than proof.',q:'Can you migrate rapidly to post-quantum cryptography if required?',dim:'ag',o:[['Not assessed',1],['Analysis started',2],['Plan in place',3],['Tested & hybrid-ready',5]]},
+    {dw:1.0,wr:'Maturity-only (no X/Y effect): evidence quality shapes the maturity read-out.',q:'Can you demonstrate cryptographic agility with evidence, not assertion?',dim:'mat',o:[['No evidence',1],['Informal',2],['Documented',3],['Auditable, board-reported',5]]},
+    {dw:1.0,wr:'This question alone sets X. Its weight scales X directly.',q:'What is your longest data-confidentiality requirement (harvest-now-decrypt-later exposure)?',dim:'shelf',o:[['Under 5 years',3],['5–10 years',8],['10–25 years',18],['25+ years',30]]}
   ]
 };
 const levels=[null,
@@ -1316,9 +1319,13 @@ const recMap={
 };
 function toggleRec(b){const x=b.nextElementSibling;const open=!x.hidden;x.hidden=open;b.setAttribute('aria-expanded',String(!open));}
 let aMode=null;const aAns={exec:{},tech:{},auditor:{}};const aW={exec:{},tech:{},auditor:{}};let aX=null,aY=null;
-function qw(i){const w=aW[aMode][i];return (w===undefined)?1:w;}
-function setQW(i,v){aW[aMode][i]=(+v)/100;const o=$('qwOut_'+i);if(o)o.textContent='\u00d7'+qw(i).toFixed(2).replace(/0$/,'');const r=$('qwReset');if(r)r.hidden=!Object.keys(aW[aMode]).length;scoreAssess();}
-function resetQW(){aW[aMode]={};document.querySelectorAll('#assessQs .qwrow input').forEach(inp=>{inp.value=100;});document.querySelectorAll('#assessQs .qwrow output').forEach(o=>{o.textContent='\u00d71.0';});const r=$('qwReset');if(r)r.hidden=true;scoreAssess();}
+function qdw(i){return (assess[aMode][i]&&assess[aMode][i].dw)||1;}
+function qw(i){const w=aW[aMode][i];return (w===undefined)?qdw(i):w;}
+function fmtW(v){return '\u00d7'+v.toFixed(2).replace(/0$/,'');}
+function resetQW1(i){delete aW[aMode][i];const inp=$('qwIn_'+i);if(inp)inp.value=Math.round(qdw(i)*100);const o=$('qwOut_'+i);if(o)o.textContent=fmtW(qdw(i));const r=$('qwReset');if(r)r.hidden=!Object.keys(aW[aMode]).length;scoreAssess();}
+function toggleQwExp(i){const d=$('qwExp_'+i);if(d)d.hidden=!d.hidden;}
+function setQW(i,v){aW[aMode][i]=(+v)/100;const o=$('qwOut_'+i);if(o)o.textContent=fmtW(qw(i));const r=$('qwReset');if(r)r.hidden=!Object.keys(aW[aMode]).length;scoreAssess();}
+function resetQW(){aW[aMode]={};document.querySelectorAll('#assessQs .qwrow input').forEach((inp,i)=>{inp.value=Math.round(qdw(i)*100);});document.querySelectorAll('#assessQs .qwrow output').forEach((o,i)=>{o.textContent=fmtW(qdw(i));});const r=$('qwReset');if(r)r.hidden=true;scoreAssess();}
 const aNotes={
   exec:'The three questions a CIO or CISO should be able to answer instantly — plus your data-confidentiality horizon.',
   tech:'A deeper self-check across discovery, criticality, key management, agility, suppliers, technology and governance.',
@@ -1329,7 +1336,7 @@ function loadAns(){try{const s=sessionStorage.getItem('qday_assess');if(s){const
 function segId(k){return 'seg'+k[0].toUpperCase()+k.slice(1);}
 function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];const pk=$('aPick');if(pk)pk.hidden=true;const s2=$('aStep2');if(s2)s2.hidden=false;buildAssess();scoreAssess();}
 function buildAssess(){
-  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div><div class="qwrow"><span class="qwlab">influence on X/Y</span><input type="range" min="0" max="200" value="${Math.round(qw(i)*100)}" oninput="setQW(${i},this.value)" aria-label="Weight of this question in the suggested X and Y"><output id="qwOut_${i}">\u00d7${qw(i).toFixed(2).replace(/0$/,'')}</output></div>${recHtml}</div>`;}).join('');
+  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div><div class="qwrow"><span class="qwlab">weight · ${q.dim==='shelf'?'sets X':q.dim==='ag'?'drives Y':'maturity only'}</span><input id="qwIn_${i}" type="range" min="0" max="200" value="${Math.round(qw(i)*100)}" oninput="setQW(${i},this.value)" aria-label="Weight of this question"><output id="qwOut_${i}">${fmtW(qw(i))}</output><button class="qwi" onclick="toggleQwExp(${i})" aria-label="Why this default weight" title="Why this default?">ⓘ</button><button class="qwi" onclick="resetQW1(${i})" aria-label="Reset this weight to its default" title="Reset to default">↺</button></div><div class="qwexp" id="qwExp_${i}" hidden>Default ${fmtW(q.dw||1)} — ${q.wr||''}</div>${recHtml}</div>`;}).join('');
   $('aresetBtn').hidden=Object.keys(aAns[aMode]).length===0;
 }
 function pickAns(i,j,val){
