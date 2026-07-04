@@ -1489,7 +1489,7 @@ function drawVulnCluster(){
       d.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});d.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')showTip(svg,e,tip);});d.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')hideTip();});tapOpen(d,e=>showTip(svg,e,tip),e=>{hideTip();focusThreatCard('a',a.name);});
       kbd(d,a.name+', '+a.year+', impact '+a.impactScore.toFixed(1),e=>showTip(svg,e,tip));d.addEventListener('blur',hideTip);
       svg.appendChild(d);
-      if(wide)svg.appendChild(el('text',{x:cx,y:(ai%2?cy+s+11:cy-s-6),fill:akc,'font-family':'monospace','font-size':6.8,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},a.name.length>15?a.name.slice(0,14)+'\u2026':a.name));
+      if(wide)svg.appendChild(el('text',{x:cx,y:(idx%2?cy+s+11:cy-s-6),fill:akc,'font-family':'monospace','font-size':6.8,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},a.name.length>15?a.name.slice(0,14)+'\u2026':a.name));
     });
   }
 }
