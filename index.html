@@ -578,12 +578,24 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
  .welcome .card{max-width:none;width:calc(100vw - 18px);max-height:92dvh;padding:22px 16px;border-radius:16px}
  .wvid video{max-height:38vh}
 }
+.whead h2{margin-bottom:6px}
+.whead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:10px}
+.wmore{margin:12px 0 4px;display:grid;gap:8px}
+.wmlab{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.wcard{display:block;border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-decoration:none;transition:.15s;background:rgba(255,255,255,.015)}
+:root[data-theme=light] .wcard{background:rgba(0,0,0,.015)}
+.wcard:hover{border-color:var(--defence);transform:translateY(-1px)}
+.wcard b{display:block;font-size:12px;color:var(--ink);margin-bottom:3px}
+.wcard span{font-size:10.5px;color:var(--muted);line-height:1.5}
+.wfoot{border-top:1px solid var(--line);margin-top:14px;padding-top:11px;font-family:var(--mono);font-size:9.5px;color:var(--faint);line-height:1.7;display:flex;flex-wrap:wrap;gap:4px 18px;justify-content:space-between}
 @media(min-width:1100px){
- .welcome .card{max-width:980px;display:grid;grid-template-columns:1.08fr 1fr;gap:2px 30px;align-items:start}
- .welcome .card>h2,.welcome .card>p{grid-column:1/-1}
- .welcome .card>.wvid{grid-column:1;margin-top:6px}
- .welcome .card>ul{grid-column:2;columns:1;margin-top:6px}
- .welcome .card>.controls,.welcome .card>.minifoot{grid-column:1/-1}
+ .welcome .card{max-width:1020px;display:grid;grid-template-columns:1.08fr 1fr;gap:2px 30px;align-items:start;grid-template-areas:"h h" "v u" "m u" "f f" "g g"}
+ .welcome .card>.whead{grid-area:h}
+ .welcome .card>.wvid{grid-area:v;margin-top:6px}
+ .welcome .card>.wmore{grid-area:m}
+ .welcome .card>ul{grid-area:u;margin-top:6px}
+ .welcome .card>.wfoot{grid-area:f}
+ .welcome .card>.go{grid-area:g;justify-self:end}
  .wvid video{max-height:none}
 }
 @media(min-width:1720px){.welcome .card{max-width:1150px}.welcome .card li{font-size:13.5px;line-height:1.78}}
@@ -1048,8 +1060,8 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
 
 <div class="welcome" id="welcome"><div class="card">
   <button class="wclose" onclick="closeWelcome()" aria-label="Close tour">×</button>
-  <h2>Welcome to the Q-Day Observatory</h2>
-  <p>A planning aid for the race between quantum capability and post-quantum migration. Everything here is drawn from verified public sources — tap any point, bar, milestone or icon on a chart for detail.</p>
+  <div class="whead"><h2>Welcome to the Q-Day Observatory</h2>
+  <p>A planning aid for the race between quantum capability and post-quantum migration. Everything here is drawn from verified public sources — tap any point, bar, milestone or icon on a chart for detail.</p></div>
   <div class="wvid">
     <button class="applybtn" id="wvidBtn" onclick="showDemo()">▶ Watch the demo</button>
     <div id="wvidWrap" hidden>
@@ -1059,6 +1071,13 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
       </video>
       <p class="minifoot" id="wvidErr" hidden style="text-align:left;color:var(--alert)">Couldn’t load <b>QDayDemo.mp4</b> — the video must sit in the same folder as this page (exact name, case-sensitive).</p>
     </div>
+  </div>
+  <div class="wmore">
+    <span class="wmlab">Feedback &amp; more from the author</span>
+    <a class="wcard" href="https://www.linkedin.com/in/stuart-okin-b37ab69" target="_blank" rel="noopener"><b>Feedback welcome — connect on LinkedIn</b><span>Thoughts, corrections and challenge all gratefully received.</span></a>
+    <a class="wcard" href="https://www.linkedin.com/pulse/ai-finding-zero-day-bugs-fast-stuart-okin-khv1e/" target="_blank" rel="noopener"><b>AI is finding zero-day bugs — fast</b><span>How AI-assisted research is rewriting vulnerability discovery.</span></a>
+    <a class="wcard" href="https://www.linkedin.com/pulse/mapping-ai-governance-standards-stuart-okin-w8oqe/" target="_blank" rel="noopener"><b>Mapping AI governance &amp; standards</b><span>Making sense of the UK and international AI governance landscape.</span></a>
+    <a class="wcard" href="https://stuartokin.github.io/uk-ai-landscape/" target="_blank" rel="noopener"><b>The UK AI Governance Map — interactive</b><span>Bodies, regulators and guidance — and how they connect. A sister app to this one.</span></a>
   </div>
   <ul>
     <li><b>Clocks</b> — live countdowns: estimated Q-Day vs the NCSC 2035 deadline. Switch scenarios to move Q-Day, then run the <b>Mosca exposure test</b> — with optional readiness questionnaires (Executive, Technical or Auditor) that suggest your X and Y, and a copy-as-text result to share.</li>
@@ -1070,7 +1089,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
     <li><b>Readiness</b> — two AI-scored views, every claim linked: 37 IT/OT vendors ranked on cryptographic capability, and end-user organisations (banks, telcos, defence, healthcare, energy) ranked on their public quantum-readiness signal — including the honest gaps. ⓘ has methodology and CSV.</li>
     <li><b>⋮ menu</b> — share a snapshot, copy a link that preserves your view, the <b>glossary of acronyms</b>, and all references &amp; sources. The sun/moon toggles light or dark.</li>
   </ul>
-    <p style="color:var(--faint)">Planning anchors, not forecasts. No trackers. Views are the author's own.</p>
+    <div class="wfoot"><span>Planning anchors, not forecasts · no trackers · views are the author’s own</span><span>AI-assembled from verified public sources — may contain errors; always verify · Stuart Okin, personal capacity · checked <span data-checked>4 Jul 2026</span></span></div>
   <button class="go" onclick="closeWelcome()">Explore →</button>
 </div></div>
 
