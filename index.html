@@ -291,6 +291,11 @@ body.noscroll{overflow:hidden}
 .wvid video{width:100%;max-height:52vh;border-radius:12px;border:1px solid var(--line);background:#000;display:block}
 /* learn tab */
 .jstep{width:100%;margin:10px 0 0}
+.jstep{scroll-margin-top:calc(var(--bar-h) + 10px)}
+.jstep[aria-expanded=true]{position:sticky;top:var(--bar-h);z-index:6;background:var(--bg);box-shadow:0 10px 20px -10px rgba(0,0,0,.55);border-color:var(--defence)}
+.jstep[aria-expanded=true] .lab::after{content:' — tap to minimise';font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--faint);font-weight:400}
+@media(max-width:560px){.jstep[aria-expanded=true] .lab::after{content:''}}
+.jbody{position:relative}
 .jnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(70,212,196,.14);color:var(--defence);font-family:var(--mono);font-size:11.5px;font-weight:700;flex:none;margin-right:9px}
 .jstep[aria-expanded=true] .jnum{background:var(--defence);color:#062824}
 .jbody{margin-top:8px}
@@ -950,8 +955,8 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
     <p class="vdesc">A journey in eight steps — open each in turn (or jump around): why it matters, how today’s locks work, how they’re managed, why quantum changes everything, and what comes next. Two ideas protect almost everything online — RSA and elliptic curves. Both rest on maths that is easy in one direction and (classically) hopeless in reverse. Shor’s algorithm reverses both. Here’s how they work, in plain English and in the maths, and what the new NIST FIPS standards replace them with.</p>
 
     
-    <button class="sechead jstep" aria-expanded="true" data-target="ls1" onclick="toggle(this)"><span class="jnum">1</span><span class="lab">Why should you care?</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
-    <div id="ls1" class="secbody"><div class="lsec jbody">
+    <button class="sechead jstep" aria-expanded="false" data-target="ls1" onclick="jToggle(this)"><span class="jnum">1</span><span class="lab">Why should you care?</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <div id="ls1" class="secbody" hidden><div class="lsec jbody">
       <p class="lplain">You have probably used both a dozen times before breakfast — this is why Q-Day is an everyone problem, not a cryptographer problem:</p>
       <div class="fipsgrid">
         <div class="fipscard"><b>&#128274; The browser padlock</b><span class="ftag">TLS</span><p>Every HTTPS page starts with an elliptic-curve key exchange, inside a certificate chain signed with RSA or ECDSA. Billions of handshakes a day.</p></div>
@@ -963,7 +968,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
       </div>
       <button class="applybtn jnext" onclick="jNext(2)">Continue → step 2: how RSA works</button>
     </div></div>
-    <button class="sechead jstep" aria-expanded="false" data-target="ls2" onclick="toggle(this)"><span class="jnum">2</span><span class="lab">Today’s lock #1 — RSA, the multiplication trapdoor</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls2" onclick="jToggle(this)"><span class="jnum">2</span><span class="lab">Today’s lock #1 — RSA, the multiplication trapdoor</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     <div id="ls2" class="secbody" hidden><div class="lsec jbody">
       <p class="lplain"><b>In plain English:</b> pick two large secret prime numbers and multiply them. Anyone can see the result; nobody can feasibly split it back into the two primes. Multiplying is seconds; un-multiplying a 2,048-bit number would take classical computers longer than the age of the universe. Your secret is the ingredients — the world only ever sees the cake.</p>
       <div class="ldemo">
@@ -978,7 +983,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
       <p class="ltech"><b>The maths:</b> the public key is N = p×q (plus an exponent e); the private key d satisfies e·d ≡ 1 mod φ(N). Encryption is c = m<sup>e</sup> mod N; only knowing p and q lets you compute d and reverse it. Security = the difficulty of factoring N. The largest number ever factored by open classical effort is RSA-250 (829 bits, months of supercomputer time) — RSA-2048 is astronomically beyond that. <b>Shor’s algorithm factors N in polynomial time</b>, collapsing the entire construction once a large fault-tolerant quantum computer exists.</p>
       <button class="applybtn jnext" onclick="jNext(3)">Continue → step 3: elliptic curves</button>
     </div></div>
-    <button class="sechead jstep" aria-expanded="false" data-target="ls3" onclick="toggle(this)"><span class="jnum">3</span><span class="lab">Today’s lock #2 — ECC, billiards on a curve</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls3" onclick="jToggle(this)"><span class="jnum">3</span><span class="lab">Today’s lock #2 — ECC, billiards on a curve</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     <div id="ls3" class="secbody" hidden><div class="lsec jbody">
       <p class="lplain"><b>In plain English:</b> imagine bouncing a billiard ball on a strangely curved table using one fixed rule. Everyone knows the starting spot and the rule. Your secret is simply <i>how many times</i> you bounced. Given the final position, working out the number of bounces is (classically) as hopeless as factoring — but the keys are far smaller, which is why your phone, bank and TLS use elliptic curves.</p>
       <div class="ldemo">
@@ -992,7 +997,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
       <p class="ltech"><b>The maths:</b> points on y² = x³ + ax + b (over a finite field) form a group: a chord through two points, reflected, gives their “sum”. The private key is a number k; the public key is Q = kP. Recovering k from Q is the elliptic-curve discrete logarithm problem — 256-bit ECC gives security comparable to 3,072-bit RSA. <b>Shor’s discrete-log variant breaks this too</b>: Google’s 2026 estimates put 256-bit ECC within reach of ~500,000 physical superconducting qubits, and a March 2026 Oratomic/Caltech paper argues P-256 discrete logs could take days on ~26,000 neutral-atom qubits. <a class="srclink" href="https://arxiv.org/abs/2603.28627v1" target="_blank" rel="noopener">Cain et al., arXiv ↗</a> <a class="srclink" href="https://postquantum.com/security-pqc/10000-qubits-shors/" target="_blank" rel="noopener">analysis ↗</a></p>
       <button class="applybtn jnext" onclick="jNext(4)">Continue → step 4: managing today’s keys</button>
     </div></div>
-    <button class="sechead jstep" aria-expanded="false" data-target="ls4" onclick="toggle(this)"><span class="jnum">4</span><span class="lab">Managing today’s keys — one doctrine, many documents</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls4" onclick="jToggle(this)"><span class="jnum">4</span><span class="lab">Managing today’s keys — one doctrine, many documents</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     <div id="ls4" class="secbody" hidden><div class="lsec jbody">
       <p class="lplain">Long before quantum, every serious framework converged on the same handful of disciplines for managing keys — different documents, one doctrine. The ribbons below show five frameworks and the practices they demand; <b>the bigger a practice’s node, the more frameworks insist on it</b>. Tap anything.</p>
       <div class="chart lchart"><svg id="mgmtSvg" viewBox="0 0 540 380" role="img" aria-label="Frameworks and the key-management practices they share"></svg></div>
@@ -1000,14 +1005,14 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
       <p class="ltech">The neat twist: NIST’s key-management bible is being rewritten right now — the draft SP 800-57 Rev 6 (Dec 2025) folds the post-quantum algorithms of FIPS 203/204/205 into the same lifecycle rules. Good classical key management and PQC migration are becoming one discipline. <a class="srclink" href="https://csrc.nist.gov/pubs/sp/800/57/pt1/r6/ipd" target="_blank" rel="noopener">SP 800-57 Rev 6 draft ↗</a></p>
       <button class="applybtn jnext" onclick="jNext(5)">Continue → step 5: the quantum problem</button>
     </div></div>
-    <button class="sechead jstep" aria-expanded="false" data-target="ls5" onclick="toggle(this)"><span class="jnum">5</span><span class="lab">The quantum problem — and why the deadline is now</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls5" onclick="jToggle(this)"><span class="jnum">5</span><span class="lab">The quantum problem — and why the deadline is now</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     <div id="ls5" class="secbody" hidden><div class="lsec jbody">
       <p class="lplain">Both locks share one weakness: they’re only hard <i>classically</i>. In 1994 Peter Shor showed a quantum computer runs both trapdoors backwards — factoring and curve-unwinding — in polynomial time. No key length saves them; only different mathematics does.</p>
       <p class="lplain">And you don’t get to wait for the machine: traffic and data <b>recorded today</b> can be decrypted the day it arrives — harvest now, decrypt later. That’s why every deadline in this app is dated years before anyone expects the computer itself.</p>
       <p class="ltech">Requirements keep falling: Gidney (2025) cut RSA-2048 to under a million noisy qubits; Google’s 2026 estimates put 256-bit ECC near ~500k; and the March 2026 Oratomic/Caltech paper argues ~10,000 reconfigurable neutral-atom qubits could suffice — with P-256 discrete logs in days at ~26,000. Track it live on the <b>Trends</b> tab. <a class="srclink" href="https://arxiv.org/abs/2603.28627v1" target="_blank" rel="noopener">Cain et al. ↗</a> <a class="srclink" href="https://arxiv.org/abs/2505.15917" target="_blank" rel="noopener">Gidney ↗</a></p>
       <button class="applybtn jnext" onclick="jNext(6)">Continue → step 6: the replacements</button>
     </div></div>
-    <button class="sechead jstep" aria-expanded="false" data-target="ls6" onclick="toggle(this)"><span class="jnum">6</span><span class="lab">The replacements — FIPS 203, 204 &amp; 205</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls6" onclick="jToggle(this)"><span class="jnum">6</span><span class="lab">The replacements — FIPS 203, 204 &amp; 205</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     <div id="ls6" class="secbody" hidden><div class="lsec jbody">
       <p class="lplain"><b>In plain English:</b> in August 2024, after an eight-year global competition, NIST published the replacement locks. Instead of factoring or curve-bouncing, they hide secrets inside noisy high-dimensional lattices (imagine finding one specific point in a 500-dimensional haystack) or inside chains of hash functions. No known quantum shortcut exists for either.</p>
       <div class="fipsgrid">
@@ -1023,14 +1028,14 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
       <p class="ltech">A fourth standard (FN-DSA, from Falcon) is in draft, and NIST selected <b>HQC</b> (code-based) in March 2025 as a backup KEM on different maths — deliberate diversity in case lattices ever fall. Sources: <a class="srclink" href="https://www.federalregister.gov/documents/2024/08/14/2024-17956/announcing-issuance-of-federal-information-processing-standards-fips-fips-203-module-lattice-based" target="_blank" rel="noopener">Federal Register (official issuance) ↗</a> <a class="srclink" href="https://www.wolfssl.com/what-are-fips-203-204-and-205/" target="_blank" rel="noopener">wolfSSL explainer ↗</a> <a class="srclink" href="https://quantumsecuritydefence.com/insights/nist-fips-standards/" target="_blank" rel="noopener">size &amp; parameter guide ↗</a> <a class="srclink" href="https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption" target="_blank" rel="noopener">NIST on HQC ↗</a></p>
       <button class="applybtn jnext" onclick="jNext(7)">Continue → step 7: who’s steering</button>
     </div></div>
-    <button class="sechead jstep" aria-expanded="false" data-target="ls7" onclick="toggle(this)"><span class="jnum">7</span><span class="lab">Who’s steering — the guidance constellation</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls7" onclick="jToggle(this)"><span class="jnum">7</span><span class="lab">Who’s steering — the guidance constellation</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     <div id="ls7" class="secbody" hidden><div class="lsec jbody">
       <p class="lplain">The standards and guidance for managing cryptography well, arranged as a night sky: <b>standards</b> (teal) define the algorithms, <b>national guidance</b> (amber) sets deadlines and direction — and everything orbits one job: managed cryptography. Tap any star.</p>
       <div class="chart lchart"><svg id="constSvg" viewBox="0 0 540 360" role="img" aria-label="Constellation of cryptographic standards and guidance"></svg></div>
       <div class="lout" id="constOut">Tap a star to see what it is and open the source.</div>
       <button class="applybtn jnext" onclick="jNext(8)">Continue → step 8: the practice cycle</button>
     </div></div>
-    <button class="sechead jstep" aria-expanded="false" data-target="ls8" onclick="toggle(this)"><span class="jnum">8</span><span class="lab">The loop that never ends — the practice cycle</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="sechead jstep" aria-expanded="false" data-target="ls8" onclick="jToggle(this)"><span class="jnum">8</span><span class="lab">The loop that never ends — the practice cycle</span><svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     <div id="ls8" class="secbody" hidden><div class="lsec jbody">
       <p class="lplain">Every national playbook converges on the same loop. It never finishes — crypto-agility means being able to go round again when an algorithm falls. Tap a stage.</p>
       <div class="chart lchart"><svg id="cycleSvg" viewBox="0 0 540 340" role="img" aria-label="Cryptographic management practice cycle"></svg></div>
@@ -2274,9 +2279,14 @@ function drawMgmt(){const svg=$('mgmtSvg');if(!svg)return;svg.innerHTML='';
     svg.appendChild(el('text',{x:RX-40,y:y+2.6,fill:dim?mut:'#46d4c4','font-family':'monospace','font-size':7.2,'font-weight':700,'text-anchor':'middle',style:'pointer-events:none'},k));
     svg.appendChild(el('text',{x:RX-22,y:y+2.6,fill:dim?mut:ink,'font-family':'monospace','font-size':7,'text-anchor':'start',style:'pointer-events:none'},p.n.length>24?p.n.slice(0,23)+'\u2026':p.n));});
 }
+function jToggle(btn){const open=btn.getAttribute('aria-expanded')==='true';
+  if(open){toggle(btn);return;}
+  document.querySelectorAll('.jstep[aria-expanded="true"]').forEach(b=>{if(b!==btn)toggle(b);});
+  toggle(btn);
+  setTimeout(()=>{try{btn.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}},70);}
 function jNext(n){const b=document.querySelector('.jstep[data-target="ls'+n+'"]');if(!b)return;
-  if(b.getAttribute('aria-expanded')!=='true')toggle(b);
-  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),60);}
+  if(b.getAttribute('aria-expanded')!=='true')jToggle(b);
+  else setTimeout(()=>{try{b.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}},60);}
 
 /* ---- end-user organisation readiness ---- */
 const orgSectors={fin:{label:'Banking & Payments',color:'#46d4c4'},tel:{label:'Telecoms',color:'#b48cff'},def:{label:'Defence & Alliances',color:'#ff9e3d'},hea:{label:'Healthcare',color:'#ff7ab8'},egy:{label:'Energy & Utilities',color:'#f4d35e'}};
