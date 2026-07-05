@@ -569,6 +569,66 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
 @media(min-width:2200px){:root{--appw:1480px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 @media print{.appbar,.tabbar,.drawer,.welcome,.actions,.seg,.disc,.tip{display:none!important}.view{display:block!important;page-break-inside:avoid;margin-bottom:20px}body{background:#fff;color:#000}body::before,body::after{display:none}.appmain{max-width:none;padding:0}}
+
+/* ---- tour v2 ---- */
+.wvid{margin:14px 0 8px}
+#wvidBtn{width:100%;padding:15px 16px;font-size:14px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,rgba(70,212,196,.16),rgba(70,212,196,.05));border:1px solid rgba(70,212,196,.5);color:var(--defence);font-weight:700;letter-spacing:.02em}
+#wvidBtn:hover{background:linear-gradient(135deg,rgba(70,212,196,.26),rgba(70,212,196,.08));transform:translateY(-1px)}
+@media(max-width:560px){
+ .welcome .card{max-width:none;width:calc(100vw - 18px);max-height:92dvh;padding:22px 16px;border-radius:16px}
+ .wvid video{max-height:38vh}
+}
+@media(min-width:1100px){
+ .welcome .card{max-width:980px;display:grid;grid-template-columns:1.08fr 1fr;gap:2px 30px;align-items:start}
+ .welcome .card>h2,.welcome .card>p{grid-column:1/-1}
+ .welcome .card>.wvid{grid-column:1;margin-top:6px}
+ .welcome .card>ul{grid-column:2;columns:1;margin-top:6px}
+ .welcome .card>.controls,.welcome .card>.minifoot{grid-column:1/-1}
+ .wvid video{max-height:none}
+}
+@media(min-width:1720px){.welcome .card{max-width:1150px}.welcome .card li{font-size:13.5px;line-height:1.78}}
+/* ---- assessment v2 ---- */
+.assess .seg{display:grid;grid-template-columns:repeat(3,1fr);width:100%;border:none;border-radius:0;overflow:visible;gap:8px}
+.assess .seg button{border:1px solid var(--line2);border-radius:12px;padding:11px 8px;font-size:11.5px;background:var(--card);min-height:46px;transition:.15s}
+.assess .seg button:hover{border-color:var(--defence);color:var(--ink)}
+.assess .seg button.on{background:var(--defence);border-color:var(--defence);color:#06211d;box-shadow:0 4px 18px rgba(70,212,196,.28)}
+.aq{border:1px solid var(--line);border-radius:14px;padding:14px 14px 9px;margin:10px 0;background:rgba(255,255,255,.015);transition:border-color .15s}
+:root[data-theme=light] .aq{background:rgba(0,0,0,.015)}
+.aq:hover,.aq:focus-within{border-color:var(--line2)}
+.qt{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.55;font-weight:600}
+.qn{flex:none;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(70,212,196,.13);color:var(--defence);font-family:var(--mono);font-size:10px;font-weight:700;margin-top:1px}
+.aopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:7px;margin:10px 0 4px}
+.aopt{min-height:44px;display:flex;align-items:center;border-radius:11px;padding:8px 12px;font-size:11px;line-height:1.45}
+.aopt:hover{border-color:var(--defence);color:var(--ink)}
+.aopt.on{background:rgba(70,212,196,.14);border-color:var(--defence);color:var(--ink);font-weight:600}
+.aopt.on::after{content:'\2713';color:var(--defence);margin-left:auto;font-weight:700;padding-left:8px}
+.qwrow{border-top:1px dashed var(--line);padding-top:8px;margin-top:9px}
+.qwrow input,.mrow input,#assessQs input[type=range]{accent-color:var(--defence)}
+.aresult{border:1px solid rgba(70,212,196,.35);border-radius:16px;padding:16px;background:rgba(70,212,196,.05);margin-top:14px}
+#applyBtn{width:100%;min-height:48px;font-size:13px;border-radius:12px;margin-top:10px}
+/* ---- mosca v2 ---- */
+.mfield{border:1px solid var(--line);border-radius:14px;padding:13px 15px;background:rgba(255,255,255,.015)}
+:root[data-theme=light] .mfield{background:rgba(0,0,0,.015)}
+.mfield label{letter-spacing:.03em}
+.mfield output{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--defence);min-width:52px;text-align:right}
+.mrow{align-items:center;gap:12px}
+.mbar{height:14px;border-radius:8px}
+.mresult{border-radius:14px}
+@media(min-width:1200px){
+ #assessQs{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+ #assessQs .aq{margin:0;height:100%}
+ .aopts{grid-template-columns:repeat(auto-fit,minmax(175px,1fr))}
+ .mgrid{grid-template-columns:1fr 1fr;gap:16px}
+ .qt{font-size:13px}
+ .mosca{padding:20px 22px;border-radius:16px}
+}
+@media(min-width:1720px){#assessQs{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:480px){
+ .aopts{grid-template-columns:1fr}
+ .assess .seg{gap:6px}
+ .assess .seg button{font-size:10px;padding:10px 4px}
+ .mfield output{font-size:17px}
+}
 </style>
 </head>
 <body>
@@ -990,6 +1050,16 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
   <button class="wclose" onclick="closeWelcome()" aria-label="Close tour">×</button>
   <h2>Welcome to the Q-Day Observatory</h2>
   <p>A planning aid for the race between quantum capability and post-quantum migration. Everything here is drawn from verified public sources — tap any point, bar, milestone or icon on a chart for detail.</p>
+  <div class="wvid">
+    <button class="applybtn" id="wvidBtn" onclick="showDemo()">▶ Watch the demo</button>
+    <div id="wvidWrap" hidden>
+      <video id="wvid" controls playsinline preload="none">
+        <source id="wvidSrc" src="QDayDemo.mp4" type="video/mp4">
+        Your browser doesn’t support embedded video.
+      </video>
+      <p class="minifoot" id="wvidErr" hidden style="text-align:left;color:var(--alert)">Couldn’t load <b>QDayDemo.mp4</b> — the video must sit in the same folder as this page (exact name, case-sensitive).</p>
+    </div>
+  </div>
   <ul>
     <li><b>Clocks</b> — live countdowns: estimated Q-Day vs the NCSC 2035 deadline. Switch scenarios to move Q-Day, then run the <b>Mosca exposure test</b> — with optional readiness questionnaires (Executive, Technical or Auditor) that suggest your X and Y, and a copy-as-text result to share.</li>
     <li><b>Trends</b> — when the qubits-required and qubits-built curves cross (RSA or ECC), plus the expert outlook. Use the expand icon to view either chart full-screen; tap the Q-Day clock to jump here.</li>
@@ -1000,17 +1070,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
     <li><b>Readiness</b> — two AI-scored views, every claim linked: 37 IT/OT vendors ranked on cryptographic capability, and end-user organisations (banks, telcos, defence, healthcare, energy) ranked on their public quantum-readiness signal — including the honest gaps. ⓘ has methodology and CSV.</li>
     <li><b>⋮ menu</b> — share a snapshot, copy a link that preserves your view, the <b>glossary of acronyms</b>, and all references &amp; sources. The sun/moon toggles light or dark.</li>
   </ul>
-  <div class="wvid">
-    <button class="applybtn" id="wvidBtn" onclick="showDemo()">▶ Watch the demo (9½ min)</button>
-    <div id="wvidWrap" hidden>
-      <video id="wvid" controls playsinline preload="none">
-        <source id="wvidSrc" src="QDayDemo.mp4" type="video/mp4">
-        Your browser doesn’t support embedded video.
-      </video>
-      <p class="minifoot" id="wvidErr" hidden style="text-align:left;color:var(--alert)">Couldn’t load <b>QDayDemo.mp4</b> — the video must sit in the same folder as this page (exact name, case-sensitive).</p>
-    </div>
-  </div>
-  <p style="color:var(--faint)">Planning anchors, not forecasts. No trackers. Views are the author's own.</p>
+    <p style="color:var(--faint)">Planning anchors, not forecasts. No trackers. Views are the author's own.</p>
   <button class="go" onclick="closeWelcome()">Explore →</button>
 </div></div>
 
@@ -1362,7 +1422,7 @@ function loadAns(){try{const s=sessionStorage.getItem('qday_assess');if(s){const
 function segId(k){return 'seg'+k[0].toUpperCase()+k.slice(1);}
 function setAssess(m){aMode=m;['exec','tech','auditor'].forEach(k=>$(segId(k)).classList.toggle('on',k===m));$('aNote').textContent=aNotes[m];const pk=$('aPick');if(pk)pk.hidden=true;const s2=$('aStep2');if(s2)s2.hidden=false;buildAssess();scoreAssess();}
 function buildAssess(){
-  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt">${q.q}</div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div><div class="qwrow"><span class="qwlab">weight · ${q.dim==='shelf'?'sets X':q.dim==='ag'?'drives Y':'maturity only'}</span><input id="qwIn_${i}" type="range" min="0" max="200" value="${Math.round(qw(i)*100)}" oninput="setQW(${i},this.value)" aria-label="Weight of this question"><output id="qwOut_${i}">${fmtW(qw(i))}</output><button class="qwi" onclick="toggleQwExp(${i})" aria-label="Why this default weight" title="Why this default?">ⓘ</button><button class="qwi" onclick="resetQW1(${i})" aria-label="Reset this weight to its default" title="Reset to default">↺</button></div><div class="qwexp" id="qwExp_${i}" hidden>Default ${fmtW(q.dw||1)} — ${q.wr||''}</div>${recHtml}</div>`;}).join('');
+  $('assessQs').innerHTML=assess[aMode].map((q,i)=>{const cur=aAns[aMode][i];const rec=recTopics[recMap[aMode][i]];const recHtml=rec?`<button class="reccall" aria-expanded="false" onclick="toggleRec(this)"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h10a2 2 0 012 2v14l-7-3-7 3z"/></svg>NCSC &amp; international guidance<svg class="ic chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button><div class="recbody" hidden><p>${rec.t}</p><div class="reclinks">${rec.l.map(x=>`<a class="srclink" href="${x[1]}" target="_blank" rel="noopener">${linkIcon}${x[0]} ↗</a>`).join('')}</div></div>`:'';return `<div class="aq"><div class="qt"><span class="qn">${i+1}</span><span>${q.q}</span></div><div class="aopts">${q.o.map((o,j)=>`<button class="aopt${cur&&cur.j===j?' on':''}" onclick="pickAns(${i},${j},${o[1]})">${o[0]}</button>`).join('')}</div><div class="qwrow"><span class="qwlab">weight · ${q.dim==='shelf'?'sets X':q.dim==='ag'?'drives Y':'maturity only'}</span><input id="qwIn_${i}" type="range" min="0" max="200" value="${Math.round(qw(i)*100)}" oninput="setQW(${i},this.value)" aria-label="Weight of this question"><output id="qwOut_${i}">${fmtW(qw(i))}</output><button class="qwi" onclick="toggleQwExp(${i})" aria-label="Why this default weight" title="Why this default?">ⓘ</button><button class="qwi" onclick="resetQW1(${i})" aria-label="Reset this weight to its default" title="Reset to default">↺</button></div><div class="qwexp" id="qwExp_${i}" hidden>Default ${fmtW(q.dw||1)} — ${q.wr||''}</div>${recHtml}</div>`;}).join('');
   $('aresetBtn').hidden=Object.keys(aAns[aMode]).length===0;
 }
 function pickAns(i,j,val){
