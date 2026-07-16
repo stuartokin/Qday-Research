@@ -295,9 +295,7 @@ body.noscroll{overflow:hidden}
 .introov video.fadeout{opacity:0}
 .introbar{display:flex;gap:10px;padding:12px;flex-wrap:wrap;justify-content:center}
 .introbar .catchip{font-size:12px;padding:9px 14px;min-height:42px}
-.introov:fullscreen{background:#000}
-.introov:fullscreen .introbar{position:fixed;bottom:14px;left:0;right:0;opacity:.25;transition:opacity .2s}
-.introov:fullscreen .introbar:hover,.introov:fullscreen .introbar:focus-within{opacity:1}
+.introhint{flex-basis:100%;text-align:center;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
 .introerr{position:absolute;top:16px;left:0;right:0;text-align:center;color:var(--alert)}
 /* tour demo video */
 .wvid{margin:12px 0 4px}
@@ -678,6 +676,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
   <button role="menuitem" onclick="hmenuAct('copy')"><svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg><span id="copyLbl">Copy link</span></button>
   <button role="menuitem" onclick="hmenuAct('gloss')"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Glossary</button>
   <button role="menuitem" onclick="hmenuAct('applog')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>Change log</button>
+  <button role="menuitem" onclick="hmenuAct('author')"><svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Feedback &amp; more from the author</button>
   <button role="menuitem" onclick="hmenuAct('ref')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.6" r=".7" fill="currentColor" stroke="none"/></svg>Reference &amp; sources</button>
 </div>
 
@@ -1081,14 +1080,14 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
 </div>
 
 <div class="introov" id="introOv" hidden role="dialog" aria-label="Intro video loop">
-  <video id="introVid" playsinline preload="none">
+  <video id="introVid" controls playsinline preload="none">
     <source id="introSrc" src="QDayIntro.mp4" type="video/mp4">
   </video>
   <p class="minifoot introerr" id="introErr" hidden>Couldn’t load <b>QDayIntro.mp4</b> — the video must sit in the same folder as this page (exact name, case-sensitive).</p>
   <div class="introbar">
     <button class="catchip" id="introRep" aria-pressed="true" onclick="introToggleRepeat()" title="Repeat when finished">⟳ Repeat: on</button>
-    <button class="catchip" onclick="introFS()" title="Fullscreen">⛶ Fullscreen</button>
     <button class="catchip" onclick="closeIntro()" title="Close">× Close</button>
+    <span class="introhint">use the player’s own controls for full screen, volume and speed</span>
   </div>
 </div>
 <div class="welcome" id="welcome"><div class="card">
@@ -1110,6 +1109,7 @@ svg [tabindex]:focus-visible{outline:2px solid var(--defence);outline-offset:2px
     <a class="wcard" href="https://www.linkedin.com/in/stuart-okin-b37ab69" target="_blank" rel="noopener"><b>Feedback welcome — connect on LinkedIn</b><span>Thoughts, corrections and challenge all gratefully received.</span></a>
     <a class="wcard" href="https://www.linkedin.com/pulse/ai-finding-zero-day-bugs-fast-stuart-okin-khv1e/" target="_blank" rel="noopener"><b>AI is finding zero-day bugs — fast</b><span>How AI-assisted research is rewriting vulnerability discovery.</span></a>
     <a class="wcard" href="https://www.linkedin.com/pulse/mapping-ai-governance-standards-stuart-okin-w8oqe/" target="_blank" rel="noopener"><b>Mapping AI governance &amp; standards</b><span>Making sense of the UK and international AI governance landscape.</span></a>
+    <a class="wcard" href="https://www.linkedin.com/pulse/ai-models-learn-basics-decide-ecosystem-you-need-understand-okin-od7he" target="_blank" rel="noopener"><b>AI models — learn the basics, decide your ecosystem</b><span>Understand how to secure AI, align with standards and regulation, and plan the business change.</span></a>
   </div>
   <ul>
     <li><b>Clocks</b> — live countdowns: estimated Q-Day vs the NCSC 2035 deadline. Switch scenarios to move Q-Day, then run the <b>Mosca exposure test</b> — with optional readiness questionnaires (Executive, Technical or Auditor) that suggest your X and Y, and a copy-as-text result to share.</li>
@@ -1923,9 +1923,7 @@ function openIntro(){const ov=$('introOv'),v=$('introVid');ov.hidden=false;docum
   const err=()=>{$('introErr').hidden=false;};
   v.addEventListener('error',err);const s=$('introSrc');if(s)s.addEventListener('error',err);
   v.addEventListener('loadedmetadata',_introApplyRate);
-  v.addEventListener('play',_introApplyRate);
   v.addEventListener('ended',_introEnded);
-  v.addEventListener('click',()=>{if(v.paused){v.play().catch(()=>{});}else v.pause();});
   try{v.load();const p=v.play();if(p&&p.catch)p.catch(()=>{});}catch(e){err();}}
 function _introEnded(){const v=$('introVid');if(!_introRepeat)return;
   clearTimeout(_introHoldT);
@@ -1935,12 +1933,6 @@ function _introEnded(){const v=$('introVid');if(!_introRepeat)return;
     },700);
   },INTRO_HOLD_MS);}
 function introToggleRepeat(){_introRepeat=!_introRepeat;const b=$('introRep');b.setAttribute('aria-pressed',String(_introRepeat));b.textContent='\u27F3 Repeat: '+(_introRepeat?'on':'off');if(!_introRepeat)clearTimeout(_introHoldT);}
-function introFS(){const ov=$('introOv'),v=$('introVid');
-  try{
-    if(document.fullscreenElement){document.exitFullscreen();return;}
-    if(ov.requestFullscreen)ov.requestFullscreen();
-    else if(v.webkitEnterFullscreen)v.webkitEnterFullscreen();
-  }catch(e){}}
 function closeIntro(){const ov=$('introOv'),v=$('introVid');clearTimeout(_introHoldT);
   try{v.pause();v.classList.remove('fadeout');}catch(e){}
   try{if(document.fullscreenElement)document.exitFullscreen();}catch(e){}
@@ -2232,6 +2224,13 @@ const glossaryTerms=[
 ['WDAC','Windows Defender Application Control — Windows allow-listing that limits abuse of stolen code-signing certificates.']
 ];
 const panes={
+  author:()=>`<h2>Feedback &amp; more from the author</h2><p>This observatory is a personal project \u2014 thoughts, corrections and challenge are all gratefully received.</p>
+<div class="wmore" style="margin-top:14px">
+  <a class="wcard" href="https://www.linkedin.com/in/stuart-okin-b37ab69" target="_blank" rel="noopener"><b>Feedback welcome \u2014 connect on LinkedIn</b><span>The best route for comments, corrections and conversation.</span></a>
+  <a class="wcard" href="https://www.linkedin.com/pulse/ai-finding-zero-day-bugs-fast-stuart-okin-khv1e/" target="_blank" rel="noopener"><b>AI is finding zero-day bugs \u2014 fast</b><span>How AI-assisted research is rewriting vulnerability discovery.</span></a>
+  <a class="wcard" href="https://www.linkedin.com/pulse/mapping-ai-governance-standards-stuart-okin-w8oqe/" target="_blank" rel="noopener"><b>Mapping AI governance &amp; standards</b><span>Making sense of the UK and international AI governance landscape.</span></a>
+  <a class="wcard" href="https://www.linkedin.com/pulse/ai-models-learn-basics-decide-ecosystem-you-need-understand-okin-od7he" target="_blank" rel="noopener"><b>AI models \u2014 learn the basics, decide your ecosystem</b><span>Understand how to secure AI, align with standards and regulation, and plan the business change.</span></a>
+</div><p style="margin-top:16px;color:var(--faint)">Written in a personal capacity; views are the author\u2019s own.</p>`,
   applog:()=>`<h2>Change log</h2><p>How this observatory has evolved. Built iteratively with AI assistance; every data addition carries its source link in situ.</p>
 <div class="chglist">
 <p><b>16 Jul 2026</b> \u2014 Research sweep: IBM 2026 roadmap milestones and error-correction advances (Trends, Stack); US federal implementation wave incl. the FIPS 140-2 sunset (Plan); SimpleHelp corrected to CVE-2026-48558 / CVSS 10.0, attested-TLS relay flaw, U-Boot verified-boot flaws, wolfSSL PQC-path weaknesses, and JadePuffer \u2014 the first documented autonomous LLM-run ransomware intrusion (Threats); STMicroelectronics ST54M mobile PQC silicon (Readiness); nine glossary terms; this change log.</p>
@@ -2260,7 +2259,7 @@ const panes={
 function open_(k){$('paneBody').innerHTML=(panes[k]||panes.sources)();$('drawer').classList.add('open');document.body.style.overflow='hidden';}
 function close_(){$('drawer').classList.remove('open');document.body.style.overflow='';}
 function toggleHmenu(e){if(e){e.stopPropagation();}const m=$('hmenu'),b=$('menuBtn');const willOpen=m.hidden;m.hidden=!willOpen;b.setAttribute('aria-expanded',willOpen?'true':'false');}
-function hmenuAct(a){const m=$('hmenu'),b=$('menuBtn');m.hidden=true;b.setAttribute('aria-expanded','false');if(a==='tour'){showWelcome();}else if(a==='intro'){openIntro();}else if(a==='share')shareCard();else if(a==='copy')copyLink();else if(a==='gloss')open_('glossary');else if(a==='applog')open_('applog');else if(a==='ref')open_('menu');}
+function hmenuAct(a){const m=$('hmenu'),b=$('menuBtn');m.hidden=true;b.setAttribute('aria-expanded','false');if(a==='tour'){showWelcome();}else if(a==='intro'){openIntro();}else if(a==='share')shareCard();else if(a==='copy')copyLink();else if(a==='gloss')open_('glossary');else if(a==='applog')open_('applog');else if(a==='author')open_('author');else if(a==='ref')open_('menu');}
 document.addEventListener('click',e=>{const m=$('hmenu');if(!m||m.hidden)return;if(!e.target.closest('#hmenu')&&!e.target.closest('#menuBtn')){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}});
 document.addEventListener('click',e=>{if(Date.now()-_coAt<450)return;['ganttInfo','sizeInfo'].forEach(id=>{const b=$(id);if(b&&!b.hidden&&!e.target.closest('#'+id))b.hidden=true;});});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=$('hmenu');if(m&&!m.hidden){m.hidden=true;$('menuBtn').setAttribute('aria-expanded','false');}const w=$('welcome');if(w&&w.classList.contains('open'))closeWelcome();const io=$('introOv');if(io&&!io.hidden)closeIntro();exitFS();}});
